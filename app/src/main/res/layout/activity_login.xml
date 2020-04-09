@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity"
+    android:id="@+id/constraintLayoutRoot">
+
+    <ImageView
+        android:scaleType="centerCrop"
+        android:src="@drawable/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:src="@drawable/logo_black"
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_max="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextCardViewWorkspace"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <appsquared.votings.app.EditTextCardView
+        android:id="@+id/editTextCardViewWorkspace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/editTextCardViewMail"
+        app:hint="Workspace"/>
+
+    <appsquared.votings.app.EditTextCardView
+        android:id="@+id/editTextCardViewMail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/editTextCardViewPassword"
+        app:hint="E-Mail"/>
+
+    <appsquared.votings.app.EditTextCardView
+        android:id="@+id/editTextCardViewPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineCenter"
+        app:hint="Password"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/linearLayoutStartIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:background="@null"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineCenter">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@null" />
+
+        <TextView
+            android:layout_marginTop="16dp"
+            android:id="@+id/textViewProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <appsquared.votings.app.ButtonCardView
+        android:id="@+id/buttonCardViewLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCardViewQR"
+        app:background_color="@color/colorAccent"
+        app:border_color="#EE7800"
+        app:text_color="@android:color/white"
+        app:text="Anmelden"/>
+
+    <appsquared.votings.app.ButtonCardView
+        android:id="@+id/buttonCardViewQR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:background_color="@android:color/white"
+        app:border_color="#EE7800"
+        app:text_color="@color/colorAccent"
+        app:text="QR-Code scannen"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

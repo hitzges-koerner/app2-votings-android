@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="EditTextCardView">
+        <attr name="hint" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="ButtonCardView">
+        <attr name="text" format="string"/>
+        <attr name="text_color" format="color"/>
+        <attr name="border_color" format="color"/>
+        <attr name="background_color" format="color"/>
+    </declare-styleable>
+
+</resources>

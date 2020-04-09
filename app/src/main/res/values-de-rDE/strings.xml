@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">VotingsApp</string>
+    <string name="loading_workspace">Lade Workspace…</string>
+    <string name="loading_login">Anmelden…</string>
+    <string name="error_missing_input">Bitte alle Felder ausfüllen.</string>
+    <string name="error_credentials_false">Zugangsdaten nicht gültig. Bitte erneut einloggen.</string>
+    <string name="error_general">Es ging etwas schief … bitte nochmal versuchen.</string>
+    <string name="error_login_again">Bitte erneut einloggen.</string>
+</resources>
