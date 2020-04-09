@@ -2,11 +2,14 @@ package appsquared.votings.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.View.*
+import android.view.animation.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.updatePadding
 import androidx.preference.PreferenceManager
 import framework.base.constant.Constant
 import framework.base.rest.ApiService
@@ -26,7 +29,6 @@ class LoginActivity : AppCompatActivity() {
         ApiService.create(Constant.BASE_API)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -41,32 +43,58 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
+        // TODO ONLY IN DEBUG MODE
         editTextCardViewMail.setText("jakob.koerner@app-squared.com")
         editTextCardViewPassword.setText("12345")
         editTextCardViewWorkspace.setText("app-squared")
 
         buttonCardViewLogin.materialCardView.setOnClickListener {
 
+            // hide error view
+            textCardViewError.visibility = GONE
+            // show spinning progress indicator
             linearLayoutStartIndicator.visibility = VISIBLE
 
+            // check if inputs are not empty
             if(editTextCardViewMail.isEmpty() || editTextCardViewPassword.isEmpty() || editTextCardViewWorkspace.isEmpty()) {
                 showErrorToast(getString(R.string.error_missing_input))
                 return@setOnClickListener
             }
 
-            editTextCardViewWorkspace.isEnabled(false)
-            editTextCardViewMail.isEnabled(false)
-            editTextCardViewPassword.isEnabled(false)
+            // disable login button
+            buttonCardViewLogin.isEnabled = false
+            // fade out all views
+            viewFadeOut(editTextCardViewWorkspace)
+            viewFadeOut(editTextCardViewMail)
+            viewFadeOut(editTextCardViewPassword)
+            viewFadeOut(buttonCardViewLogin)
+            viewFadeOut(buttonCardViewQR)
 
             apiLogin(editTextCardViewMail.getText(),
                 editTextCardViewPassword.getText(),
                 editTextCardViewWorkspace.getText())
+        }
 
+        textCardViewError.setOnClickListener {
+            textCardViewError.visibility = GONE
         }
     }
 
     fun showErrorToast(error: String) {
-        Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
+
+        linearLayoutStartIndicator.visibility = GONE
+
+        buttonCardViewLogin.isEnabled = false
+        viewFadeIn(editTextCardViewWorkspace)
+        viewFadeIn(editTextCardViewMail)
+        viewFadeIn(editTextCardViewPassword)
+        viewFadeIn(buttonCardViewLogin)
+        viewFadeIn(buttonCardViewQR)
+
+        //Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
+
+        textCardViewError.visibility = View.VISIBLE
+        textCardViewError.setText(error)
     }
 
 
@@ -135,10 +163,6 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                     showErrorToast(getString(R.string.error_general))
-
-                    editTextCardViewWorkspace.isEnabled(true)
-                    editTextCardViewMail.isEnabled(true)
-                    editTextCardViewPassword.isEnabled(true)
                 }
             )
     }

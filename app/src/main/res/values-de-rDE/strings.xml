@@ -6,4 +6,6 @@
     <string name="error_credentials_false">Zugangsdaten nicht gültig. Bitte erneut einloggen.</string>
     <string name="error_general">Es ging etwas schief … bitte nochmal versuchen.</string>
     <string name="error_login_again">Bitte erneut einloggen.</string>
+    <string name="button_login">ANMELDEN</string>
+    <string name="button_qr_scan">QR-CODE SCANNEN</string>
 </resources>

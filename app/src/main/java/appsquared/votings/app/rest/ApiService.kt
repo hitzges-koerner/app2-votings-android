@@ -1,5 +1,7 @@
 package framework.base.rest
 
+import androidx.preference.PreferenceManager
+import appsquared.votings.app.rest.BasicAuthInterceptor
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.squareup.moshi.FromJson
@@ -17,6 +19,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.*
 import retrofit2.http.Headers
+import java.net.Authenticator
 
 /**
  * Created by jakobkoerner on 12.12.17.

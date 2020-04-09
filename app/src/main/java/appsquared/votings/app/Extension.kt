@@ -8,6 +8,7 @@ import android.graphics.Point
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.os.Handler
 import android.util.DisplayMetrics
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
@@ -16,6 +17,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AlphaAnimation
+import android.view.animation.AnimationSet
+import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.children
@@ -223,4 +228,32 @@ fun displayHeightInPx(window: WindowManager) : Int {
     val size = Point()
     display.getSize(size)
     return size.y
+}
+
+fun viewFadeOut(view: View) {
+    val fadeOut = AlphaAnimation(1f, 0f)
+    fadeOut.interpolator = AccelerateInterpolator() //and this
+    fadeOut.duration = 500
+
+    val animation = AnimationSet(false) //change to false
+    animation.addAnimation(fadeOut)
+    view.animation = animation
+
+    Handler().postDelayed({
+        view.visibility = View.INVISIBLE
+    }, 500)
+}
+
+fun viewFadeIn(view: View) {
+    val fadeIn = AlphaAnimation(0f, 1f)
+    fadeIn.interpolator = DecelerateInterpolator() //add this
+    fadeIn.duration = 500
+
+    val animation = AnimationSet(false) //change to false
+    animation.addAnimation(fadeIn)
+    view.animation = animation
+
+    Handler().postDelayed({
+        view.visibility = View.VISIBLE
+    }, 500)
 }

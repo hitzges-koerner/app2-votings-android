@@ -3,7 +3,9 @@
     <string name="loading_workspace">Loading Workspace…</string>
     <string name="loading_login">Login…</string>
     <string name="error_missing_input">Please enter your credentials to login.</string>
-    <string name="error_credentials_false">Credentials are false. Please try again.</string>
+    <string name="error_credentials_false">Wrong credentials. Please try again.</string>
     <string name="error_general">Something went wrong. Please retry.</string>
     <string name="error_login_again">Please login again.</string>
+    <string name="button_login">LOGIN</string>
+    <string name="button_qr_scan">SCAN QR CODE</string>
 </resources>

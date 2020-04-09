@@ -23,21 +23,21 @@
         app:layout_constraintBottom_toTopOf="@+id/editTextCardViewWorkspace"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <appsquared.votings.app.EditTextCardView
+    <appsquared.votings.app.views.EditTextCardView
         android:id="@+id/editTextCardViewWorkspace"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/editTextCardViewMail"
         app:hint="Workspace"/>
 
-    <appsquared.votings.app.EditTextCardView
+    <appsquared.votings.app.views.EditTextCardView
         android:id="@+id/editTextCardViewMail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/editTextCardViewPassword"
         app:hint="E-Mail"/>
 
-    <appsquared.votings.app.EditTextCardView
+    <appsquared.votings.app.views.EditTextCardView
         android:id="@+id/editTextCardViewPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,7 +51,20 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
 
+    <appsquared.votings.app.views.TextCardView
+        android:visibility="gone"
+        android:id="@+id/textCardViewError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineCenter"
+        app:background_color="@color/error"
+        app:text_color="@android:color/white"
+        app:text="Anmelden"/>
+
     <LinearLayout
+        android:layout_marginTop="16dp"
         android:visibility="gone"
         android:id="@+id/linearLayoutStartIndicator"
         android:layout_width="wrap_content"
@@ -72,6 +85,8 @@
             android:background="@null" />
 
         <TextView
+            android:textSize="18sp"
+            android:textColor="@color/colorAccent"
             android:layout_marginTop="16dp"
             android:id="@+id/textViewProgress"
             android:layout_width="wrap_content"
@@ -79,7 +94,7 @@
 
     </LinearLayout>
 
-    <appsquared.votings.app.ButtonCardView
+    <appsquared.votings.app.views.ButtonCardView
         android:id="@+id/buttonCardViewLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -87,9 +102,9 @@
         app:background_color="@color/colorAccent"
         app:border_color="#EE7800"
         app:text_color="@android:color/white"
-        app:text="Anmelden"/>
+        app:text="@string/button_login"/>
 
-    <appsquared.votings.app.ButtonCardView
+    <appsquared.votings.app.views.ButtonCardView
         android:id="@+id/buttonCardViewQR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -97,6 +112,6 @@
         app:background_color="@android:color/white"
         app:border_color="#EE7800"
         app:text_color="@color/colorAccent"
-        app:text="QR-Code scannen"/>
+        app:text="@string/button_qr_scan"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
