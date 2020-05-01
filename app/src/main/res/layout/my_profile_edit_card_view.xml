@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#f00"
+    app:strokeWidth="0dp"
+    android:id="@+id/materialCardViewMyProfile"
+    android:layout_marginBottom="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/editTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"
+            android:textSize="@dimen/edit_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            android:maxLines="1"/>
+
+        <ImageView
+            android:layout_marginLeft="8dp"
+            android:id="@+id/imageViewIcon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editTextView"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editTextView" />
+
+        <com.google.android.material.button.MaterialButton
+            app:cornerRadius="15dp"
+            android:text="edit"
+            style="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+            android:layout_marginTop="16dp"
+            android:id="@+id/buttonRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextView"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:textSize="13sp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_marginRight="8dp"
+            app:cornerRadius="15dp"
+            android:text="cancel"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:textSize="13sp"
+            style="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+            android:layout_marginTop="16dp"
+            android:id="@+id/buttonLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonRight"
+            app:layout_constraintTop_toBottomOf="@+id/editTextView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -5,6 +5,9 @@ class PreferenceNames {
     companion object {
 
         const val USER_TOKEN = "account_token"
+        const val WORKSPACE_NAME = "workspace_name"
+        const val LOGIN_DATA = "login_data"
+        const val WORKSPACE = "workspace"
 
         const val REALM = "realm"
 
@@ -27,8 +30,8 @@ class PreferenceNames {
         const val SIDEMENU_TOURNEMENT_HIDE = "sidemenu_tournement_hide"
 
         //firebase
-        const val FIREBASE_TOKEN = "firebase_token";
-        const val FIREBASE_TOKEN_SEND_TO_SERVER = "firebase_token_send_to_server";
+        const val FIREBASE_TOKEN = "firebase_token"
+        const val FIREBASE_TOKEN_SEND_TO_SERVER = "firebase_token_send_to_server"
         const val NOTIFICATION_SHOW = "notification_show"
 
         //login

@@ -4,6 +4,7 @@ import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.button_card_view.view.*
@@ -28,14 +29,27 @@ class TilesAdapter(private val items: MutableList<Item>, val attributes: Attribu
             with(itemView) {
 
                 textViewLabel.text = item.text
-                textViewLabel.setTextColor(ResourcesCompat.getColor(resources, attributes.textColor, null))
+                textViewLabel.setTextColor(attributes.tilesTextColor)
 
                 imageViewIcon.setImageResource(item.iconId)
-                imageViewIcon.setColorFilter(ResourcesCompat.getColor(resources, attributes.highlightColor, null), PorterDuff.Mode.SRC_ATOP)
+                imageViewIcon.setColorFilter(attributes.tilesIconTintColor, PorterDuff.Mode.SRC_ATOP)
+                materialCardViewIcon.setCardBackgroundColor(attributes.tilesIconBackgroundColor)
 
-                materialCardView.setCardBackgroundColor(ResourcesCompat.getColor(resources, attributes.tilesBackgroundColor, null))
-                materialCardView.strokeColor = ResourcesCompat.getColor(resources, attributes.tilesBorderColor, null)
+                materialCardView.setCardBackgroundColor(attributes.tilesBackgroundColor)
+                materialCardView.strokeColor = attributes.tilesBorderColor
                 materialCardView.strokeWidth = dpToPx(attributes.tilesBorderWidth)
+                materialCardView.radius = dpToPx(attributes.tilesCornerRadius).toFloat()
+
+                materialCardViewIcon.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        materialCardViewIcon.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                        val materialCardViewIconWidth = materialCardViewIcon.width //height is ready
+                        val radius = materialCardViewIconWidth.toFloat() / 100 * attributes.tilesIconCornerRadius.toFloat()
+
+                        materialCardViewIcon.radius = dpToPx(radius.toInt()).toFloat()
+                    }
+                })
 
                 /*
                 if(item.icon.isEmpty()) {

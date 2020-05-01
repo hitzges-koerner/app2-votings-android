@@ -8,4 +8,15 @@
     <string name="error_login_again">Please login again.</string>
     <string name="button_login">LOGIN</string>
     <string name="button_qr_scan">SCAN QR CODE</string>
+    <string name="search_user">Suchen</string>
+    <string name="placeholder_name_first">Vorname</string>
+    <string name="placeholder_name_last">Nachname</string>
+    <string name="placeholder_email">lorem@ipsum.com</string>
+    <string name="placeholder_phone_number">+49 17123456789</string>
+
+    <string name="camera">Foto mit Kamera aufnehmen</string>
+    <string name="gallery">Foto aus Album hochladen</string>
+    <string name="delete_avatar">Avatar löschen</string>
+
+    <string name="authority" translatable="false">appsquared.votings.app.fileprovider</string>
 </resources>

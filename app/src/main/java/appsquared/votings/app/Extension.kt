@@ -1,5 +1,6 @@
 package appsquared.votings.app
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -21,9 +22,12 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.children
+import androidx.fragment.app.Fragment
 
 /**
  *
@@ -108,7 +112,7 @@ fun setStatusBarBackgroundColor(window: Window, color: Int) {
  */
 fun setStatusBarTransparent(window: Window) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        window.statusBarColor = Color.TRANSPARENT;
+        window.statusBarColor = Color.TRANSPARENT
     }
 }
 
@@ -187,7 +191,7 @@ private fun setLightBar(window: Window, light: Boolean, systemUiFlag: Int) {
  * @param color
  */
 fun isLight(color: Int) : Boolean {
-    return ColorUtils.calculateLuminance(color) > 0.8;
+    return ColorUtils.calculateLuminance(color) > 0.8
 }
 
 fun dpToPx(dp: Int) = (dp * Resources.getSystem().displayMetrics.density).toInt()
@@ -257,3 +261,60 @@ fun viewFadeIn(view: View) {
         view.visibility = View.VISIBLE
     }, 500)
 }
+
+fun viewFadeOut(view: View, timeInMs: Long) {
+    val fadeOut = AlphaAnimation(1f, 0f)
+    fadeOut.interpolator = AccelerateInterpolator() //and this
+    fadeOut.duration = timeInMs
+
+    val animation = AnimationSet(false) //change to false
+    animation.addAnimation(fadeOut)
+    view.animation = animation
+
+    Handler().postDelayed({
+        view.visibility = View.INVISIBLE
+    }, timeInMs)
+}
+
+fun viewFadeIn(view: View, timeInMs: Long) {
+    val fadeIn = AlphaAnimation(0f, 1f)
+    fadeIn.interpolator = DecelerateInterpolator() //add this
+    fadeIn.duration = timeInMs
+
+    val animation = AnimationSet(false) //change to false
+    animation.addAnimation(fadeIn)
+    view.animation = animation
+
+    Handler().postDelayed({
+        view.visibility = View.VISIBLE
+    }, timeInMs)
+}
+
+fun convertStringToColor(color: String) : Int {
+    val colorTemp = color.replace("(", "").replace(")", "").replace(" ", "")
+    val result = colorTemp.split(",")
+    val red = Integer.valueOf(result[0])
+    val green = Integer.valueOf(result[1])
+    val blue = Integer.valueOf(result[2])
+    val a = result[3].toDouble()
+    return Color.argb( (a*255).toInt(), red, green, blue)
+}
+
+fun Fragment.hideKeyboard() {
+    view?.let { activity?.hideKeyboard(it) }
+}
+
+fun Activity.hideKeyboard() {
+    if (currentFocus == null) View(this) else currentFocus?.let { hideKeyboard(it) }
+}
+
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+fun Context.toast(message: CharSequence) =
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+fun Context.toastLong(message: CharSequence) =
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()

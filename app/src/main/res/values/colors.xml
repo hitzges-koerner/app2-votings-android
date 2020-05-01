@@ -2,8 +2,15 @@
 <resources>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#EE7800</color>
-    <color name="white">#ffffffff</color>
+    <color name="colorAccent">#FF8000</color>
+    <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="error">#FF0000</color>
+    <color name="white_transparent">#99FFFFFF</color>
+    <color name="white_transparent_fill">#F2FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="grey_230">#E6E6E6</color>
+    <color name="grey_60">#3C3C3C</color>
+    <color name="grey_144">#909090</color>
+    <color name="grey_190">#BEBEBE</color>
 </resources>

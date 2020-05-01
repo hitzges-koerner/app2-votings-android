@@ -27,12 +27,32 @@ import java.net.Authenticator
 
 interface ApiService {
 
-    @POST("login")
+    @POST("{WORKSPACE}/login")
     @Headers("Content-type: application/json", "Accept: application/json")
-    fun login(@Body data: String) : Observable<Model.LoginResponse>
+    fun login(@Path("WORKSPACE") workspace : String,
+              @Body data: String) : Observable<Model.LoginResponse>
 
-    @GET(".")
-    fun loadWorkspace(@Header("Authorization") token : String) : Observable<Model.WorkspaceResponse>
+    @GET("{WORKSPACE}")
+    fun loadWorkspace(@Path("WORKSPACE") workspace : String,
+                      @Header("Authorization") token : String) : Observable<Model.WorkspaceResponse>
+
+    @GET("{WORKSPACE}/user")
+    fun getUserList(@Header("Authorization") token : String,
+                    @Path("WORKSPACE") workspace : String) : Observable<MutableList<Model.User>>
+
+    @PUT("{WORKSPACE}/user")
+    fun sendUserData(@Header("Authorization") token : String,
+                     @Path("WORKSPACE") workspace : String,
+                     @Body data: String) : Observable<MutableList<Model.User>>
+
+    @POST("{WORKSPACE}/user/avatar")
+    @Headers("Content-Type: image/png",
+        "Connection: Keep-Alive",
+        "x-ms-blob-type: BlockBlob"
+    )
+    fun sendAvatar(@Header("Authorization") token : String,
+                   @Path("WORKSPACE") workspace : String,
+                   @Body params: RequestBody) : Observable<String>
 
     companion object {
 

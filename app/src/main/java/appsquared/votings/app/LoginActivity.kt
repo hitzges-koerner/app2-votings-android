@@ -2,11 +2,9 @@ package appsquared.votings.app
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.View.*
-import android.view.animation.*
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
@@ -41,6 +39,22 @@ class LoginActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(buttonCardViewQR) { view, insets ->
             buttonCardViewQR.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
+        }
+
+        buttonCardViewAppsquared.materialCardView.setOnClickListener {
+            editTextCardViewWorkspace.setText("app-squared")
+        }
+
+        buttonCardViewRich.materialCardView.setOnClickListener {
+            editTextCardViewWorkspace.setText("rich")
+        }
+
+        buttonCardViewMinimal.materialCardView.setOnClickListener {
+            editTextCardViewWorkspace.setText("minimal")
+        }
+
+        buttonCardViewClean.materialCardView.setOnClickListener {
+            editTextCardViewWorkspace.setText("clean")
         }
 
         // TODO ONLY IN DEBUG MODE
@@ -107,7 +121,7 @@ class LoginActivity : AppCompatActivity() {
         jsonData.put("Password", password)
         jsonData.put("Workspace", workspace)
 
-        disposable = apiService.login(jsonData.toString())
+        disposable = apiService.login(workspace, jsonData.toString())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -116,10 +130,15 @@ class LoginActivity : AppCompatActivity() {
                     val pref = PreferenceManager.getDefaultSharedPreferences(this)
                     pref.edit().putString(PreferenceNames.USER_TOKEN, result.userToken).apply()
                     pref.edit().putString(PreferenceNames.USERID, result.userId).apply()
+                    pref.edit().putString(PreferenceNames.WORKSPACE_NAME, workspace).apply()
+
+                    AppData().saveObjectToSharedPreference(this, PreferenceNames.LOGIN_DATA, result)
 
                     loadWorkspace()
 
                 }, { error ->
+
+                    Log.d("LOGIN", error.message)
 
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 401 || error.code() == 403) {
@@ -143,16 +162,20 @@ class LoginActivity : AppCompatActivity() {
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         val token = pref.getString(PreferenceNames.USER_TOKEN, "")
+        val workspace = pref.getString(PreferenceNames.WORKSPACE_NAME, "")
 
-        disposable = apiService.loadWorkspace("Bearer $token")
+        disposable = apiService.loadWorkspace(workspace!!, "Bearer $token")
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
 
+                    AppData().saveObjectToSharedPreference(this, PreferenceNames.WORKSPACE, result)
                     startActivity(Intent(this, MainActivity::class.java))
+                    finish()
 
                 }, { error ->
+                    Log.d("LOGIN", error.message)
 
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 401 || error.code() == 403) {

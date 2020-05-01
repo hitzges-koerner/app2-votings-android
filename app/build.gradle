@@ -4,6 +4,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    dataBinding {
+        enabled = true
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -15,7 +18,7 @@ android {
     }
 
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "appsquared.votings.app"
@@ -50,12 +53,12 @@ dependencies {
     implementation "com.google.android.material:material:1.1.0"
     implementation 'androidx.cardview:cardview:1.0.0'
 
-    implementation "androidx.preference:preference-ktx:1.1.0"
+    implementation "androidx.preference:preference-ktx:1.1.1"
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
     implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
@@ -64,4 +67,11 @@ dependencies {
     implementation 'com.squareup.moshi:moshi:1.8.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.5.0'
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.8.0")
+
+    // image download
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'com.isseiaoki:simplecropview:1.1.8'
+    // https://github.com/Yalantis/uCrop
+    implementation 'com.github.yalantis:ucrop:2.2.5'
 }

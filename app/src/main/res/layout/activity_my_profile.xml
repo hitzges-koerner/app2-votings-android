@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:id="@+id/constraintLayoutRoot"
+    android:clipToPadding="false">
+
+    <ImageView
+        android:scaleType="centerCrop"
+        android:id="@+id/imageViewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarCustom"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <com.google.android.material.card.MaterialCardView
+                app:strokeWidth="0dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:id="@+id/materialCardViewProfile"
+                app:cardCornerRadius="75dp"
+                android:layout_margin="32dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:elevation="0dp"
+                android:translationZ="0dp">
+
+                <ImageView
+                    android:scaleType="centerCrop"
+                    android:id="@+id/imageViewProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <TextView
+                    android:gravity="center"
+                    android:text="edit"
+                    android:id="@+id/textViewImageEdit"
+                    android:layout_gravity="bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="@color/colorAccent" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <appsquared.votings.app.views.MyProfilEditCardView
+                android:id="@+id/myProfileEditCardViewNameOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:image="@drawable/icon_name"/>
+
+            <appsquared.votings.app.views.MyProfilEditCardView
+                android:id="@+id/myProfileEditCardViewNameTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:image="@drawable/icon_name"/>
+
+            <appsquared.votings.app.views.MyProfilEditCardView
+                android:id="@+id/myProfileEditCardViewMail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:image="@drawable/icon_mail"/>
+
+            <appsquared.votings.app.views.MyProfilEditCardView
+                android:id="@+id/myProfileEditCardViewPhoneNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:image="@drawable/icon_phone"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ImageView
+        android:src="@drawable/header_image"
+        app:layout_constraintTop_toBottomOf="@id/toolbarCustom"
+        android:id="@+id/imageViewHeader"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="H,1000:350" />
+
+    <appsquared.votings.app.ToolbarCustom
+        android:id="@+id/toolbarCustom"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
