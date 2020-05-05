@@ -24,7 +24,8 @@
             android:theme="@style/LoginTheme"/>
         <activity android:name=".MainActivity" />
         <activity android:name=".WelcomeActivity" />
-        <activity android:name=".MyProfileActivity" />
+        <activity android:name=".MyProfileActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".UserListActivity" />
         <activity android:name=".NewsListActivity" />
         <activity android:name=".SplashActivity"
@@ -35,10 +36,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".CameraActivity" />
-
-        <activity android:name="com.lyrebirdstudio.croppylib.main.CroppyActivity"
-            android:theme="@style/AppThemeCroppy">
-        </activity>
 
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

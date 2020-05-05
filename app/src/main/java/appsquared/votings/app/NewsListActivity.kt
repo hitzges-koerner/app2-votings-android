@@ -6,6 +6,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
 import android.widget.AbsListView
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import appsquared.votings.app.views.CustomOnClickListener
@@ -28,13 +30,11 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_news_list.*
 import kotlinx.android.synthetic.main.activity_news_list.constraintLayoutRoot
 import kotlinx.android.synthetic.main.activity_news_list.imageViewBackground
-import kotlinx.android.synthetic.main.activity_news_list.imageViewHeader
 import kotlinx.android.synthetic.main.activity_news_list.recyclerView
-import kotlinx.android.synthetic.main.activity_news_list.toolbarCustom
 import kotlinx.android.synthetic.main.tab_custom.*
 
 
-class NewsListActivity : AppCompatActivity() {
+class NewsListActivity : BaseActivity() {
 
     var statusBarSize = 0
 
@@ -42,23 +42,8 @@ class NewsListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_list)
 
-        val workspace: Model.WorkspaceResponse? = AppData().getSavedObjectFromPreference(this, "workspace", Model.WorkspaceResponse::class.java)
+        val workspace: Model.WorkspaceResponse = mWorkspace
 
-        setLightStatusBar(window, true)
-
-        constraintLayoutRoot.systemUiVisibility =
-            SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-
-        ViewCompat.setOnApplyWindowInsetsListener(toolbarCustom) { view, insets ->
-            statusBarSize = insets.systemWindowInsetTop
-
-            val params: ViewGroup.LayoutParams = toolbarCustom.layoutParams
-            val temp = dpToPx(56)
-            params.height = statusBarSize + temp
-            toolbarCustom.requestLayout()
-
-            insets
-        }
         var attributes = Attributes()
         tabCustom.setCustomOnClickListener(object : CustomOnClickListener {
             override fun customOnClick(button: Int) {
@@ -66,8 +51,8 @@ class NewsListActivity : AppCompatActivity() {
             }
         })
 
-        if(workspace!!.settings.style.isNotEmpty()) {
-            when(workspace.settings.style.toLowerCase()) {
+        if (workspace.settings.style.isNotEmpty()) {
+            when (workspace.settings.style.toLowerCase()) {
                 "rich" -> {
                     attributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
                     attributes.contentBorderColor = getColorTemp(R.color.white_transparent)
@@ -84,8 +69,14 @@ class NewsListActivity : AppCompatActivity() {
                     materialCardViewTab.strokeWidth = dpToPx(1)
                     materialCardViewTab.radius = dpToPx(5).toFloat()
 
-                    tabCustom.setTabBackgroundColor(getColorTemp(R.color.colorAccent), getColorTemp(R.color.white))
-                    tabCustom.setTabTextColor(getColorTemp(R.color.white), getColorTemp(R.color.colorAccent))
+                    tabCustom.setTabBackgroundColor(
+                        getColorTemp(R.color.colorAccent),
+                        getColorTemp(R.color.white)
+                    )
+                    tabCustom.setTabTextColor(
+                        getColorTemp(R.color.white),
+                        getColorTemp(R.color.colorAccent)
+                    )
                 }
 
                 "minimal" -> {
@@ -104,8 +95,14 @@ class NewsListActivity : AppCompatActivity() {
                     materialCardViewTab.strokeWidth = dpToPx(1)
                     materialCardViewTab.radius = dpToPx(5).toFloat()
 
-                    tabCustom.setTabBackgroundColor(getColorTemp(R.color.colorAccent), getColorTemp(R.color.white))
-                    tabCustom.setTabTextColor(getColorTemp(R.color.white), getColorTemp(R.color.colorAccent))
+                    tabCustom.setTabBackgroundColor(
+                        getColorTemp(R.color.colorAccent),
+                        getColorTemp(R.color.white)
+                    )
+                    tabCustom.setTabTextColor(
+                        getColorTemp(R.color.white),
+                        getColorTemp(R.color.colorAccent)
+                    )
                 }
 
                 "clean" -> {
@@ -117,8 +114,14 @@ class NewsListActivity : AppCompatActivity() {
                     materialCardViewTab.strokeWidth = dpToPx(1)
                     materialCardViewTab.radius = dpToPx(5).toFloat()
 
-                    tabCustom.setTabBackgroundColor(getColorTemp(R.color.colorAccent), getColorTemp(R.color.white))
-                    tabCustom.setTabTextColor(getColorTemp(R.color.white), getColorTemp(R.color.colorAccent))
+                    tabCustom.setTabBackgroundColor(
+                        getColorTemp(R.color.colorAccent),
+                        getColorTemp(R.color.white)
+                    )
+                    tabCustom.setTabTextColor(
+                        getColorTemp(R.color.white),
+                        getColorTemp(R.color.colorAccent)
+                    )
                 }
                 else -> {
                     attributes = setAttributesDefault()
@@ -132,68 +135,58 @@ class NewsListActivity : AppCompatActivity() {
             }
         }
 
-        if(workspace.settings.backgroundColor.isNotEmpty()) constraintLayoutRoot.setBackgroundColor(convertStringToColor(workspace.settings.backgroundColor))
-        if(workspace.settings.backgroundImageUrl.isNotEmpty()) {
+        if (workspace.settings.backgroundColor.isNotEmpty()) constraintLayoutRoot.setBackgroundColor(
+            convertStringToColor(workspace.settings.backgroundColor)
+        )
+        if (workspace.settings.backgroundImageUrl.isNotEmpty()) {
             imageViewBackground.visibility = VISIBLE
             Picasso.get()
                 .load(workspace.settings.backgroundImageUrl)
                 .into(imageViewBackground)
-        } else if(workspace.settings.style.equals("rich", true)) {
+        } else if (workspace.settings.style.equals("rich", true)) {
             imageViewBackground.visibility = VISIBLE
             imageViewBackground.setImageResource(R.drawable.image)
         }
 
         val workspaceSettings = workspace.settings
-        if(workspaceSettings.contentBackgroundColor.isNotEmpty())  attributes.contentBackgroundColor = convertStringToColor(workspaceSettings.contentBackgroundColor)
-        if(workspaceSettings.contentBorderColor.isNotEmpty()) attributes.contentBorderColor = convertStringToColor(workspaceSettings.contentBorderColor)
-        if(workspaceSettings.contentBorderWidth.isNotEmpty()) attributes.contentBorderWidth = workspaceSettings.contentBorderWidth.toInt()
-        if(workspaceSettings.contentCornerRadius.isNotEmpty()) attributes.contentCornerRadius = workspaceSettings.contentCornerRadius.toInt()
+        if (workspaceSettings.contentBackgroundColor.isNotEmpty()) attributes.contentBackgroundColor =
+            convertStringToColor(workspaceSettings.contentBackgroundColor)
+        if (workspaceSettings.contentBorderColor.isNotEmpty()) attributes.contentBorderColor =
+            convertStringToColor(workspaceSettings.contentBorderColor)
+        if (workspaceSettings.contentBorderWidth.isNotEmpty()) attributes.contentBorderWidth =
+            workspaceSettings.contentBorderWidth.toInt()
+        if (workspaceSettings.contentCornerRadius.isNotEmpty()) attributes.contentCornerRadius =
+            workspaceSettings.contentCornerRadius.toInt()
 
-        if(workspaceSettings.contentTextColor.isNotEmpty()) attributes.contentTextColor = convertStringToColor(workspaceSettings.contentTextColor)
-        if(workspaceSettings.contentAccentColor.isNotEmpty()) attributes.contentAccentColor = convertStringToColor(workspaceSettings.contentAccentColor)
+        if (workspaceSettings.contentTextColor.isNotEmpty()) attributes.contentTextColor =
+            convertStringToColor(workspaceSettings.contentTextColor)
+        if (workspaceSettings.contentAccentColor.isNotEmpty()) attributes.contentAccentColor =
+            convertStringToColor(workspaceSettings.contentAccentColor)
 
-        imageViewHeader.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        tabCustom.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                imageViewHeader.viewTreeObserver.removeOnGlobalLayoutListener(this)
-
-                if (workspace.main.headerImageUrl.isNotEmpty()) {
-                    imageViewHeader.visibility = VISIBLE
-
-                    imageViewHeader.layoutParams.height = calculateViewHeight(
-                        this@NewsListActivity,
-                        workspace.main.headerImageSize.split(":")[0].toInt(),
-                        workspace.main.headerImageSize.split(":")[1].toInt()
-                    )
-                    imageViewHeader.requestLayout()
-
-                    Picasso.get()
-                        .load(workspace.main.headerImageUrl)
-                        .into(imageViewHeader)
-                } else if(workspace.settings.logoImageUrl.isNotEmpty()) {
-                    imageViewHeader.visibility = VISIBLE
-                    Picasso.get()
-                        .load(workspace.settings.logoImageUrl)
-                        .into(imageViewHeader)
-                } else imageViewHeader.visibility = GONE
-
-                var imageViewHeaderHeight = imageViewHeader.height //height is ready
-                if(imageViewHeader.visibility == GONE) imageViewHeaderHeight = 0
+                tabCustom.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
                 val tabCustomHeight = tabCustom.height //height is ready
 
-                var spanCount = 2 // 2 columns for phone
+                var spanCount = 1 // 1 columns for phone
                 val tabletSize = resources.getBoolean(R.bool.isTablet)
                 if (tabletSize) {
-                    spanCount = 3 // 3 columns for tablet
+                    spanCount = 2 // 2 columns for tablet
                 }
                 val includeEdge = false
 
                 val spacing = dpToPx(16)
 
-                recyclerView.setPadding(0, imageViewHeaderHeight + tabCustomHeight + spacing + spacing + spacing, 0, 0)
-                recyclerView.addItemDecoration(MarginItemDecoration(dpToPx(16)))
-
-                recyclerView.layoutManager = LinearLayoutManager(this@NewsListActivity)
+                recyclerView.setPadding(0, getImageHeaderHeight() + tabCustomHeight + spacing, 0, 0)
+                recyclerView.addItemDecoration(
+                    GridSpacingItemDecoration(
+                        spanCount,
+                        spacing,
+                        includeEdge
+                    )
+                )
+                recyclerView.layoutManager = GridLayoutManager(this@NewsListActivity, spanCount)
 
                 recyclerView.adapter = NewsAdapter(workspace.news, attributes) { position: Int ->
 

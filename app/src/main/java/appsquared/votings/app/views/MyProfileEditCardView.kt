@@ -12,16 +12,16 @@ import appsquared.votings.app.R
 import kotlinx.android.synthetic.main.my_profile_edit_card_view.view.*
 
 
-class MyProfilEditCardView(context: Context, attrs: AttributeSet): LinearLayout(context, attrs) {
+class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout(context, attrs) {
 
-    private var onMyProfileEditBttonClickListener: OnMyProfileEditBttonClickListener? = null
+    private var onMyProfileEditButtonClickListener: OnMyProfileEditButtonClickListener? = null
 
     /**
      * TODO
      * @param onToolbarItemClickListener
      */
-    fun setOnMyProfileEditButtonClickListener(onMyProfileEditBttonClickListener: OnMyProfileEditBttonClickListener) {
-        this.onMyProfileEditBttonClickListener = onMyProfileEditBttonClickListener
+    fun setOnMyProfileEditButtonClickListener(onMyProfileEditButtonClickListener: OnMyProfileEditButtonClickListener) {
+        this.onMyProfileEditButtonClickListener = onMyProfileEditButtonClickListener
     }
 
     fun setOnClickListener(l: (View) -> Unit) {
@@ -36,9 +36,9 @@ class MyProfilEditCardView(context: Context, attrs: AttributeSet): LinearLayout(
 
         editText = findViewById(R.id.editTextView)
         val attributes = context.obtainStyledAttributes(attrs,
-            R.styleable.MyProfilEditCardView
+            R.styleable.MyProfileEditCardView
         )
-        imageViewIcon.setImageResource(attributes.getResourceId(R.styleable.MyProfilEditCardView_image, R.drawable.transparent))
+        imageViewIcon.setImageResource(attributes.getResourceId(R.styleable.MyProfileEditCardView_image, R.drawable.transparent))
         attributes.recycle()
 
         editText.isEnabled = false
@@ -61,6 +61,7 @@ class MyProfilEditCardView(context: Context, attrs: AttributeSet): LinearLayout(
                 editText.isEnabled = true
                 editText.requestFocus()
                 editText.showKeyboard()
+                onMyProfileEditButtonClickListener?.onClick(this)
             } else {
                 editMode = EDIT_MODE_OFF
                 buttonLeft.visibility = View.GONE
@@ -140,8 +141,8 @@ class MyProfilEditCardView(context: Context, attrs: AttributeSet): LinearLayout(
     /**
      *
      */
-    interface OnMyProfileEditBttonClickListener {
-        fun onClick()
+    interface OnMyProfileEditButtonClickListener {
+        fun onClick(myProfileEditCardView: MyProfileEditCardView)
     }
 
     companion object {

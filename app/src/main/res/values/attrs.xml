@@ -5,7 +5,7 @@
         <attr name="hint" format="string"/>
     </declare-styleable>
 
-    <declare-styleable name="MyProfilEditCardView">
+    <declare-styleable name="MyProfileEditCardView">
         <attr name="image" format="reference"/>
     </declare-styleable>
 

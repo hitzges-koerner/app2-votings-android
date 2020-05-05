@@ -45,6 +45,10 @@ interface ApiService {
                      @Path("WORKSPACE") workspace : String,
                      @Body data: String) : Observable<MutableList<Model.User>>
 
+    @DELETE("{WORKSPACE}/user/avatar")
+    fun deleteAvatar(@Header("Authorization") token : String,
+                     @Path("WORKSPACE") workspace : String) : Observable<ResponseBody>
+
     @POST("{WORKSPACE}/user/avatar")
     @Headers("Content-Type: image/png",
         "Connection: Keep-Alive",
