@@ -147,7 +147,7 @@ class CameraActivity : AppCompatActivity() {
             }
         } else if (resultCode == UCrop.RESULT_ERROR) {
             val cropError = UCrop.getError(data!!);
-        }
+        } else finish()
     }
 
     private fun getCapturedImage(selectedPhotoUri: Uri): Bitmap {

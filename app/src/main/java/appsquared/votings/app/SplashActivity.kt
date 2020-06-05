@@ -11,8 +11,8 @@ class SplashActivity : AppCompatActivity() {
         setTheme(R.style.SplashTheme)
         super.onCreate(savedInstanceState)
 
-        setLightNavigationBar(window, true)
-        setLightStatusBar(window, true)
+        setLightNavigationBar(window, false)
+        setLightStatusBar(window, false)
 
         val handler = Handler()
         handler.postDelayed({

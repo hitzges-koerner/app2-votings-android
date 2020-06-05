@@ -1,10 +1,9 @@
 package appsquared.votings.app
 
 import android.os.Bundle
-import android.view.View.VISIBLE
 import androidx.core.content.res.ResourcesCompat
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_welcome.*
+import kotlin.math.roundToInt
 
 
 class WelcomeActivity : BaseActivity() {
@@ -13,35 +12,21 @@ class WelcomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_welcome)
+    }
+
+    fun getColorTemp(color: Int) : Int {
+        return ResourcesCompat.getColor(resources, color, null)
+    }
+
+    override fun childOnlyMethod() {
+
+        setScreenTitle("Willkommen")
 
         val workspace = mWorkspace
 
-        setContentView(R.layout.activity_welcome)
-
         val spacing = dpToPx(16)
         scrollView.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
-
-        if(workspace.settings.backgroundColor.isNotEmpty()) constraintLayoutRoot.setBackgroundColor(convertStringToColor(workspace.settings.backgroundColor))
-        if(workspace.settings.backgroundImageUrl.isNotEmpty()) {
-            imageViewBackground.visibility = VISIBLE
-            Picasso.get()
-                .load(workspace.settings.backgroundImageUrl)
-                .into(imageViewBackground)
-        } else if(workspace.settings.style.equals("rich", true)) {
-            imageViewBackground.visibility = VISIBLE
-            imageViewBackground.setImageResource(R.drawable.image)
-        }
-
-        if(workspace.settings.backgroundColor.isNotEmpty()) constraintLayoutRoot.setBackgroundColor(convertStringToColor(workspace.settings.backgroundColor))
-        if(workspace.settings.backgroundImageUrl.isNotEmpty()) {
-            imageViewBackground.visibility = VISIBLE
-            Picasso.get()
-                .load(workspace.settings.backgroundImageUrl)
-                .into(imageViewBackground)
-        } else if(workspace.settings.style.equals("rich", true)) {
-            imageViewBackground.visibility = VISIBLE
-            imageViewBackground.setImageResource(R.drawable.image)
-        }
 
         var borderColor = getColorTemp(R.color.transparent)
         var borderWidth = 0
@@ -82,13 +67,13 @@ class WelcomeActivity : BaseActivity() {
         }
 
         if(workspace.settings.contentBorderColor.isNotEmpty()) borderColor = convertStringToColor(workspace.settings.contentBorderColor)
-        if(workspace.settings.contentBorderWidth.isNotEmpty()) borderWidth = workspace.settings.contentBorderWidth.toInt()
+        if(workspace.settings.contentBorderWidth.isNotEmpty()) borderWidth = workspace.settings.contentBorderWidth.toDouble().roundToInt()
 
         if(workspace.settings.contentTextColor.isNotEmpty()) contentTextColor = convertStringToColor(workspace.settings.contentTextColor)
         if(workspace.settings.contentAccentColor.isNotEmpty()) contentAccentColor = convertStringToColor(workspace.settings.contentAccentColor)
 
         if(workspace.settings.contentBackgroundColor.isNotEmpty()) contentBackgroundColor = convertStringToColor(workspace.settings.contentBackgroundColor)
-        if(workspace.settings.contentCornerRadius.isNotEmpty()) contentCornerRadius = workspace.settings.contentCornerRadius.toInt()
+        if(workspace.settings.contentCornerRadius.isNotEmpty()) contentCornerRadius = workspace.settings.contentCornerRadius.toDouble().roundToInt()
 
         materialCardView.setCardBackgroundColor(contentBackgroundColor)
         materialCardView.strokeColor = borderColor
@@ -96,9 +81,5 @@ class WelcomeActivity : BaseActivity() {
         materialCardView.radius = dpToPx(contentCornerRadius).toFloat()
 
         PseudoMarkDown.styleTextView(workspace.welcome.text, textViewContent, contentAccentColor, contentTextColor)
-    }
-
-    fun getColorTemp(color: Int) : Int {
-        return ResourcesCompat.getColor(resources, color, null)
     }
 }

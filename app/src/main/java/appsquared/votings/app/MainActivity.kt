@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar_custom.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     var statusBarSize = 0
 
@@ -30,13 +30,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val workspace: Model.WorkspaceResponse? = AppData().getSavedObjectFromPreference(this, "workspace", Model.WorkspaceResponse::class.java)
+    }
 
-        setLightStatusBar(window, true)
+    override fun childOnlyMethod() {
 
-        constraintLayoutRoot.systemUiVisibility =
-            SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        val workspace: Model.WorkspaceResponse = mWorkspace
 
+        /*
         ViewCompat.setOnApplyWindowInsetsListener(toolbarCustom) { view, insets ->
             statusBarSize = insets.systemWindowInsetTop
 
@@ -55,19 +55,22 @@ class MainActivity : AppCompatActivity() {
 
             insets
         }
+         */
 
-        toolBar.logo = ResourcesCompat.getDrawable(resources, R.drawable.logo, null)
+        //toolBar.logo = ResourcesCompat.getDrawable(resources, R.drawable.logo, null)
 
         val list = mutableListOf<Item>()
-        list.add(Item("Willkommen", R.drawable.ico_ueber_uns))
-        list.add(Item("Mein Profil", R.drawable.ico_profil))
-        list.add(Item("Aktuelles", R.drawable.ico_aktuelles))
-        list.add(Item("Abstimmungen", R.drawable.ico_abstimmungen))
-        list.add(Item("Teilnehmer", R.drawable.ico_teilnehmer))
-        list.add(Item("Einstellungen", R.drawable.ico_einstellungen))
+        list.add(Item("Willkommen", R.drawable.tile_icons_info, Item.INFO))
+        list.add(Item("Mein Profil", R.drawable.tile_icons_profil, Item.PROFIL))
+        list.add(Item("Abstimmungen", R.drawable.tile_icons_voting, Item.VOTING_ACTIV))
+        list.add(Item("Aktuelles", R.drawable.tile_icons_news, Item.NEWS))
+        list.add(Item("Kommende Abstimmungen", R.drawable.tile_icons_kalender, Item.VOTING_FUTURE))
+        list.add(Item("Archiv", R.drawable.tile_icons_vergangene_abstimmungen, Item.VOTING_PAST))
+        list.add(Item("Teilnehmer", R.drawable.tile_icons_teilnehmer, Item.ATTENDEES))
+        list.add(Item("Einstellungen", R.drawable.ico_einstellungen, Item.SETIINGS))
         var attributes = Attributes()
 
-        if(workspace!!.settings.style.isNotEmpty()) {
+        if(workspace.settings.style.isNotEmpty()) {
             when(workspace.settings.style.toLowerCase()) {
                 "rich" -> {
                     attributes.tilesBackgroundColor = getColorTemp(R.color.white_transparent)
@@ -104,17 +107,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if(workspace.settings.backgroundColor.isNotEmpty()) constraintLayoutRoot.setBackgroundColor(convertStringToColor(workspace.settings.backgroundColor))
-        if(workspace.settings.backgroundImageUrl.isNotEmpty()) {
-            imageViewBackground.visibility = VISIBLE
-            Picasso.get()
-                .load(workspace.settings.backgroundImageUrl)
-                .into(imageViewBackground)
-        } else if(workspace.settings.style.equals("rich", true)) {
-            imageViewBackground.visibility = VISIBLE
-            imageViewBackground.setImageResource(R.drawable.image)
-        }
-
         val workspaceSettings = workspace.settings
         if(workspaceSettings.tilesBackgroundColor.isNotEmpty())  attributes.tilesBackgroundColor = convertStringToColor(workspaceSettings.tilesBackgroundColor)
         if(workspaceSettings.tilesBorderColor.isNotEmpty()) attributes.tilesBorderColor = convertStringToColor(workspaceSettings.tilesBorderColor)
@@ -127,6 +119,7 @@ class MainActivity : AppCompatActivity() {
         if(workspaceSettings.tilesIconCornerRadius.isNotEmpty()) attributes.tilesIconCornerRadius = convertStringToColor(workspaceSettings.tilesIconCornerRadius)
         if(workspaceSettings.tilesIconTintColor.isNotEmpty()) attributes.tilesIconTintColor = convertStringToColor(workspaceSettings.tilesIconTintColor)
 
+        /*
         imageViewHeader.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 imageViewHeader.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -155,46 +148,63 @@ class MainActivity : AppCompatActivity() {
 
                 if(imageViewHeader.visibility == GONE) imageViewHeaderHeight = 0
 
-                var spanCount = 2 // 2 columns for phone
-                val tabletSize = resources.getBoolean(R.bool.isTablet)
-                if (tabletSize) {
-                    spanCount = 3 // 3 columns for tablet
-                }
-                val includeEdge = false
 
-                var tilesSpacing = 16
-                if(workspace.settings.tilesSpacing.isNotEmpty()) tilesSpacing = workspace.settings.tilesSpacing.toInt()
-
-                val spacing = dpToPx(tilesSpacing)
-
-                recyclerView.setPadding(spacing, spacing + imageViewHeaderHeight, spacing, spacing)
-                recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount, spacing, includeEdge))
-
-                recyclerView.layoutManager = GridLayoutManager(this@MainActivity, spanCount)
-
-                recyclerView.adapter = TilesAdapter(list, attributes) { position: Int ->
-
-                    when(position) {
-                        0 -> {
-                            startActivityTemp(WelcomeActivity())
-                        }
-                        1 -> {
-                            startActivityTemp(MyProfileActivity())
-                        }
-                        2 -> {
-                            startActivityTemp(NewsListActivity())
-                        }
-                        4 -> {
-                            startActivityTemp(UserListActivity())
-                        }
-                        else -> {
-                            startActivityTemp(LoginActivity())
-                            finish()
-                        }
-                    }
-                }
             }
         })
+
+         */
+
+
+        var spanCount = 2 // 2 columns for phone
+        val tabletSize = resources.getBoolean(R.bool.isTablet)
+        if (tabletSize) {
+            spanCount = 3 // 3 columns for tablet
+        }
+        val includeEdge = false
+
+        var tilesSpacing = 16
+        if(workspace.settings.tilesSpacing.isNotEmpty()) tilesSpacing = workspace.settings.tilesSpacing.toInt()
+
+        val spacing = dpToPx(tilesSpacing)
+
+        recyclerView.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
+        recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount, spacing, includeEdge))
+
+        recyclerView.layoutManager = GridLayoutManager(this@MainActivity, spanCount)
+
+        recyclerView.adapter = TilesAdapter(list, attributes) { position: Int ->
+
+            when(position) {
+                Item.INFO -> {
+                    startActivityTemp(WelcomeActivity())
+                }
+                Item.PROFIL -> {
+                    startActivityTemp(MyProfileActivity())
+                }
+                Item.NEWS -> {
+                    startActivityTemp(NewsListActivity())
+                }
+                Item.ATTENDEES -> {
+                    startActivityTemp(UserListActivity())
+                }
+                Item.SETIINGS -> {
+                    startActivityTemp(SettingsActivity())
+                }
+                Item.VOTING_ACTIV -> {
+                    startActivityTemp(VotingsListActivity())
+                }
+                Item.VOTING_FUTURE -> {
+                    startActivityTemp(VotingsListActivity())
+                }
+                Item.VOTING_PAST -> {
+                    startActivityTemp(VotingsListActivity())
+                }
+                else -> {
+                    startActivityTemp(LoginActivity())
+                    finish()
+                }
+            }
+        }
     }
 
     private fun startActivityTemp(activity: Activity) {

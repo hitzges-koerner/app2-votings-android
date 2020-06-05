@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import android.view.View.*
+import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.webkit.URLUtil
 import android.widget.TextView
@@ -22,11 +22,10 @@ import framework.base.rest.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.constraintLayoutRoot
 import kotlinx.android.synthetic.main.activity_my_profile.*
-import kotlinx.android.synthetic.main.activity_user_list.imageViewBackground
-import kotlinx.android.synthetic.main.activity_welcome.scrollView
+import kotlinx.android.synthetic.main.button_card_view.view.*
 import org.json.JSONObject
+import kotlin.math.roundToInt
 
 class MyProfileActivity : BaseActivity(),
     TextView.OnEditorActionListener, MyProfileEditCardView.OnMyProfileEditButtonClickListener {
@@ -46,11 +45,16 @@ class MyProfileActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_profile)
+
+        buttonCardViewLogout.materialCardView.setOnClickListener {
+            val intent = Intent(this@MyProfileActivity, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+        }
+
     }
 
-    override fun onStart() {
-        super.onStart()
-
+    override fun childOnlyMethod() {
         val workspace = mWorkspace
         val loginData = mLoginData
 
@@ -103,22 +107,11 @@ class MyProfileActivity : BaseActivity(),
             }
         }
 
-        if(workspace.settings.backgroundColor.isNotEmpty()) constraintLayoutRoot.setBackgroundColor(convertStringToColor(workspace.settings.backgroundColor))
-        if(workspace.settings.backgroundImageUrl.isNotEmpty()) {
-            imageViewBackground.visibility = VISIBLE
-            Picasso.get()
-                .load(workspace.settings.backgroundImageUrl)
-                .into(imageViewBackground)
-        } else if(workspace.settings.style.equals("rich", true)) {
-            imageViewBackground.visibility = VISIBLE
-            imageViewBackground.setImageResource(R.drawable.image)
-        }
-
         val workspaceSettings = workspace.settings
         if(workspaceSettings.contentBackgroundColor.isNotEmpty())  mAttributes.contentBackgroundColor = convertStringToColor(workspaceSettings.contentBackgroundColor)
         if(workspaceSettings.contentBorderColor.isNotEmpty()) mAttributes.contentBorderColor = convertStringToColor(workspaceSettings.contentBorderColor)
-        if(workspaceSettings.contentBorderWidth.isNotEmpty()) mAttributes.contentBorderWidth = workspaceSettings.contentBorderWidth.toInt()
-        if(workspaceSettings.contentCornerRadius.isNotEmpty()) mAttributes.contentCornerRadius = workspaceSettings.contentCornerRadius.toInt()
+        if(workspaceSettings.contentBorderWidth.isNotEmpty()) mAttributes.contentBorderWidth = workspaceSettings.contentBorderWidth.toDouble().roundToInt()
+        if(workspaceSettings.contentCornerRadius.isNotEmpty()) mAttributes.contentCornerRadius = workspaceSettings.contentCornerRadius.toDouble().roundToInt()
 
         if(workspaceSettings.contentTextColor.isNotEmpty()) mAttributes.contentTextColor = convertStringToColor(workspaceSettings.contentTextColor)
         if(workspaceSettings.contentAccentColor.isNotEmpty()) mAttributes.contentAccentColor = convertStringToColor(workspaceSettings.contentAccentColor)
@@ -206,7 +199,10 @@ class MyProfileActivity : BaseActivity(),
                 .show()
 
         }
+    }
 
+    override fun onStart() {
+        super.onStart()
     }
 
     fun getColorTemp(color: Int) : Int {
@@ -291,6 +287,9 @@ class MyProfileActivity : BaseActivity(),
                     Toast.makeText(this, "Super dupa", Toast.LENGTH_LONG).show()
                     imageViewProfile.setImageResource(R.drawable.icon_placeholder)
                     imageViewProfile.setColorFilter(mAttributes.contentTextColor, PorterDuff.Mode.SRC_ATOP)
+
+                    mLoginData.avatarUrl = ""
+                    AppData().saveObjectToSharedPreference(this, PreferenceNames.LOGIN_DATA, mLoginData)
                 }, { error ->
                     Log.d("LOGIN", error.message)
 
@@ -344,6 +343,10 @@ class MyProfileActivity : BaseActivity(),
                 val imageUrl = data.getStringExtra("imageUrl")
                 imageUrl?.let {
                     if(it.isNotEmpty() && URLUtil.isValidUrl(it)) {
+
+                        mLoginData.avatarUrl = it
+                        AppData().saveObjectToSharedPreference(this, PreferenceNames.LOGIN_DATA, mLoginData)
+
                         imageViewProfile.colorFilter = null
                         Picasso.get()
                             .load(it)

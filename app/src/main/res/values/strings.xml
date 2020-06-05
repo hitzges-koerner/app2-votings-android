@@ -7,7 +7,9 @@
     <string name="error_general">Something went wrong. Please retry.</string>
     <string name="error_login_again">Please login again.</string>
     <string name="button_login">LOGIN</string>
+    <string name="button_logout">LOGOUT</string>
     <string name="button_qr_scan">SCAN QR CODE</string>
+    <string name="button_password_reset">FORGOT PASSWORD</string>
     <string name="search_user">Suchen</string>
     <string name="placeholder_name_first">Vorname</string>
     <string name="placeholder_name_last">Nachname</string>
@@ -18,5 +20,11 @@
     <string name="gallery">Foto aus Album hochladen</string>
     <string name="delete_avatar">Avatar löschen</string>
 
-    <string name="authority" translatable="false">appsquared.votings.app.fileprovider</string>
+    <string name="authority" translatable="false">app.votings.android.fileprovider</string>
+    <string name="voting_current">current votes</string>
+    <string name="archiv">archivs</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="notification_channel_description">push notifications</string>
 </resources>

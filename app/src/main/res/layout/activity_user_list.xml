@@ -8,13 +8,6 @@
     android:id="@+id/constraintLayoutRoot"
     android:clipToPadding="false">
 
-    <ImageView
-        android:visibility="gone"
-        android:scaleType="centerCrop"
-        android:id="@+id/imageViewBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
     <com.google.android.material.card.MaterialCardView
         android:visibility="gone"
         android:layout_margin="16dp"
@@ -26,9 +19,9 @@
         android:focusableInTouchMode="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewHeader">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <appsquared.votings.app.EditTextWithClear
+        <appsquared.votings.app.views.EditTextWithClear
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="4dp"
@@ -42,7 +35,6 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:visibility="visible"
         android:id="@+id/recyclerView"
@@ -52,33 +44,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarCustom" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewHeader"
-        android:padding="16dp"
-        android:visibility="gone">
-
-        <include layout="@layout/item_user" />
-
-    </LinearLayout>
-
-    <ImageView
-        android:src="@drawable/header_image"
-        app:layout_constraintTop_toBottomOf="@id/toolbarCustom"
-        android:id="@+id/imageViewHeader"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="H,1000:350" />
-
-    <appsquared.votings.app.ToolbarCustom
-        android:id="@+id/toolbarCustom"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,33 +4,27 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View.*
-import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
 import android.widget.AbsListView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.ViewCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import appsquared.votings.app.views.EditTextWithClear
 import framework.base.constant.Constant
 import framework.base.rest.ApiService
 import framework.base.rest.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.constraintLayoutRoot
-import kotlinx.android.synthetic.main.activity_main.imageViewHeader
 import kotlinx.android.synthetic.main.activity_main.recyclerView
-import kotlinx.android.synthetic.main.activity_main.toolbarCustom
 import kotlinx.android.synthetic.main.activity_user_list.*
-import kotlinx.android.synthetic.main.activity_user_list.imageViewBackground
+import kotlin.math.roundToInt
 
 
-class UserListActivity : AppCompatActivity(), EditTextWithClear.OnEditTextWithClearClickListener,
+class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearClickListener,
     TextView.OnEditorActionListener {
 
     private lateinit var mUserListDownloaded: MutableList<Model.User>
@@ -48,23 +42,15 @@ class UserListActivity : AppCompatActivity(), EditTextWithClear.OnEditTextWithCl
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_list)
 
-        val workspace: Model.WorkspaceResponse? = AppData().getSavedObjectFromPreference(this, "workspace", Model.WorkspaceResponse::class.java)
+    }
 
-        setLightStatusBar(window, true)
 
-        constraintLayoutRoot.systemUiVisibility =
-            SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+    override fun childOnlyMethod() {
 
-        ViewCompat.setOnApplyWindowInsetsListener(toolbarCustom) { view, insets ->
-            statusBarSize = insets.systemWindowInsetTop
+        setScreenTitle("Teilnehmer-Liste")
 
-            val params: ViewGroup.LayoutParams = toolbarCustom.layoutParams
-            val temp = dpToPx(56)
-            params.height = statusBarSize + temp
-            toolbarCustom.requestLayout()
 
-            insets
-        }
+        val workspace: Model.WorkspaceResponse = mWorkspace
 
         editTextSearch.setOnEditWithClearClickListener(this)
         editTextSearch.setOnEditorActionListener(this)
@@ -73,7 +59,7 @@ class UserListActivity : AppCompatActivity(), EditTextWithClear.OnEditTextWithCl
         mUserList = mutableListOf<Model.User>()
         var attributes = Attributes()
 
-        if(workspace!!.settings.style.isNotEmpty()) {
+        if(workspace.settings.style.isNotEmpty()) {
             when(workspace.settings.style.toLowerCase()) {
                 "rich" -> {
                     attributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
@@ -142,52 +128,18 @@ class UserListActivity : AppCompatActivity(), EditTextWithClear.OnEditTextWithCl
             }
         }
 
-        if(workspace.settings.backgroundColor.isNotEmpty()) constraintLayoutRoot.setBackgroundColor(convertStringToColor(workspace.settings.backgroundColor))
-        if(workspace.settings.backgroundImageUrl.isNotEmpty()) {
-            imageViewBackground.visibility = VISIBLE
-            Picasso.get()
-                .load(workspace.settings.backgroundImageUrl)
-                .into(imageViewBackground)
-        } else if(workspace.settings.style.equals("rich", true)) {
-            imageViewBackground.visibility = VISIBLE
-            imageViewBackground.setImageResource(R.drawable.image)
-        }
-
         val workspaceSettings = workspace.settings
         if(workspaceSettings.contentBackgroundColor.isNotEmpty())  attributes.contentBackgroundColor = convertStringToColor(workspaceSettings.contentBackgroundColor)
         if(workspaceSettings.contentBorderColor.isNotEmpty()) attributes.contentBorderColor = convertStringToColor(workspaceSettings.contentBorderColor)
-        if(workspaceSettings.contentBorderWidth.isNotEmpty()) attributes.contentBorderWidth = workspaceSettings.contentBorderWidth.toInt()
-        if(workspaceSettings.contentCornerRadius.isNotEmpty()) attributes.contentCornerRadius = workspaceSettings.contentCornerRadius.toInt()
+        if(workspaceSettings.contentBorderWidth.isNotEmpty()) attributes.contentBorderWidth = workspaceSettings.contentBorderWidth.toDouble().roundToInt()
+        if(workspaceSettings.contentCornerRadius.isNotEmpty()) attributes.contentCornerRadius = workspaceSettings.contentCornerRadius.toDouble().roundToInt()
 
         if(workspaceSettings.contentTextColor.isNotEmpty()) attributes.contentTextColor = convertStringToColor(workspaceSettings.contentTextColor)
         if(workspaceSettings.contentAccentColor.isNotEmpty()) attributes.contentAccentColor = convertStringToColor(workspaceSettings.contentAccentColor)
 
-        imageViewHeader.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        materialCardViewSearch.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                imageViewHeader.viewTreeObserver.removeOnGlobalLayoutListener(this)
-
-                if (workspace.main.headerImageUrl.isNotEmpty()) {
-                    imageViewHeader.visibility = VISIBLE
-
-                    imageViewHeader.layoutParams.height = calculateViewHeight(
-                        this@UserListActivity,
-                        workspace.main.headerImageSize.split(":")[0].toInt(),
-                        workspace.main.headerImageSize.split(":")[1].toInt()
-                    )
-                    imageViewHeader.requestLayout()
-
-                    Picasso.get()
-                        .load(workspace.main.headerImageUrl)
-                        .into(imageViewHeader)
-                } else if(workspace.settings.logoImageUrl.isNotEmpty()) {
-                    imageViewHeader.visibility = VISIBLE
-                    Picasso.get()
-                        .load(workspace.settings.logoImageUrl)
-                        .into(imageViewHeader)
-                } else imageViewHeader.visibility = GONE
-
-                var imageViewHeaderHeight = imageViewHeader.height //height is ready
-                if(imageViewHeader.visibility == GONE) imageViewHeaderHeight = 0
+                materialCardViewSearch.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
                 val searchBarHeight = materialCardViewSearch.height //height is ready
 
@@ -200,7 +152,7 @@ class UserListActivity : AppCompatActivity(), EditTextWithClear.OnEditTextWithCl
 
                 val spacing = dpToPx(16)
 
-                recyclerView.setPadding(0, imageViewHeaderHeight + searchBarHeight + spacing + spacing + spacing, 0, 0)
+                recyclerView.setPadding(0, getImageHeaderHeight() + searchBarHeight + spacing + spacing + spacing, 0, 0)
                 recyclerView.addItemDecoration(MarginItemDecoration(dpToPx(16)))
 
                 recyclerView.layoutManager = LinearLayoutManager(this@UserListActivity)

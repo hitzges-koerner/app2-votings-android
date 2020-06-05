@@ -9,12 +9,6 @@
     android:clipToPadding="false"
     android:fitsSystemWindows="true">
 
-    <ImageView
-        android:scaleType="centerCrop"
-        android:id="@+id/imageViewBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -85,6 +79,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:image="@drawable/icon_phone" />
+
+            <appsquared.votings.app.views.ButtonCardView
+                android:id="@+id/buttonCardViewLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:background_color="@color/colorAccent"
+                app:border_color="#EE7800"
+                app:text="@string/button_logout"
+                app:text_color="@android:color/white" />
 
         </LinearLayout>
 

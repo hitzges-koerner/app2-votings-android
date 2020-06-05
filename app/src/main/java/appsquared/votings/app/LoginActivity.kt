@@ -169,7 +169,7 @@ class LoginActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-
+                    sendFirebaseTokenToServer()
                     AppData().saveObjectToSharedPreference(this, PreferenceNames.WORKSPACE, result)
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
@@ -188,5 +188,30 @@ class LoginActivity : AppCompatActivity() {
                     showErrorToast(getString(R.string.error_general))
                 }
             )
+    }
+
+    private fun sendFirebaseTokenToServer() {
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+
+        val firebaseToken = pref.getString(PreferenceNames.FIREBASE_TOKEN, "")
+        val userToken = pref.getString(PreferenceNames.USER_TOKEN, "")
+        val workspace = pref.getString(PreferenceNames.WORKSPACE_NAME, "")
+
+        val jsonObject = JSONObject()
+        jsonObject.put(JsonParamNames.TOKEN, firebaseToken)
+        jsonObject.put(JsonParamNames.PLATFORM, "fcm")
+
+        if(userToken!!.isNotEmpty())  {
+            disposable = apiService.sendFirebaseToken("Bearer $userToken", workspace!!, jsonObject.toString())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        Log.d("FIREBASE", "Firebase token sent")
+                    }, { error ->
+                        Log.d("FIREBASE", "Firebase token NOT sent")
+                    }
+                )
+        }
     }
 }

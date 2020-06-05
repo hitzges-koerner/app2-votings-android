@@ -1,4 +1,4 @@
-package appsquared.votings.app
+package appsquared.votings.app.views
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.ResourcesCompat
+import appsquared.votings.app.R
 
 class EditTextWithClear : AppCompatEditText {
 

@@ -3,12 +3,12 @@
     android:opacity="opaque">
 
     <item
-        android:drawable="@android:color/white"/>
+        android:drawable="@color/colorAccent"/>
 
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/ic_logo" />
+            android:src="@drawable/ic_splash" />
     </item>
 
 </layer-list>

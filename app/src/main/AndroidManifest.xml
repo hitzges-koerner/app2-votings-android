@@ -28,6 +28,7 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".UserListActivity" />
         <activity android:name=".NewsListActivity" />
+        <activity android:name=".SettingsActivity" />
         <activity android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -41,6 +42,10 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".NewsActivity" />
+        <activity android:name=".VotingsListActivity" />
+        <activity android:name=".LegalDocsActivity" />
+        <activity android:name=".ChangelogActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -51,6 +56,16 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

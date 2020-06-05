@@ -28,6 +28,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  *
@@ -318,3 +321,99 @@ fun Context.toast(message: CharSequence) =
 
 fun Context.toastLong(message: CharSequence) =
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+
+fun getResId(resName: String, c: Class<*>): Int {
+    try {
+        val idField = c.getDeclaredField(resName)
+        return idField.getInt(idField)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return -1
+    }
+}
+
+fun ratingSumAndCountToStars(ratingSum: String, ratingCount: String) : Int {
+
+    // Converts the given sum and count of all ratings
+    // into an average value for the stars display
+    val count = ratingCount.toInt()
+    val sum = ratingSum.toInt()
+
+    // Avoid division by 0:
+    if(count == 0) return 0
+    return sum/count
+}
+
+val dateFormateStringArray = arrayOf("yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ssZ", "yyyy-MM-dd HH:mm:ss.SSS", "EEE MMM dd HH:mm:ss Z yyyy")
+
+fun parseStringToDate(time: String): Date? {
+
+    var date: Date? = null
+
+    for (string in dateFormateStringArray) {
+        val sdf = SimpleDateFormat(string)
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        try {
+            date = sdf.parse(time)
+            break
+        } catch (e: Exception) {
+            Log.d("dateformatter", e.stackTrace.toString())
+        }
+    }
+    return date
+}
+
+fun getLocalDateStyle(time: String, context: Context) : String {
+
+    val date = parseStringToDate(time) ?: return time
+
+    // https://stackoverflow.com/a/47098904
+    // SimpleDateFormat.getDateTimeInstance()
+    val dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault())
+    val s = dateFormat.format(date)
+    return s
+}
+
+fun getTimeDifference(time: String) : Long {
+    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+    val date = sdf.parse(time)
+    val timeCountdown = date.time
+
+    val timeNow = System.currentTimeMillis()
+
+    return (timeCountdown - timeNow)
+}
+
+fun converToReadableDistance(distanceInMeter: String) : String {
+    var textDistance = ""
+    if(distanceInMeter.isNotEmpty()) {
+        val distance = distanceInMeter.toInt()
+        textDistance = when(distance) {
+            in 0 .. 1 -> "hier"
+            in 2 .. 999 -> "${distance} m"
+            in 1000 .. 50000 -> "${distance/1000} km"
+            else -> "> 50 km"
+        }
+    }
+    return textDistance
+}
+
+fun getCleanImageNameOld(icon: String) : String {
+    var iconTemp = icon
+    if(iconTemp.contains("/")) iconTemp = iconTemp.substring(iconTemp.lastIndexOf("/") + 1)
+    if(iconTemp.contains("@")) iconTemp = iconTemp.substringBefore("@")
+    if(iconTemp.contains("-")) iconTemp = iconTemp.replace("-", "_")
+    if(iconTemp.contains(".")) iconTemp = iconTemp.substring(0, iconTemp.indexOf("."))
+    return iconTemp.toLowerCase()
+}
+
+fun getCleanImageName(icon: String) : String {
+    var iconTemp = icon
+    iconTemp = iconTemp.substringAfterLast("/")
+    iconTemp = iconTemp.substringBefore("@")
+    if(iconTemp.contains("-")) iconTemp = iconTemp.replace("-", "_")
+    if(iconTemp.contains(" ")) iconTemp = iconTemp.replace(" ", "_")
+    iconTemp = iconTemp.substringBefore(".")
+    iconTemp = iconTemp.toLowerCase()
+    return iconTemp.toLowerCase()
+}

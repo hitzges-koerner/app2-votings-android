@@ -1,7 +1,9 @@
 package appsquared.votings.app
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -9,10 +11,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentActivity
 import com.squareup.picasso.Picasso
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_base.view.*
+import kotlinx.android.synthetic.main.activity_base.view.constraintLayoutRoot
+import kotlinx.android.synthetic.main.activity_base.view.imageViewBackground
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -20,6 +25,7 @@ abstract class BaseActivity : AppCompatActivity() {
     lateinit var mTextViewScreenTitle: TextView
     lateinit var mImageButtonBack: ImageButton
     lateinit var mImageViewHeader: ImageView
+    lateinit var mImageViewBackground: ImageView
 
     var mWorkspace: Model.WorkspaceResponse = Model.WorkspaceResponse()
     var mLoginData: Model.LoginResponse = Model.LoginResponse()
@@ -39,6 +45,7 @@ abstract class BaseActivity : AppCompatActivity() {
         mTextViewScreenTitle = constraintLayout.findViewById(R.id.text_screen_title) as TextView
         mImageButtonBack = constraintLayout.findViewById(R.id.image_back_button)
         mImageViewHeader = constraintLayout.findViewById(R.id.imageViewHeader)
+        mImageViewBackground = constraintLayout.findViewById(R.id.imageViewBackground)
 
         setLightStatusBar(window, true)
 
@@ -47,9 +54,26 @@ abstract class BaseActivity : AppCompatActivity() {
 
         setImageViewHeader()
 
+        setBackgroundImage()
+
         layoutInflater.inflate(layoutResID, activityContainer, true)
 
         super.setContentView(constraintLayout)
+    }
+
+    private fun setBackgroundImage() {
+        if (mWorkspace.settings.backgroundColor.isNotEmpty()) constraintLayoutRoot.setBackgroundColor(
+            convertStringToColor(mWorkspace.settings.backgroundColor)
+        )
+        if (mWorkspace.settings.backgroundImageUrl.isNotEmpty()) {
+            mImageViewBackground.visibility = VISIBLE
+            Picasso.get()
+                .load(mWorkspace.settings.backgroundImageUrl)
+                .into(mImageViewBackground)
+        } else if (mWorkspace.settings.style.equals("rich", true)) {
+            mImageViewBackground.visibility = VISIBLE
+            mImageViewBackground.setImageResource(R.drawable.image)
+        }
     }
 
     private fun setImageViewHeader() {
@@ -80,16 +104,26 @@ abstract class BaseActivity : AppCompatActivity() {
 
                 mImageViewHeaderHeight = mImageViewHeader.height //height is ready
                 if (mImageViewHeader.visibility == View.GONE) mImageViewHeaderHeight = 0
+
+                childOnlyMethod()
             }
         })
     }
 
+    open fun childOnlyMethod() {
+
+    }
+
     fun setScreenTitle(resId: Int) {
         mTextViewScreenTitle.text = getString(resId)
+        toolBar.title = getString(resId)
+        toolbar.title = getString(resId)
     }
 
     fun setScreenTitle(title: String) {
         mTextViewScreenTitle.text = title
+        toolBar.title = title
+        toolbar.title = title
     }
 
     fun getBackButton(): ImageButton {

@@ -2,20 +2,16 @@ package appsquared.votings.app.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.TextView
-import appsquared.votings.app.NewsListActivity
 import appsquared.votings.app.R
 import kotlinx.android.synthetic.main.tab_custom.view.*
 
 class TabCustomView(context: Context, attrs: AttributeSet): LinearLayout(context, attrs) {
 
     var tabBackgroundColorActive = 0
-    var tabBackgroundColor = 0
+    var tabBackgroundColorInActive = 0
     var tabTextColorActive = 0
-    var tabTextColor = 0
+    var tabTextColorInActive = 0
 
     init {
         inflate(context, R.layout.tab_custom, this)
@@ -23,16 +19,16 @@ class TabCustomView(context: Context, attrs: AttributeSet): LinearLayout(context
             listener?.customOnClick(LEFT)
 
             textViewTabLeft.setBackgroundColor(tabBackgroundColorActive)
-            textViewTabRight.setBackgroundColor(tabBackgroundColor)
+            textViewTabRight.setBackgroundColor(tabBackgroundColorInActive)
             textViewTabLeft.setTextColor(tabTextColorActive)
-            textViewTabRight.setTextColor(tabTextColor)
+            textViewTabRight.setTextColor(tabTextColorInActive)
         }
         textViewTabRight.setOnClickListener {
             listener?.customOnClick(RIGHT)
 
-            textViewTabLeft.setBackgroundColor(tabBackgroundColor)
+            textViewTabLeft.setBackgroundColor(tabBackgroundColorInActive)
             textViewTabRight.setBackgroundColor(tabBackgroundColorActive)
-            textViewTabLeft.setTextColor(tabTextColor)
+            textViewTabLeft.setTextColor(tabTextColorInActive)
             textViewTabRight.setTextColor(tabTextColorActive)
         }
         val attributes = context.obtainStyledAttributes(attrs,
@@ -47,25 +43,42 @@ class TabCustomView(context: Context, attrs: AttributeSet): LinearLayout(context
         listener = l
     }
 
-    fun setTabBackgroundColor(colorActive: Int, color: Int) {
-        this.tabBackgroundColorActive = colorActive
-        this.tabBackgroundColor = color
+    fun setTabBackgroundColorSelected(color: Int) {
+        this.tabBackgroundColorActive = color
 
         textViewTabLeft.setBackgroundColor(tabBackgroundColorActive)
-        textViewTabRight.setBackgroundColor(tabBackgroundColor)
+        materialCardViewTab.setStrokeColor(tabBackgroundColorActive)
     }
 
-    fun setTabTextColor(colorActive: Int, color: Int) {
-        this.tabTextColorActive = colorActive
-        this.tabTextColor = color
+    fun setTabBackgroundColorUnSelected(color: Int) {
+        this.tabBackgroundColorInActive = color
+
+        textViewTabRight.setBackgroundColor(tabBackgroundColorInActive)
+    }
+
+    fun setTabTextColorSelected(color: Int) {
+        this.tabTextColorActive = color
 
         textViewTabLeft.setTextColor(tabTextColorActive)
-        textViewTabRight.setTextColor(tabTextColor)
+    }
+
+    fun setTabTextColorUnSelected(color: Int) {
+        this.tabTextColorInActive = color
+
+        textViewTabRight.setTextColor(tabTextColorInActive)
+    }
+
+    fun setTabTitleLeft(title: String) {
+        textViewTabLeft.text = title
+    }
+
+    fun setTabTitleRight(title: String) {
+        textViewTabRight.text = title
     }
 
     companion object {
-        var LEFT = 1
-        var RIGHT = 2
+        var LEFT = 0
+        var RIGHT = 1
     }
 }
 

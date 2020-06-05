@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:focusable="true"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:id="@+id/textViewVotingTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/news_title_size" />
+
+                <com.google.android.material.button.MaterialButton
+                    app:cornerRadius="10dp"
+                    android:text="cancel"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:textSize="13sp"
+                    style="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/materialButtonVotingType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonRight"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextView" />
+
+                <TextView
+                    android:layout_marginTop="8dp"
+                    android:maxLines="1"
+                    android:id="@+id/textViewVotingStart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/news_text_size" />
+
+                <TextView
+                    android:layout_marginTop="8dp"
+                    android:maxLines="1"
+                    android:id="@+id/textViewVotingEnd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/news_text_size" />
+
+                <appsquared.votings.app.views.ButtonCardView
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="-14dp"
+                    android:layout_marginRight="-14dp"
+                    android:id="@+id/buttonCardViewVoting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:background_color="@color/colorAccent"
+                    app:border_color="#EE7800"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonVotingList"
+                    app:text="@string/button_login"
+                    app:text_color="@android:color/white" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

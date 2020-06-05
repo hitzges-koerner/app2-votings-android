@@ -8,35 +8,12 @@
     android:id="@+id/constraintLayoutRoot"
     android:clipToPadding="false">
 
-    <ImageView
-        android:visibility="gone"
-        android:scaleType="centerCrop"
-        android:id="@+id/imageViewBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarCustom" />
-
-    <ImageView
-        android:src="@drawable/header_image"
-        app:layout_constraintTop_toBottomOf="@id/toolbarCustom"
-        android:id="@+id/imageViewHeader"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="H,1000:350" />
-
-    <appsquared.votings.app.ToolbarCustom
-        android:id="@+id/toolbarCustom"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

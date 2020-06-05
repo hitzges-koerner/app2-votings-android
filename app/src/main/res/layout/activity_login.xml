@@ -154,7 +154,7 @@
         app:background_color="@android:color/white"
         app:border_color="#EE7800"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:text="@string/button_qr_scan"
+        app:text="@string/button_password_reset"
         app:text_color="@color/colorAccent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

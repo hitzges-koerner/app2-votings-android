@@ -40,10 +40,27 @@ interface ApiService {
     fun getUserList(@Header("Authorization") token : String,
                     @Path("WORKSPACE") workspace : String) : Observable<MutableList<Model.User>>
 
+    @GET("{WORKSPACE}/push")
+    fun getNotificationList(@Header("Authorization") token : String,
+                    @Path("WORKSPACE") workspace : String) : Observable<MutableList<Model.Notification>>
+
+    @GET("{WORKSPACE}/votings")
+    fun getVotingsList(@Header("Authorization") token : String,
+                    @Path("WORKSPACE") workspace : String) : Observable<MutableList<Model.Voting>>
+
+    @GET("{WORKSPACE}/changelog/android")
+    fun getChangelog(@Header("Authorization") token : String,
+                    @Path("WORKSPACE") workspace : String) : Observable<MutableList<Model.Changelog>>
+
     @PUT("{WORKSPACE}/user")
     fun sendUserData(@Header("Authorization") token : String,
                      @Path("WORKSPACE") workspace : String,
                      @Body data: String) : Observable<MutableList<Model.User>>
+
+    @PUT("{WORKSPACE}/user/pushtoken")
+    fun sendFirebaseToken(@Header("Authorization") token : String,
+                     @Path("WORKSPACE") workspace : String,
+                     @Body data: String) : Observable<ResponseBody>
 
     @DELETE("{WORKSPACE}/user/avatar")
     fun deleteAvatar(@Header("Authorization") token : String,
