@@ -1,4 +1,4 @@
-package appsquared.votings.app
+package appsquared.votings.app.views
 
 import android.app.Dialog
 import android.content.Context
@@ -7,6 +7,7 @@ import android.os.Build
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import appsquared.votings.app.R
 import kotlinx.android.synthetic.main.dialog_list.*
 
 class ListDialog(val context: Context, val listener: (String) -> Unit) {

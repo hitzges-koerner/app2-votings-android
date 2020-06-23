@@ -21,4 +21,14 @@
     <string name="button_logout">Ausloggen</string>
     <string name="voting_current">Aktuelle Abstimmungen</string>
     <string name="archiv">Archiv</string>
+    <string name="open">offen</string>
+    <string name="secret">geheim</string>
+    <string name="show_information">Informationen hierzu</string>
+    <string name="vote_now">Jetzt teilnehmen</string>
+    <string name="show_result">Ergebnis anzeigen</string>
+    <string name="start">Start:</string>
+    <string name="end">Ende:</string>
+    <string name="show_preliminary_result">zeige zwischenergebnis</string>
+    <string name="not_voted">noch nicht abgestimmt</string>
+    <string name="already_voted">bereits abgestimmt</string>
 </resources>

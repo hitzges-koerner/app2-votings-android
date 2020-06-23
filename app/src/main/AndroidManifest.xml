@@ -46,6 +46,7 @@
         <activity android:name=".VotingsListActivity" />
         <activity android:name=".LegalDocsActivity" />
         <activity android:name=".ChangelogActivity" />
+        <activity android:name=".VotingsActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -27,4 +27,14 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notification_channel_description">push notifications</string>
+    <string name="open">open</string>
+    <string name="secret">secret</string>
+    <string name="show_information">show information</string>
+    <string name="vote_now">vote now</string>
+    <string name="show_result">show result</string>
+    <string name="start">Start:</string>
+    <string name="end">End:</string>
+    <string name="show_preliminary_result">show preliminary result</string>
+    <string name="not_voted">not yet voted</string>
+    <string name="already_voted">already voted</string>
 </resources>

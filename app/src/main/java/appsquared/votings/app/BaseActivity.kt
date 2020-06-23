@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_base.view.*
 import kotlinx.android.synthetic.main.activity_base.view.constraintLayoutRoot
 import kotlinx.android.synthetic.main.activity_base.view.imageViewBackground
+import kotlinx.android.synthetic.main.layout_toolbar.*
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -47,6 +48,11 @@ abstract class BaseActivity : AppCompatActivity() {
         mImageViewHeader = constraintLayout.findViewById(R.id.imageViewHeader)
         mImageViewBackground = constraintLayout.findViewById(R.id.imageViewBackground)
 
+
+        mImageButtonBack.setOnClickListener {
+            finish()
+        }
+
         setLightStatusBar(window, true)
 
         constraintLayout.constraintLayoutRoot.systemUiVisibility =
@@ -72,7 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 .into(mImageViewBackground)
         } else if (mWorkspace.settings.style.equals("rich", true)) {
             mImageViewBackground.visibility = VISIBLE
-            mImageViewBackground.setImageResource(R.drawable.image)
+            mImageViewBackground.setImageResource(R.drawable.bg)
         }
     }
 
@@ -83,7 +89,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 mImageViewHeader.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
                 if (mWorkspace.main.headerImageUrl.isNotEmpty()) {
-                    mImageViewHeader.visibility = View.VISIBLE
+                    mImageViewHeader.visibility = VISIBLE
 
                     mImageViewHeader.layoutParams.height = calculateViewHeight(
                         this@BaseActivity,
@@ -114,6 +120,11 @@ abstract class BaseActivity : AppCompatActivity() {
 
     }
 
+    fun removeToolbarShadow() {
+        toolBar.elevation = 0F
+        toolBar.translationZ = 0F
+    }
+
     fun setScreenTitle(resId: Int) {
         mTextViewScreenTitle.text = getString(resId)
         toolBar.title = getString(resId)
@@ -124,6 +135,14 @@ abstract class BaseActivity : AppCompatActivity() {
         mTextViewScreenTitle.text = title
         toolBar.title = title
         toolbar.title = title
+    }
+
+    fun removeBackButton() {
+        mImageButtonBack.visibility = View.GONE
+    }
+
+    fun showToolbarLogo() {
+        image_logo.visibility = View.VISIBLE
     }
 
     fun getBackButton(): ImageButton {

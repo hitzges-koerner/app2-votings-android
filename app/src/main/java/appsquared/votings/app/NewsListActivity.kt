@@ -217,7 +217,7 @@ class NewsListActivity : BaseActivity() {
         attributes.contentCornerRadius = 10
 
         attributes.contentTextColor = getColorTemp(R.color.white)
-        attributes.contentAccentColor = getColorTemp(R.color.black)
+        attributes.contentAccentColor = getColorTemp(R.color.white)
         attributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
         return attributes
     }

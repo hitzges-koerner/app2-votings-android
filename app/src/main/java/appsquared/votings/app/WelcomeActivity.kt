@@ -59,7 +59,7 @@ class WelcomeActivity : BaseActivity() {
                     borderColor = getColorTemp(R.color.transparent)
                     borderWidth = 0
                     contentTextColor = getColorTemp(R.color.white)
-                    contentAccentColor = getColorTemp(R.color.black)
+                    contentAccentColor = getColorTemp(R.color.white)
                     contentBackgroundColor = getColorTemp(R.color.colorAccent)
                     contentCornerRadius = 20
                 }

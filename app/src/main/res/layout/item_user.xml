@@ -30,7 +30,7 @@
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="H,1:1"
                 android:scaleType="centerCrop"
-                android:src="@drawable/image"
+                android:src="@drawable/bg"
                 app:civ_circle_background_color="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

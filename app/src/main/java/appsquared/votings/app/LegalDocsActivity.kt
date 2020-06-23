@@ -57,7 +57,7 @@ class LegalDocsActivity : BaseActivity() {
                     borderColor = getColorTemp(R.color.transparent)
                     borderWidth = 0
                     contentTextColor = getColorTemp(R.color.white)
-                    contentAccentColor = getColorTemp(R.color.black)
+                    contentAccentColor = getColorTemp(R.color.white)
                     contentBackgroundColor = getColorTemp(R.color.colorAccent)
                     contentCornerRadius = 20
                 }
@@ -82,19 +82,23 @@ class LegalDocsActivity : BaseActivity() {
 
         when(type) {
             0 -> finish()
-            IMPRESS -> {
+            IMPRINT -> {
                 setScreenTitle("Impressum")
-                setText(getResId("impress", R.raw::class.java), contentAccentColor, contentTextColor)
+                setText(workspace.legalImprint, contentAccentColor, contentTextColor)
             }
             PRIVACY -> {
                 setScreenTitle("Datenschutz")
-                setText(getResId("privacy", R.raw::class.java), contentAccentColor, contentTextColor)
+                setText(workspace.legalPrivacy, contentAccentColor, contentTextColor)
             }
             TERMS -> {
                 setScreenTitle("Terms of Use")
-                setText(getResId("terms", R.raw::class.java), contentAccentColor, contentTextColor)
+                setText(workspace.legalTerms, contentAccentColor, contentTextColor)
             }
         }
+    }
+
+    fun setText(text: String, contentAccentColor: Int, contentTextColor: Int) {
+        PseudoMarkDown.styleTextView(text, textViewContent, contentAccentColor, contentTextColor)
     }
 
     fun setText(file: Int, contentAccentColor: Int, contentTextColor: Int) {
@@ -111,7 +115,7 @@ class LegalDocsActivity : BaseActivity() {
     companion object {
         val LEGAL_DOC_TYPE = "legal_doc_type"
 
-        val IMPRESS = 1
+        val IMPRINT = 1
         val PRIVACY = 2
         val TERMS = 3
     }

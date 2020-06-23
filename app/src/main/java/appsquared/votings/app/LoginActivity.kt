@@ -82,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
             viewFadeOut(editTextCardViewMail)
             viewFadeOut(editTextCardViewPassword)
             viewFadeOut(buttonCardViewLogin)
-            viewFadeOut(buttonCardViewQR)
+            //viewFadeOut(buttonCardViewQR)
 
             apiLogin(editTextCardViewMail.getText(),
                 editTextCardViewPassword.getText(),

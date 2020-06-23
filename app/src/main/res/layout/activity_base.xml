@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:id="@+id/constraintLayoutRoot"
-    android:clipToPadding="false"
+    android:clipToPadding="true"
     android:fitsSystemWindows="true">
 
     <ImageView
@@ -54,7 +54,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center">
+        android:gravity="center"
+        android:translationZ="4dp"
+        android:elevation="4dp">
 
         <include layout="@layout/layout_toolbar"/>
 

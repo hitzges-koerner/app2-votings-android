@@ -7,13 +7,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.webkit.URLUtil
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
+import appsquared.votings.app.views.ListDialog
 import appsquared.votings.app.views.MyProfileEditCardView
 import com.squareup.picasso.Picasso
 import framework.base.constant.Constant
@@ -179,12 +179,22 @@ class MyProfileActivity : BaseActivity(),
         materialCardViewProfile.setOnClickListener {
 
             ListDialog(this) { tag: String ->
-                when(tag) {
+                when (tag) {
                     "camera" -> {
-                        startActivityForResult(Intent(this, CameraActivity::class.java).putExtra("type", CameraActivity.CAMERA), 1)
+                        startActivityForResult(
+                            Intent(
+                                this,
+                                CameraActivity::class.java
+                            ).putExtra("type", CameraActivity.CAMERA), 1
+                        )
                     }
                     "photo" -> {
-                        startActivityForResult(Intent(this, CameraActivity::class.java).putExtra("type", CameraActivity.PICKER), 1)
+                        startActivityForResult(
+                            Intent(
+                                this,
+                                CameraActivity::class.java
+                            ).putExtra("type", CameraActivity.PICKER), 1
+                        )
                     }
                     "delete" -> {
                         deleteAvatar()

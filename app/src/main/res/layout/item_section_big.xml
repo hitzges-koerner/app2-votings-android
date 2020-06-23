@@ -11,7 +11,7 @@
     android:foreground="?attr/selectableItemBackground">
 
     <TextView
-        android:textSize="@dimen/tiles_text_size"
+        android:textSize="@dimen/news_title_size"
         android:textStyle="bold"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"

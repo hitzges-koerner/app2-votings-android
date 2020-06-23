@@ -198,6 +198,7 @@ fun isLight(color: Int) : Boolean {
 }
 
 fun dpToPx(dp: Int) = (dp * Resources.getSystem().displayMetrics.density).toInt()
+fun dpToPxFloat(dp: Int) = (dp * Resources.getSystem().displayMetrics.density)
 
 fun pxToDp(px: Int) = (px / Resources.getSystem().displayMetrics.density).toInt()
 

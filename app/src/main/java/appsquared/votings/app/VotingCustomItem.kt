@@ -6,7 +6,10 @@ import android.os.Parcelable
 class VotingCustomItem() {
 
     var type: Int = 0
+    var subType: Int = 0
     var tag: Int = 0
+    var count: Int = 0
+    var total: Int = 0
     var id: String = ""
     var url: String = ""
     var title: String = ""
@@ -18,23 +21,25 @@ class VotingCustomItem() {
     /**
      * constructor for stream files
      * @param type
+     * @param subType
      * @param title
      */
-    constructor(type: Int, title: String) : this() {
+    constructor(type: Int, subType: Int, title: String) : this() {
         this.type = type
+        this.subType = subType
         this.title = title
     }
 
     /**
      * @param type
-     * @param tag
+     * @param subType
      * @param title
      * @param file
      * @param url
      */
-    constructor(type: Int, tag: Int, title: String, file: String, url: String) : this() {
+    constructor(type: Int, subType: Int, title: String, file: String, url: String) : this() {
         this.type = type
-        this.tag = tag
+        this.subType = subType
         this.title = title
         this.file = file
         this.url = url
@@ -42,32 +47,53 @@ class VotingCustomItem() {
 
     /**
      * @param type
+     * @param subType
      * @param tag
      * @param id
-     * @param url
      * @param nameFirst
      * @param nameLast
      */
-    constructor(type: Int, tag: Int, id: String, url: String, nameFirst: String, nameLast: String) : this() {
+    constructor(type: Int, subType: Int, tag: Int, id: String, nameFirst: String, nameLast: String) : this() {
         this.type = type
+        this.subType = subType
         this.tag = tag
         this.id = id
-        this.url = url
         this.nameFirst = nameFirst
         this.nameLast = nameLast
     }
 
     /**
      * @param type
+     * @param subType
      * @param tag
      * @param id
      * @param title
      */
-    constructor(type: Int, tag: Int, id: String, title: String, selected: Boolean) : this() {
+    constructor(type: Int, subType: Int, tag: Int, id: String, title: String, selected: Boolean) : this() {
         this.type = type
+        this.subType = subType
         this.tag = tag
         this.id = id
         this.title = title
+        this.selected = selected
+    }
+
+    /**
+     * @param type
+     * @param subType
+     * @param id
+     * @param title
+     * @param count
+     * @param total
+     * @param selected
+     */
+    constructor(type: Int, subType: Int, id: String, title: String, count: Int, total: Int, selected: Boolean) : this() {
+        this.type = type
+        this.subType = subType
+        this.id = id
+        this.title = title
+        this.count = count
+        this.total = total
         this.selected = selected
     }
 
@@ -87,6 +113,7 @@ class VotingCustomItem() {
         var CREATOR = 3
         var CHOICE = 4
         var BUTTON = 5
-        var VOTER = 5
+        var USER = 6
+        var INFO = 7
     }
 }

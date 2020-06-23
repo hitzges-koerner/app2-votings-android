@@ -36,6 +36,9 @@ class MainActivity : BaseActivity() {
 
         val workspace: Model.WorkspaceResponse = mWorkspace
 
+        removeBackButton()
+        showToolbarLogo()
+
         /*
         ViewCompat.setOnApplyWindowInsetsListener(toolbarCustom) { view, insets ->
             statusBarSize = insets.systemWindowInsetTop
@@ -62,8 +65,8 @@ class MainActivity : BaseActivity() {
         val list = mutableListOf<Item>()
         list.add(Item("Willkommen", R.drawable.tile_icons_info, Item.INFO))
         list.add(Item("Mein Profil", R.drawable.tile_icons_profil, Item.PROFIL))
-        list.add(Item("Abstimmungen", R.drawable.tile_icons_voting, Item.VOTING_ACTIV))
-        list.add(Item("Aktuelles", R.drawable.tile_icons_news, Item.NEWS))
+        list.add(Item("Aktuelle Abstimmungen", R.drawable.tile_icons_voting, Item.VOTING_ACTIV))
+        list.add(Item("Neuigkeiten", R.drawable.tile_icons_news, Item.NEWS))
         list.add(Item("Kommende Abstimmungen", R.drawable.tile_icons_kalender, Item.VOTING_FUTURE))
         list.add(Item("Archiv", R.drawable.tile_icons_vergangene_abstimmungen, Item.VOTING_PAST))
         list.add(Item("Teilnehmer", R.drawable.tile_icons_teilnehmer, Item.ATTENDEES))
@@ -191,13 +194,13 @@ class MainActivity : BaseActivity() {
                     startActivityTemp(SettingsActivity())
                 }
                 Item.VOTING_ACTIV -> {
-                    startActivityTemp(VotingsListActivity())
+                    startActivity(Intent(this@MainActivity, VotingsListActivity::class.java).putExtra(VotingsListActivity.STATUS, VotingsListActivity.CURRENT))
                 }
                 Item.VOTING_FUTURE -> {
-                    startActivityTemp(VotingsListActivity())
+                    startActivity(Intent(this@MainActivity, VotingsListActivity::class.java).putExtra(VotingsListActivity.STATUS, VotingsListActivity.FUTURE))
                 }
                 Item.VOTING_PAST -> {
-                    startActivityTemp(VotingsListActivity())
+                    startActivity(Intent(this@MainActivity, VotingsListActivity::class.java).putExtra(VotingsListActivity.STATUS, VotingsListActivity.PAST))
                 }
                 else -> {
                     startActivityTemp(LoginActivity())

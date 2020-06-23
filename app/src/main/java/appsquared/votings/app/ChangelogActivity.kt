@@ -40,6 +40,9 @@ class ChangelogActivity : BaseActivity() {
     private val mChangelogList = mutableListOf<Model.Changelog>()
 
     override fun childOnlyMethod() {
+
+        setTitle("Changelog")
+
         val workspace: Model.WorkspaceResponse = mWorkspace
 
         var attributes = Attributes()
@@ -155,7 +158,7 @@ class ChangelogActivity : BaseActivity() {
         attributes.contentCornerRadius = 10
 
         attributes.contentTextColor = getColorTemp(R.color.white)
-        attributes.contentAccentColor = getColorTemp(R.color.black)
+        attributes.contentAccentColor = getColorTemp(R.color.white)
         attributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
         return attributes
     }

@@ -3,10 +3,7 @@ package appsquared.votings.app
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.settings_changelog_card_view.*
 import kotlinx.android.synthetic.main.settings_impress_card_view.*
@@ -69,7 +66,7 @@ class SettingsActivity : BaseActivity() {
                     borderColor = getColorTemp(R.color.transparent)
                     borderWidth = 0
                     contentTextColor = getColorTemp(R.color.white)
-                    contentAccentColor = getColorTemp(R.color.black)
+                    contentAccentColor = getColorTemp(R.color.white)
                     contentBackgroundColor = getColorTemp(R.color.colorAccent)
                     contentCornerRadius = 20
                 }
@@ -142,7 +139,7 @@ class SettingsActivity : BaseActivity() {
         }
 
         materialCardViewImpress.setOnClickListener {
-            startActivity(Intent(this, LegalDocsActivity::class.java).putExtra(LegalDocsActivity.LEGAL_DOC_TYPE, LegalDocsActivity.IMPRESS))
+            startActivity(Intent(this, LegalDocsActivity::class.java).putExtra(LegalDocsActivity.LEGAL_DOC_TYPE, LegalDocsActivity.IMPRINT))
         }
 
         materialCardViewPrivacy.setOnClickListener {

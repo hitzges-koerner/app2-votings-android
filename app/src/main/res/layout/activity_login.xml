@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/image" />
+        android:src="@drawable/bg" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -148,6 +148,7 @@
         app:text_color="@android:color/white" />
 
     <appsquared.votings.app.views.ButtonCardView
+        android:visibility="invisible"
         android:id="@+id/buttonCardViewQR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

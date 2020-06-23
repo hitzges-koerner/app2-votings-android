@@ -35,7 +35,11 @@ object Model {
         @field:Json(name = "main") val main: Main = Main(),
         @field:Json(name = "settings") val settings: Settings = Settings(),
         @field:Json(name = "news") val news: MutableList<News> = mutableListOf(),
-        @field:Json(name = "licence") val licence: String = ""
+        @field:Json(name = "votings") val votings: MutableList<VotingShort> = mutableListOf(),
+        @field:Json(name = "licence") val licence: String = "",
+        @field:Json(name = "legalImprint") val legalImprint: String = "",
+        @field:Json(name = "legalTerms") val legalTerms: String = "",
+        @field:Json(name = "legalPrivacy") val legalPrivacy: String = ""
     )
 
     @JsonClass(generateAdapter = true)
@@ -115,19 +119,48 @@ object Model {
     )
 
     @JsonClass(generateAdapter = true)
+    data class VotingShort(
+        @field:Json(name = "votingTitle") val votingTitle:String = "",
+        @field:Json(name = "isVoted") val isVoted:String = "",
+        @field:Json(name = "votingId") val votingId:String = "",
+        @field:Json(name = "votingFrom") val votingFrom:String = "",
+        @field:Json(name = "votingTill") val votingTill:String = "",
+        @field:Json(name = "votingType") val votingType:String = "",
+        @field:Json(name = "votingStatus") var votingStatus:Int = 0,
+        @field:Json(name = "inRepresentationOfId") val inRepresentationOfId:String = "",
+        @field:Json(name = "inRepresentationOfName") val inRepresentationOfName:String = ""
+    )
+
+    @JsonClass(generateAdapter = true)
     data class Voting(
         @field:Json(name = "votingId") val votingId:String = "",
         @field:Json(name = "votingTitle") val votingTitle:String = "",
         @field:Json(name = "votingDescription") val votingDescription:String = "",
         @field:Json(name = "liveStreamUrl") val liveStreamUrl:String = "",
-        @field:Json(name = "relatedDocuments") val relatedDocuments:MutableList<Document> = mutableListOf(),
-        @field:Json(name = "votingFrom") val votingFrom:String = "",
-        @field:Json(name = "votingTill") val votingTill:String = "",
-        @field:Json(name = "votingType") val votingType:String = "",
-        @field:Json(name = "votingInRepresentationOf") val votingInRepresentationOf:User = User(),
         @field:Json(name = "votingResultsAvailableFrom") val votingResultsAvailableFrom:String = "",
         @field:Json(name = "choicesMin") val choicesMin:String = "",
-        @field:Json(name = "choices") val choices:MutableList<Choice> = mutableListOf()
+        @field:Json(name = "choicesMax") val choicesMax:String = "",
+        @field:Json(name = "votingType") val votingType:String = "",
+        @field:Json(name = "votingFrom") val votingFrom:String = "",
+        @field:Json(name = "votingTill") val votingTill:String = "",
+        @field:Json(name = "inRepresentationOfId") val inRepresentationOfId:String = "",
+        @field:Json(name = "inRepresentationOfName") val inRepresentationOfName:String = "",
+        @field:Json(name = "documents") val documents:MutableList<Document> = mutableListOf(),
+        @field:Json(name = "choices") val choices:MutableList<Choice> = mutableListOf(),
+        @field:Json(name = "users") val users:MutableList<UserVoting> = mutableListOf()
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class UserVoting(
+        @field:Json(name = "userId") val userId:String = "",
+        @field:Json(name = "firstname") val firstName:String = "",
+        @field:Json(name = "lastname") val lastName:String = "",
+        @field:Json(name = "votesCnt") val votesCnt: String = "",
+        @field:Json(name = "votedAt") val votedAt: String = "",
+        @field:Json(name = "votedChoiceId") val votedChoiceId: String = "",
+        @field:Json(name = "representedByUserId") val representedByUserId: String = "",
+        @field:Json(name = "representedByUserFirstname") val representedByUserFirstname: String = "",
+        @field:Json(name = "representedByUserLastname") val representedByUserLastname: String = ""
     )
 
     @JsonClass(generateAdapter = true)
@@ -141,8 +174,8 @@ object Model {
     data class Choice(
         @field:Json(name = "choiceId") val choiceId:String = "",
         @field:Json(name = "choiceTitle") val choiceTitle:String = "",
-        @field:Json(name = "currentResult") val currentResult:String = "",
-        @field:Json(name = "votes") val votes:MutableList<User> = mutableListOf()
+        @field:Json(name = "pos") val pos:String = "",
+        @field:Json(name = "votesCnt") val votesCnt:String = ""
     )
 
     @JsonClass(generateAdapter = true)

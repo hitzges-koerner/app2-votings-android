@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:id="@+id/constraintLayoutRoot"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:background="@color/white"
+        android:id="@+id/linearLayoutVotingsTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:elevation="4dp"
+        android:translationZ="4dp">
+
+        <TextView
+            android:textColor="@color/black"
+            android:textSize="@dimen/news_title_size"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:id="@+id/textViewVotingsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:textSize="@dimen/news_text_size"
+            android:gravity="center"
+            android:id="@+id/textViewVotingsInRepresentationOf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:paddingBottom="16dp"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutVotingsTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

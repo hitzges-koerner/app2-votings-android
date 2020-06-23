@@ -45,8 +45,20 @@ interface ApiService {
                     @Path("WORKSPACE") workspace : String) : Observable<MutableList<Model.Notification>>
 
     @GET("{WORKSPACE}/votings")
-    fun getVotingsList(@Header("Authorization") token : String,
-                    @Path("WORKSPACE") workspace : String) : Observable<MutableList<Model.Voting>>
+    fun getVotingList(@Header("Authorization") token : String,
+                    @Path("WORKSPACE") workspace : String) : Observable<MutableList<Model.VotingShort>>
+
+    @GET("{WORKSPACE}/votings/{VOTING_ID}/{VOTING_REPRESENTATION_ID}")
+    fun getVoting(@Header("Authorization") token : String,
+                    @Path("WORKSPACE") workspace : String,
+                    @Path("VOTING_ID") votingID : String,
+                    @Path("VOTING_REPRESENTATION_ID") votingRepresentationId : String) : Observable<Model.Voting>
+
+    @POST("{WORKSPACE}/votings/{VOTING_ID}")
+    fun sendVoting(@Header("Authorization") token : String,
+                     @Path("WORKSPACE") workspace : String,
+                     @Path("VOTING_ID") votingId : String,
+                     @Body data: String) : Observable<ResponseBody>
 
     @GET("{WORKSPACE}/changelog/android")
     fun getChangelog(@Header("Authorization") token : String,
@@ -65,6 +77,11 @@ interface ApiService {
     @DELETE("{WORKSPACE}/user/avatar")
     fun deleteAvatar(@Header("Authorization") token : String,
                      @Path("WORKSPACE") workspace : String) : Observable<ResponseBody>
+
+    @GET("{WORKSPACE}/documents/{DOCUMENT}")
+    fun getDocument(@Header("Authorization") token : String,
+                     @Path("WORKSPACE") workspace : String,
+                     @Path("DOCUMENT") document : String) : Observable<ResponseBody>
 
     @POST("{WORKSPACE}/user/avatar")
     @Headers("Content-Type: image/png",

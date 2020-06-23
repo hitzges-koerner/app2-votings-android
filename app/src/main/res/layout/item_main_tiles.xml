@@ -58,14 +58,18 @@
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
+                android:gravity="center"
+                android:maxLines="2"
                 android:id="@+id/textViewLabel"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:textSize="@dimen/tiles_text_size"
-                app:layout_constraintBottom_toTopOf="@+id/guideline2"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardViewIcon" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
