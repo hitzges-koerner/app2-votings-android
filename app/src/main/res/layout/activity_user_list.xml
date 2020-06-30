@@ -8,9 +8,19 @@
     android:id="@+id/constraintLayoutRoot"
     android:clipToPadding="false">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:visibility="visible"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.card.MaterialCardView
-        android:visibility="gone"
-        android:layout_margin="16dp"
+        android:visibility="visible"
         android:id="@+id/materialCardViewSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,16 +44,5 @@
             android:singleLine="true" />
 
     </com.google.android.material.card.MaterialCardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:visibility="visible"
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -47,6 +48,12 @@ class MyProfileActivity : BaseActivity(),
         setContentView(R.layout.activity_my_profile)
 
         buttonCardViewLogout.materialCardView.setOnClickListener {
+
+            val pref = PreferenceManager.getDefaultSharedPreferences(this)
+            pref.edit().remove(PreferenceNames.PASSWORD).apply()
+            pref.edit().remove(PreferenceNames.WORKSPACE_NAME).apply()
+            pref.edit().remove(PreferenceNames.EMAIL).apply()
+
             val intent = Intent(this@MyProfileActivity, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
@@ -124,6 +131,7 @@ class MyProfileActivity : BaseActivity(),
         myProfileEditCardViewNameOne.setButtonsTextColor(mAttributes.contentAccentContrastColor)
         myProfileEditCardViewNameOne.setIconTintColor(mAttributes.contentTextColor)
         myProfileEditCardViewNameOne.setTextColor(mAttributes.contentTextColor)
+        myProfileEditCardViewNameOne.setCursorColor(mAttributes.contentTextColor)
         myProfileEditCardViewNameOne.setPlaceholderColor(mAttributes.contentPlaceholderColor)
         if(loginData.firstName.isNotEmpty()) myProfileEditCardViewNameOne.setText(loginData.firstName) else myProfileEditCardViewNameOne.setPlaceHolderText(getString(
             R.string.placeholder_name_first))
@@ -135,8 +143,9 @@ class MyProfileActivity : BaseActivity(),
         myProfileEditCardViewNameTwo.setButtonsTextColor(mAttributes.contentAccentContrastColor)
         myProfileEditCardViewNameTwo.setIconTintColor(mAttributes.contentTextColor)
         myProfileEditCardViewNameTwo.setTextColor(mAttributes.contentTextColor)
+        myProfileEditCardViewNameTwo.setCursorColor(mAttributes.contentTextColor)
         myProfileEditCardViewNameTwo.setPlaceholderColor(mAttributes.contentPlaceholderColor)
-        if(loginData.firstName.isNotEmpty()) myProfileEditCardViewNameOne.setText(loginData.firstName) else myProfileEditCardViewNameOne.setPlaceHolderText(getString(
+        if(loginData.lastName.isNotEmpty()) myProfileEditCardViewNameTwo.setText(loginData.lastName) else myProfileEditCardViewNameTwo.setPlaceHolderText(getString(
             R.string.placeholder_name_last))
         myProfileEditCardViewNameTwo.setOnMyProfileEditButtonClickListener(this)
 
@@ -146,10 +155,12 @@ class MyProfileActivity : BaseActivity(),
         myProfileEditCardViewMail.setButtonsTextColor(mAttributes.contentAccentContrastColor)
         myProfileEditCardViewMail.setIconTintColor(mAttributes.contentTextColor)
         myProfileEditCardViewMail.setTextColor(mAttributes.contentTextColor)
+        myProfileEditCardViewMail.setCursorColor(mAttributes.contentTextColor)
         myProfileEditCardViewMail.setPlaceholderColor(mAttributes.contentPlaceholderColor)
-        if(loginData.firstName.isNotEmpty()) myProfileEditCardViewNameOne.setText(loginData.firstName) else myProfileEditCardViewNameOne.setPlaceHolderText(getString(
+        if(loginData.email.isNotEmpty()) myProfileEditCardViewMail.setText(loginData.email) else myProfileEditCardViewMail.setPlaceHolderText(getString(
             R.string.placeholder_email))
         myProfileEditCardViewMail.setOnMyProfileEditButtonClickListener(this)
+        myProfileEditCardViewMail.disabledEdit()
 
         myProfileEditCardViewPhoneNo.setBackgroundColor(mAttributes.contentBackgroundColor)
         myProfileEditCardViewPhoneNo.setTextButtonLeft("cancel")
@@ -157,8 +168,9 @@ class MyProfileActivity : BaseActivity(),
         myProfileEditCardViewPhoneNo.setButtonsTextColor(mAttributes.contentAccentContrastColor)
         myProfileEditCardViewPhoneNo.setIconTintColor(mAttributes.contentTextColor)
         myProfileEditCardViewPhoneNo.setTextColor(mAttributes.contentTextColor)
+        myProfileEditCardViewPhoneNo.setCursorColor(mAttributes.contentTextColor)
         myProfileEditCardViewPhoneNo.setPlaceholderColor(mAttributes.contentPlaceholderColor)
-        if(loginData.firstName.isNotEmpty()) myProfileEditCardViewNameOne.setText(loginData.firstName) else myProfileEditCardViewNameOne.setPlaceHolderText(getString(
+        if(loginData.phoneNo.isNotEmpty()) myProfileEditCardViewPhoneNo.setText(loginData.phoneNo) else myProfileEditCardViewPhoneNo.setPlaceHolderText(getString(
             R.string.placeholder_phone_number))
         myProfileEditCardViewPhoneNo.setOnMyProfileEditButtonClickListener(this)
 
@@ -235,17 +247,38 @@ class MyProfileActivity : BaseActivity(),
         return attributes
     }
 
-    private fun sendUserData(loginData: Model.LoginResponse) {
+    fun isEmailValid(email: CharSequence): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
 
-        val firstName = if(myProfileEditCardViewNameOne.getText().isNotEmpty()) myProfileEditCardViewNameOne.getText() else loginData.firstName
-        val lastName = if(myProfileEditCardViewNameTwo.getText().isNotEmpty()) myProfileEditCardViewNameOne.getText() else loginData.firstName
-        val email = if(myProfileEditCardViewMail.getText().isNotEmpty()) myProfileEditCardViewNameOne.getText() else loginData.email
-        val phoneNo = if(myProfileEditCardViewPhoneNo.getText().isNotEmpty()) myProfileEditCardViewNameOne.getText() else loginData.phoneNo
+    private fun sendUserData() {
 
-        myProfileEditCardViewNameOne.getText()
-        myProfileEditCardViewNameTwo.getText()
-        myProfileEditCardViewPhoneNo.getText()
-        myProfileEditCardViewMail.getText()
+        //val firstName = if(myProfileEditCardViewNameOne.getText().isNotEmpty()) myProfileEditCardViewNameOne.getText() else mLoginData.firstName
+        //val lastName = if(myProfileEditCardViewNameTwo.getText().isNotEmpty()) myProfileEditCardViewNameTwo.getText() else mLoginData.lastName
+        //val email = if(myProfileEditCardViewMail.getText().isNotEmpty()) myProfileEditCardViewMail.getText() else mLoginData.email
+        //val phoneNo = if(myProfileEditCardViewPhoneNo.getText().isNotEmpty()) myProfileEditCardViewPhoneNo.getText() else mLoginData.phoneNo
+
+        val firstName = myProfileEditCardViewNameOne.getText()
+        val lastName = myProfileEditCardViewNameTwo.getText()
+        val email = myProfileEditCardViewMail.getText()
+        val phoneNo = myProfileEditCardViewPhoneNo.getText()
+
+        if(firstName.isEmpty()) {
+            toast("Feld mit Vorname darf nicht leer sein.")
+            return
+        }
+        if(lastName.isEmpty()) {
+            toast("Feld mit Nachname darf nicht leer sein.")
+            return
+        }
+        if(email.isEmpty()) {
+            toast("Feld mit Email darf nicht leer sein.")
+            return
+        }
+        if(!isEmailValid(email)) {
+            toast("Die Email muss ein gültiges Format haben.")
+            return
+        }
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
 
@@ -254,11 +287,11 @@ class MyProfileActivity : BaseActivity(),
 
         val jsonData = JSONObject()
         jsonData.put("workspace", workspaceName)
-        jsonData.put("userId", loginData.userId)
+        jsonData.put("userId", mLoginData.userId)
         jsonData.put("firstname", firstName)
         jsonData.put("lastname", lastName)
         jsonData.put("email", email)
-        jsonData.put("avatarUrl", "")
+        jsonData.put("avatarUrl", mLoginData.avatarUrl)
         jsonData.put("phoneNo", phoneNo)
 
         disposable = apiService.sendUserData( "Bearer $token", workspaceName!!, jsonData.toString())
@@ -266,7 +299,19 @@ class MyProfileActivity : BaseActivity(),
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    Toast.makeText(this, "Super dupa", Toast.LENGTH_LONG).show()
+
+                    myProfileEditCardViewNameOne.editSave()
+                    myProfileEditCardViewNameTwo.editSave()
+                    myProfileEditCardViewMail.editSave()
+                    myProfileEditCardViewPhoneNo.editSave()
+
+                    mLoginData.firstName = firstName
+                    mLoginData.lastName = lastName
+                    mLoginData.email = email
+                    mLoginData.phoneNo = phoneNo
+
+                    AppData().saveObjectToSharedPreference(this, PreferenceNames.LOGIN_DATA, result)
+
                 }, { error ->
                     Log.d("LOGIN", error.message)
 
@@ -338,8 +383,12 @@ class MyProfileActivity : BaseActivity(),
         return false
     }
 
-    override fun onClick(myProfileEditCardView: MyProfileEditCardView) {
+    override fun scrollViewToPosition(myProfileEditCardView: MyProfileEditCardView) {
         focusOnView(myProfileEditCardView)
+    }
+
+    override fun uploadData() {
+        sendUserData()
     }
 
     override fun onActivityResult(
@@ -369,7 +418,7 @@ class MyProfileActivity : BaseActivity(),
 
     private fun focusOnView(view: View) {
         scrollView.post {
-            scrollView.scrollTo(0, view.bottom)
+            scrollView.scrollTo(0, view.top)
         }
     }
 }

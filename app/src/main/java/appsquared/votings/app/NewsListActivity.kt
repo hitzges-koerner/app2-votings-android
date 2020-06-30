@@ -158,38 +158,45 @@ class NewsListActivity : BaseActivity() {
         if (workspaceSettings.tabInactiveForegroundColor.isNotEmpty()) tabCustom.setTabTextColorUnSelected(convertStringToColor(workspaceSettings.tabInactiveForegroundColor))
 
 
+        /*
+        DIDNT WORK ANYMORE FROM ONE SECOND TO ANOTHER
         tabCustom.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 tabCustom.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                val tabCustomHeight = tabCustom.height //height is ready
-                tabCustom.setPadding(0, getImageHeaderHeight(), 0, 0)
 
-
-                tabCustom.setCustomOnClickListener(object : CustomOnClickListener {
-                    override fun customOnClick(button: Int) {
-                        when(button) {
-                            TabCustomView.LEFT -> {
-                                removeAllFragments(supportFragmentManager)
-                                selectFragment(NewsListFragment.newInstance(tabCustomHeight))
-                            }
-                            TabCustomView.RIGHT -> {
-                                removeAllFragments(supportFragmentManager)
-                                selectFragment(NotificationListFragment.newInstance(tabCustomHeight))
-                            }
-                        }
-                    }
-                })
-
-                val showNotifications = intent.extras?.getBoolean("show_notifications")
-                showNotifications?.let {
-                    if(it) selectFragment(NotificationListFragment.newInstance(tabCustomHeight))
-                    else selectFragment(NewsListFragment.newInstance(tabCustomHeight))
-                } ?: run {
-                    selectFragment(NewsListFragment.newInstance(tabCustomHeight))
-                }
             }
         })
+         */
+
+        tabCustom.run {
+            val tabCustomHeight = tabCustom.height //height is ready
+            tabCustom.setPadding(0, getImageHeaderHeight(), 0, 0)
+
+
+            tabCustom.setCustomOnClickListener(object : CustomOnClickListener {
+                override fun customOnClick(button: Int) {
+                    when(button) {
+                        TabCustomView.LEFT -> {
+                            removeAllFragments(supportFragmentManager)
+                            selectFragment(NewsListFragment.newInstance(tabCustomHeight))
+                        }
+                        TabCustomView.RIGHT -> {
+                            removeAllFragments(supportFragmentManager)
+                            selectFragment(NotificationListFragment.newInstance(tabCustomHeight))
+                        }
+                    }
+                }
+            })
+
+            val showNotifications = intent.extras?.getBoolean("show_notifications")
+            showNotifications?.let {
+                if(it) selectFragment(NotificationListFragment.newInstance(tabCustomHeight))
+                else selectFragment(NewsListFragment.newInstance(tabCustomHeight))
+            } ?: run {
+                selectFragment(NewsListFragment.newInstance(tabCustomHeight))
+            }
+        }
     }
 
     private fun selectFragment(fragment: Fragment) {

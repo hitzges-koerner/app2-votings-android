@@ -1,25 +1,14 @@
 package appsquared.votings.app
 
-import android.R.attr.*
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import android.view.View.*
-import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.ViewCompat
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
-import com.squareup.picasso.Picasso
+import appsquared.votings.app.views.DecisionDialog
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.toolbar_custom.*
 
 
 class MainActivity : BaseActivity() {
@@ -35,6 +24,8 @@ class MainActivity : BaseActivity() {
     override fun childOnlyMethod() {
 
         val workspace: Model.WorkspaceResponse = mWorkspace
+
+        checkVersion(workspace.version.android_CurrentVersion, workspace.version.android_RequiredVersion)
 
         removeBackButton()
         showToolbarLogo()
@@ -235,5 +226,70 @@ class MainActivity : BaseActivity() {
         attributes.tilesIconCornerRadius = 50
         attributes.tilesIconTintColor = getColorTemp(R.color.colorAccent)
         return attributes
+    }
+
+    private fun checkVersion(currentVersion : String, requiredVersion: String) : Boolean {
+        var currentVersionInner = currentVersion
+        var requiredVersionInner = requiredVersion
+
+        if(currentVersionInner.isEmpty()) currentVersionInner = "0.0.0"
+        if(requiredVersionInner.isEmpty())  requiredVersionInner = "0.0.0"
+
+        val versionConverter = VersionChecker(currentVersionInner, requiredVersionInner)
+        versionConverter.init()
+        if(versionConverter.isDeprecated()) {
+            showVersionDialog(VersionChecker.DEPRECATED, currentVersion)
+            return false
+        } else if(versionConverter.isOutdated()) {
+            showVersionDialog(VersionChecker.OUTDATED, currentVersion)
+            return false
+        }
+        return true
+    }
+
+    private fun showVersionDialog(type: Int, currentVersion: String) {
+
+        val url = mWorkspace.version.android_AppStoreLink
+
+        when(type) {
+            VersionChecker.OUTDATED -> {
+                DecisionDialog(this) {
+                    if (it == DecisionDialog.LEFT) return@DecisionDialog
+                    if (it == DecisionDialog.RIGHT) {
+                        openPlayStoreUrl(url)
+                    }
+                }.generate()
+                    .setTitle("Neue Version verfügbar")
+                    .setButtonRightName("Herunterladen")
+                    .setButtonLeftName("Nein, danke")
+                    .setMessage("Im Play Store steht eine neue Version ($currentVersion) zur Verfügung.\n\nBitte laden Sie die neueste Version aus dem Play Store herunter.")
+                    .show()
+            }
+            VersionChecker.DEPRECATED -> {
+                DecisionDialog(this) {
+                    if (it == DecisionDialog.LEFT) {
+                        finish()
+                    }
+                    if (it == DecisionDialog.RIGHT) {
+                        openPlayStoreUrl(url)
+                        finish()
+                    }
+                }.generate()
+                    .setCancelable(false)
+                    .setTitle("Neue Version erforderlich")
+                    .setButtonRightName("Herunterladen")
+                    .setButtonLeftName("Beenden")
+                    .setMessage("Im Play Store steht eine neue Version ($currentVersion) zur Verfügung. Die installierte Version (${getAppVersion()}) wird nicht mehr unterstützt.\n\nBitte laden Sie die neueste Version aus dem Play Store herunter.")
+                    .show()
+            }
+        }
+    }
+
+    private fun openPlayStoreUrl(url: String) {
+        val webPage = Uri.parse(url)
+        val intent = Intent(Intent.ACTION_VIEW, webPage)
+        if (intent.resolveActivity(this.packageManager) != null) {
+            startActivity(intent)
+        }
     }
 }

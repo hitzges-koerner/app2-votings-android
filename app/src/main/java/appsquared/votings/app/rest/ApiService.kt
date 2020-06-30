@@ -67,7 +67,7 @@ interface ApiService {
     @PUT("{WORKSPACE}/user")
     fun sendUserData(@Header("Authorization") token : String,
                      @Path("WORKSPACE") workspace : String,
-                     @Body data: String) : Observable<MutableList<Model.User>>
+                     @Body data: String) : Observable<Model.LoginResponse>
 
     @PUT("{WORKSPACE}/user/pushtoken")
     fun sendFirebaseToken(@Header("Authorization") token : String,

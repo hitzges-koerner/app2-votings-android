@@ -5,7 +5,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.*
+import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.preference.PreferenceManager
@@ -17,14 +22,57 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.button_card_view.view.*
 import org.json.JSONObject
+import java.util.concurrent.Executor
 
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
     var disposable: Disposable? = null
 
     val apiService by lazy {
         ApiService.create(Constant.BASE_API)
+    }
+
+    fun biometric() {
+        executor = ContextCompat.getMainExecutor(this)
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int,
+                                                   errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(applicationContext,
+                        "Authentication error: $errString", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    Toast.makeText(applicationContext,
+                        "Authentication succeeded!", Toast.LENGTH_SHORT)
+                        .show()
+                    prepLogin()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(applicationContext, "Authentication failed",
+                        Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Use account password")
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,36 +105,28 @@ class LoginActivity : AppCompatActivity() {
             editTextCardViewWorkspace.setText("clean")
         }
 
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        if(pref.getString(PreferenceNames.WORKSPACE_NAME, "")!!.isNotEmpty()) editTextCardViewWorkspace.setText(pref.getString(PreferenceNames.WORKSPACE_NAME, "")!!)
+        if(pref.getString(PreferenceNames.EMAIL, "")!!.isNotEmpty()) editTextCardViewMail.setText(pref.getString(PreferenceNames.EMAIL, "")!!)
+        if(pref.getString(PreferenceNames.PASSWORD, "")!!.isNotEmpty()) editTextCardViewPassword.setText(pref.getString(PreferenceNames.PASSWORD, "")!!)
+
+        // TODO DISABLED, TESTING ONLY
+        /*
+        if(pref.getString(PreferenceNames.WORKSPACE_NAME, "")!!.isNotEmpty() &&
+            pref.getString(PreferenceNames.EMAIL, "")!!.isNotEmpty() &&
+            pref.getString(PreferenceNames.PASSWORD, "")!!.isNotEmpty() &&
+                BiometricManager.from(this).canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
+            biometric()
+        }
+         */
+
         // TODO ONLY IN DEBUG MODE
-        editTextCardViewMail.setText("jakob.koerner@app-squared.com")
-        editTextCardViewPassword.setText("12345")
-        editTextCardViewWorkspace.setText("app-squared")
+        //editTextCardViewMail.setText("jakob.koerner@app-squared.com")
+        //editTextCardViewPassword.setText("12345")
+        //editTextCardViewWorkspace.setText("app-squared")
 
         buttonCardViewLogin.materialCardView.setOnClickListener {
-
-            // hide error view
-            textCardViewError.visibility = GONE
-            // show spinning progress indicator
-            linearLayoutStartIndicator.visibility = VISIBLE
-
-            // check if inputs are not empty
-            if(editTextCardViewMail.isEmpty() || editTextCardViewPassword.isEmpty() || editTextCardViewWorkspace.isEmpty()) {
-                showErrorToast(getString(R.string.error_missing_input))
-                return@setOnClickListener
-            }
-
-            // disable login button
-            buttonCardViewLogin.isEnabled = false
-            // fade out all views
-            viewFadeOut(editTextCardViewWorkspace)
-            viewFadeOut(editTextCardViewMail)
-            viewFadeOut(editTextCardViewPassword)
-            viewFadeOut(buttonCardViewLogin)
-            //viewFadeOut(buttonCardViewQR)
-
-            apiLogin(editTextCardViewMail.getText(),
-                editTextCardViewPassword.getText(),
-                editTextCardViewWorkspace.getText())
+            prepLogin()
         }
 
         textCardViewError.setOnClickListener {
@@ -103,7 +143,7 @@ class LoginActivity : AppCompatActivity() {
         viewFadeIn(editTextCardViewMail)
         viewFadeIn(editTextCardViewPassword)
         viewFadeIn(buttonCardViewLogin)
-        viewFadeIn(buttonCardViewQR)
+        //viewFadeIn(buttonCardViewQR)
 
         //Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
 
@@ -111,6 +151,31 @@ class LoginActivity : AppCompatActivity() {
         textCardViewError.setText(error)
     }
 
+    private fun prepLogin() {
+        // hide error view
+        textCardViewError.visibility = GONE
+        // show spinning progress indicator
+        linearLayoutStartIndicator.visibility = VISIBLE
+
+        // check if inputs are not empty
+        if(editTextCardViewMail.isEmpty() || editTextCardViewPassword.isEmpty() || editTextCardViewWorkspace.isEmpty()) {
+            showErrorToast(getString(R.string.error_missing_input))
+            return
+        }
+
+        // disable login button
+        buttonCardViewLogin.isEnabled = false
+        // fade out all views
+        viewFadeOut(editTextCardViewWorkspace)
+        viewFadeOut(editTextCardViewMail)
+        viewFadeOut(editTextCardViewPassword)
+        viewFadeOut(buttonCardViewLogin)
+        //viewFadeOut(buttonCardViewQR)
+
+        apiLogin(editTextCardViewMail.getText(),
+            editTextCardViewPassword.getText(),
+            editTextCardViewWorkspace.getText())
+    }
 
     private fun apiLogin(email: String, password: String, workspace: String) {
 
@@ -131,6 +196,8 @@ class LoginActivity : AppCompatActivity() {
                     pref.edit().putString(PreferenceNames.USER_TOKEN, result.userToken).apply()
                     pref.edit().putString(PreferenceNames.USERID, result.userId).apply()
                     pref.edit().putString(PreferenceNames.WORKSPACE_NAME, workspace).apply()
+                    pref.edit().putString(PreferenceNames.PASSWORD, password).apply()
+                    pref.edit().putString(PreferenceNames.EMAIL, email).apply()
 
                     AppData().saveObjectToSharedPreference(this, PreferenceNames.LOGIN_DATA, result)
 
@@ -169,7 +236,9 @@ class LoginActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    sendFirebaseTokenToServer()
+
+                    val showNotification = pref.getBoolean(PreferenceNames.NOTIFICATION_SHOW + "_" + PreferenceNames.WORKSPACE_NAME, true)
+                    if(showNotification) sendFirebaseTokenToServer()
                     AppData().saveObjectToSharedPreference(this, PreferenceNames.WORKSPACE, result)
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()

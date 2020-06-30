@@ -60,25 +60,29 @@
                 android:id="@+id/myProfileEditCardViewNameOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:image="@drawable/icon_name" />
+                app:image="@drawable/icon_name"
+                app:profil_type="firstname" />
 
             <appsquared.votings.app.views.MyProfileEditCardView
                 android:id="@+id/myProfileEditCardViewNameTwo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:image="@drawable/icon_name" />
+                app:image="@drawable/icon_name"
+                app:profil_type="secondname" />
 
             <appsquared.votings.app.views.MyProfileEditCardView
                 android:id="@+id/myProfileEditCardViewMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:image="@drawable/icon_mail" />
+                app:image="@drawable/icon_mail"
+                app:profil_type="email" />
 
             <appsquared.votings.app.views.MyProfileEditCardView
                 android:id="@+id/myProfileEditCardViewPhoneNo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:image="@drawable/icon_phone" />
+                app:image="@drawable/icon_phone"
+                app:profil_type="phone"/>
 
             <appsquared.votings.app.views.ButtonCardView
                 android:id="@+id/buttonCardViewLogout"

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import appsquared.votings.app.views.VotingSelectDialog
 import framework.base.constant.Constant
 import framework.base.rest.ApiService
 import framework.base.rest.Model
@@ -20,6 +21,7 @@ class VotingsListActivity : BaseActivity() {
 
     private var mStatus: Int? = 0
     private val mVotings = mutableListOf<Model.VotingShort>()
+    private val mVotingsAll = mutableListOf<Model.VotingShort>()
 
     var disposable: Disposable? = null
 
@@ -30,6 +32,11 @@ class VotingsListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_votings_list)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(recyclerView.adapter != null) loadVotingsList()
     }
 
     override fun childOnlyMethod() {
@@ -111,7 +118,7 @@ class VotingsListActivity : BaseActivity() {
 
         val spacing = dpToPx(16)
 
-        recyclerView.setPadding(0, getImageHeaderHeight(), 0, 0)
+        recyclerView.setPadding(0, spacing + getImageHeaderHeight(), 0, spacing)
         recyclerView.addItemDecoration(
             GridSpacingItemDecoration(
                 spanCount,
@@ -122,11 +129,29 @@ class VotingsListActivity : BaseActivity() {
         recyclerView.layoutManager = GridLayoutManager(this@VotingsListActivity, spanCount)
 
         recyclerView.adapter = VotingsListAdapter(mVotings, attributes) { position: Int ->
+
+            val votingSelectList = mVotingsAll.filter { it.isVoted ==  mVotings[position].isVoted && it.votingId == mVotings[position].votingId }
+
+            VotingSelectDialog(this, attributes) {
+                startActivity(
+                    Intent(this@VotingsListActivity, VotingsActivity::class.java)
+                    .putExtra("voting_id", it.votingId)
+                    .putExtra(STATUS, mStatus)
+                    .putExtra("voting_representation_id", it.inRepresentationOfId)
+                    .putExtra("voting_representation_name", it.inRepresentationOfName))
+            }
+                .generate()
+                .setItems(votingSelectList.toMutableList())
+                .show()
+
+            /*
             startActivity(Intent(this@VotingsListActivity, VotingsActivity::class.java)
                 .putExtra("voting_id", mVotings[position].votingId)
                 .putExtra(STATUS, mStatus)
                 .putExtra("voting_representation_id", mVotings[position].inRepresentationOfId)
                 .putExtra("voting_representation_name", mVotings[position].inRepresentationOfName))
+
+             */
         }
 
         loadVotingsList()
@@ -144,22 +169,43 @@ class VotingsListActivity : BaseActivity() {
             .subscribe(
                 { result ->
                     mVotings.clear()
-                    val votingsTemp = mutableListOf<Model.VotingShort>()
-                    votingsTemp.addAll(getVotingsByStatus(result))
+                    mVotingsAll.clear()
+                    mVotingsAll.addAll(getVotingsByStatus(result))
 
                     if(mStatus == CURRENT) {
-                        val listVoted = votingsTemp.filter { it.isVoted == "1" }
-                        val listNotVoted = votingsTemp.filter { it.isVoted == "0" }
+                        val listVoted = mVotingsAll.filter { it.isVoted == "1" }
+                        val listVotedGroupedMap = listVoted.groupBy { it.votingId }
+                        val listNotVoted = mVotingsAll.filter { it.isVoted == "0" }
+                        val listNotVotedGroupedMap = listNotVoted.groupBy { it.votingId }
+
+                        val listNotVotedGrouped : MutableList<Model.VotingShort> = mutableListOf()
+                        for(listNotVotedGroupedMapItem in listNotVotedGroupedMap) {
+                            listNotVotedGrouped.add(listNotVotedGroupedMapItem.value[0])
+                        }
+
+                        val listVotedGrouped : MutableList<Model.VotingShort> = mutableListOf()
+                        for(listVotedGroupedMapItem in listVotedGroupedMap) {
+                            listVotedGrouped.add(listVotedGroupedMapItem.value[0])
+                        }
 
                         if (listNotVoted.isNotEmpty()) {
                             mVotings.add(Model.VotingShort(getString(R.string.not_voted)))
-                            mVotings.addAll(listNotVoted)
+                            mVotings.addAll(listNotVotedGrouped)
                         }
                         if (listVoted.isNotEmpty()) {
                             mVotings.add(Model.VotingShort(getString(R.string.already_voted)))
-                            mVotings.addAll(listVoted)
+                            mVotings.addAll(listVotedGrouped)
                         }
-                    } else mVotings.addAll(votingsTemp)
+                    } else {
+
+                        val listGroupedMap = mVotingsAll.groupBy { it.votingId }
+
+                        val listGrouped : MutableList<Model.VotingShort> = mutableListOf()
+                        for(listGroupedMapItem in listGroupedMap) {
+                            listGrouped.add(listGroupedMapItem.value[0])
+                        }
+                        mVotings.addAll(listGrouped)
+                    }
                     recyclerView.adapter?.notifyDataSetChanged()
                 }, { error ->
                     Log.d("LOGIN", error.message)

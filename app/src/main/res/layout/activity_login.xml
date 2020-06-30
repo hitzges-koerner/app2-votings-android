@@ -23,6 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <appsquared.votings.app.views.ButtonCardView
+        android:visibility="gone"
         android:id="@+id/buttonCardViewAppsquared"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -34,6 +35,7 @@
         app:text_color="@color/colorAccent"  />
 
     <appsquared.votings.app.views.ButtonCardView
+        android:visibility="gone"
         android:id="@+id/buttonCardViewRich"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -45,6 +47,7 @@
         app:text_color="@color/colorAccent"  />
 
     <appsquared.votings.app.views.ButtonCardView
+        android:visibility="gone"
         android:id="@+id/buttonCardViewMinimal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -56,6 +59,7 @@
         app:text_color="@color/colorAccent"  />
 
     <appsquared.votings.app.views.ButtonCardView
+        android:visibility="gone"
         android:id="@+id/buttonCardViewClean"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -78,6 +82,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:hint="E-Mail"
+        app:type="mail"
         app:layout_constraintBottom_toTopOf="@+id/editTextCardViewPassword" />
 
     <appsquared.votings.app.views.EditTextCardView
@@ -85,6 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:hint="Password"
+        app:type="password"
         app:layout_constraintBottom_toTopOf="@+id/guidelineCenter" />
 
     <androidx.constraintlayout.widget.Guideline

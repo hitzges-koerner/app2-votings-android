@@ -27,6 +27,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -267,6 +268,7 @@ fun viewFadeIn(view: View) {
 }
 
 fun viewFadeOut(view: View, timeInMs: Long) {
+    if(!view.isVisible) return
     val fadeOut = AlphaAnimation(1f, 0f)
     fadeOut.interpolator = AccelerateInterpolator() //and this
     fadeOut.duration = timeInMs

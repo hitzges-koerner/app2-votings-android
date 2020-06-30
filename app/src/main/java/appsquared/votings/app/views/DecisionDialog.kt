@@ -106,6 +106,16 @@ class DecisionDialog(val context: Context, val listener: (Int) -> Unit) {
         return this
     }
 
+
+    /**
+     * TODO
+     * @param cancelable
+     */
+    fun setCancelable(cancelable: Boolean) : DecisionDialog {
+        dialog.setCancelable(cancelable)
+        return this
+    }
+
     fun show() {
         dialog.show()
     }

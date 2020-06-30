@@ -1,13 +1,16 @@
 package appsquared.votings.app
 
+import android.R.attr.*
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import android.view.View.*
+import android.view.View.VISIBLE
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
 import android.widget.AbsListView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +22,6 @@ import framework.base.rest.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.recyclerView
 import kotlinx.android.synthetic.main.activity_user_list.*
 import kotlin.math.roundToInt
 
@@ -44,11 +46,9 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
 
     }
 
-
     override fun childOnlyMethod() {
 
         setScreenTitle("Teilnehmer-Liste")
-
 
         val workspace: Model.WorkspaceResponse = mWorkspace
 
@@ -152,7 +152,7 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
 
                 val spacing = dpToPx(16)
 
-                recyclerView.setPadding(0, getImageHeaderHeight() + searchBarHeight + spacing + spacing + spacing, 0, 0)
+                recyclerView.setPadding(0, getImageHeaderHeight(), 0, 0)
                 recyclerView.addItemDecoration(MarginItemDecoration(dpToPx(16)))
 
                 recyclerView.layoutManager = LinearLayoutManager(this@UserListActivity)
@@ -160,9 +160,20 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
                 recyclerView.adapter = UserListAdapter(mUserList, attributes) { position: Int ->
 
                 }
+
+                // TODO NEED FIX SEARCH BAR
+                val lp = ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT
+                )
+                lp.setMargins(dpToPx(16), getImageHeaderHeight() + dpToPx(16) + dpToPx(16) + dpToPx(16), dpToPx(16), dpToPx(16))
+                materialCardViewSearch.layoutParams = lp
             }
         })
 
+
+        // TODO NEED FIX SEARCH BAR
+        /*
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -186,6 +197,7 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
                 }
             }
         })
+        */
 
         loadUserList()
 

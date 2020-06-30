@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.core.content.res.ResourcesCompat
+import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.settings_changelog_card_view.*
 import kotlinx.android.synthetic.main.settings_impress_card_view.*
@@ -130,8 +131,14 @@ class SettingsActivity : BaseActivity() {
         materialCardViewNotification.strokeWidth = borderWidth
         materialCardViewNotification.radius = contentCornerRadius.toFloat()
 
+
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        val showNotification = pref.getBoolean(PreferenceNames.NOTIFICATION_SHOW + "_" + PreferenceNames.WORKSPACE_NAME, true)
+        switchNotification.isChecked = showNotification
+
         materialCardViewNotification.setOnClickListener {
             switchNotification.isChecked = !switchNotification.isChecked
+            pref.edit().putBoolean(PreferenceNames.NOTIFICATION_SHOW + "_" + PreferenceNames.WORKSPACE_NAME, switchNotification.isChecked).apply()
         }
 
         materialCardViewChangelog.setOnClickListener {

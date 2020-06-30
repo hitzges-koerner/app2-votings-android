@@ -35,7 +35,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val appPrefEdit = pref.edit()
         appPrefEdit.putString(PreferenceNames.FIREBASE_TOKEN, token)
         appPrefEdit.apply()
-        sendFirebaseTokenToServer()
+        val showNotification = pref.getBoolean(PreferenceNames.NOTIFICATION_SHOW + "_" + PreferenceNames.WORKSPACE_NAME, true)
+        if(showNotification) sendFirebaseTokenToServer()
     }
 
     private fun sendFirebaseTokenToServer() {
@@ -70,7 +71,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // message, here is where that should be initiated.
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        val showPushNotification = pref.getBoolean(NOTIFICATION_SHOW, true)
+        val showPushNotification = pref.getBoolean(PreferenceNames.NOTIFICATION_SHOW + "_" + PreferenceNames.WORKSPACE_NAME, true)
+
         if (showPushNotification) {
 
             val handler = Handler(Looper.getMainLooper())

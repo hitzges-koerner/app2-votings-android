@@ -3,10 +3,22 @@
 
     <declare-styleable name="EditTextCardView">
         <attr name="hint" format="string"/>
+        <attr name="type">
+            <enum name="password" value="0"/>
+            <enum name="mail" value="1"/>
+            <enum name="name" value="2"/>
+            <enum name="phone" value="3"/>
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="MyProfileEditCardView">
         <attr name="image" format="reference"/>
+        <attr name="profil_type">
+            <enum name="firstname" value="0"/>
+            <enum name="secondname" value="1"/>
+            <enum name="email" value="2"/>
+            <enum name="phone" value="3"/>
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="ButtonCardView">

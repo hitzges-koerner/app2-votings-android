@@ -116,6 +116,9 @@ class VotingsActivity : BaseActivity() {
             convertStringToColor(workspaceSettings.contentAccentColor)
 
         loadVoting()
+
+        val spacing = dpToPx(16)
+        linearLayoutVotingsTitle.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
     }
 
     private fun loadVoting() {
@@ -186,9 +189,9 @@ class VotingsActivity : BaseActivity() {
                     if(result.users.isNotEmpty() && mStatus != FUTURE) {
                         mVotings.add(VotingCustomItem(SECTION, USER, "Teilnehmer"))
                         for((index, user) in result.users.withIndex()) {
-                            if(index == 0) mVotings.add(VotingCustomItem(USER, USER, 0, user.userId, user.firstName, user.lastName))
-                            else if(index == result.users.size-1) mVotings.add(VotingCustomItem(USER, USER, 1, user.userId, user.firstName, user.lastName))
-                            else mVotings.add(VotingCustomItem(USER, USER, -1, user.userId, user.firstName, user.lastName))
+                            if(index == 0) mVotings.add(VotingCustomItem(USER, USER, 0, user.userId, user.firstName, user.lastName, user.votedChoiceId))
+                            else if(index == result.users.size-1) mVotings.add(VotingCustomItem(USER, USER, 1, user.userId, user.firstName, user.lastName, user.votedChoiceId))
+                            else mVotings.add(VotingCustomItem(USER, USER, -1, user.userId, user.firstName, user.lastName, user.votedChoiceId))
                         }
                     }
 
@@ -201,7 +204,7 @@ class VotingsActivity : BaseActivity() {
 
                     val spacing = dpToPx(16)
 
-                    recyclerView.setPadding(0, getImageHeaderHeight(), 0, spacing)
+                    //recyclerView.setPadding(0, getImageHeaderHeight(), 0, spacing)
                     recyclerView.addItemDecoration(
                         GridSpacingItemDecoration(
                             spanCount,

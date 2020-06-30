@@ -140,7 +140,8 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
                     customView(materialCardViewUser, attributes.contentBackgroundColor, dpToPxFloat(10), "bottom")
                     constraintLayoutUserSmall.setPadding(dpToPx(8), dpToPx(4), dpToPx(8), dpToPx(8))
                 }
-                textViewUser.text = "${item.nameFirst} ${item.nameLast}"
+                if(item.choiceId.isEmpty()) textViewUser.text = " \u25EF   ${item.nameLast}, ${item.nameFirst}"
+                else textViewUser.text = " \u29BF   ${item.nameLast}, ${item.nameFirst}"
             }
         }
 

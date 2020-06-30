@@ -27,13 +27,10 @@ class NotificationListAdapter(private val items: MutableList<Model.Notification>
         fun bindItems(item: Model.Notification) {
             with(itemView) {
 
-                textViewNotificationTitle.text = item.title
-                textViewNotificationTitle.setTextColor(attributes.contentAccentColor)
-
-                textViewNotificationText.text = item.content
+                textViewNotificationText.text = item.message
                 textViewNotificationText.setTextColor(attributes.contentTextColor)
 
-                textViewNotificationDateTime.text = item.publishFrom
+                textViewNotificationDateTime.text = getLocalDateStyle(item.sentDate, context)
                 textViewNotificationDateTime.setTextColor(attributes.contentTextColor)
 
                 materialCardView.setCardBackgroundColor(attributes.contentBackgroundColor)

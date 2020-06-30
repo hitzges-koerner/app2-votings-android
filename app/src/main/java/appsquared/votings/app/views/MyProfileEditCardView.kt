@@ -1,18 +1,35 @@
 package appsquared.votings.app.views
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.VectorDrawable
+import android.os.Build
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import appsquared.votings.app.R
 import kotlinx.android.synthetic.main.my_profile_edit_card_view.view.*
 
 
 class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout(context, attrs) {
+
+    private var mTempText = ""
+    private var mType = -1
+    private var mTextColor: Int = 0
+    private var mBackgroundColor: Int = 0
 
     private var onMyProfileEditButtonClickListener: OnMyProfileEditButtonClickListener? = null
 
@@ -39,38 +56,55 @@ class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout
             R.styleable.MyProfileEditCardView
         )
         imageViewIcon.setImageResource(attributes.getResourceId(R.styleable.MyProfileEditCardView_image, R.drawable.transparent))
+        mType = attributes.getInt(R.styleable.MyProfileEditCardView_profil_type, -1)
         attributes.recycle()
 
         editText.isEnabled = false
         buttonLeft.visibility = GONE
 
         buttonLeft.setOnClickListener {
-            editMode = EDIT_MODE_OFF
-            buttonLeft.visibility = View.GONE
-            buttonRight.text = "EDIT"
-            editText.isFocusable = false
-            editText.clearFocus()
-            editText.hideKeyboard()
+            editCancel()
         }
 
         buttonRight.setOnClickListener {
             if(editMode == EDIT_MODE_OFF) {
                 editMode = EDIT_MODE_ON
+                mTempText = getText()
                 buttonLeft.visibility = View.VISIBLE
                 buttonRight.text = "SAVE"
                 editText.isEnabled = true
-                editText.requestFocus()
+                editText.setSelection(editText.text.length)
                 editText.showKeyboard()
-                onMyProfileEditButtonClickListener?.onClick(this)
+                onMyProfileEditButtonClickListener?.scrollViewToPosition(this)
             } else {
-                editMode = EDIT_MODE_OFF
-                buttonLeft.visibility = View.GONE
-                buttonRight.text = "EDIT"
-                editText.isEnabled = false
-                editText.clearFocus()
-                editText.hideKeyboard()
+                editSave()
+                onMyProfileEditButtonClickListener?.uploadData()
             }
         }
+    }
+
+    fun disabledEdit() {
+        buttonRight.visibility = View.INVISIBLE
+        buttonRight.isFocusable = false
+    }
+
+    fun editCancel() {
+        setText(mTempText)
+        editMode = EDIT_MODE_OFF
+        buttonLeft.visibility = View.GONE
+        buttonRight.text = "EDIT"
+        editText.isFocusable = false
+        editText.clearFocus()
+        editText.hideKeyboard()
+    }
+
+    fun editSave() {
+        editMode = EDIT_MODE_OFF
+        buttonLeft.visibility = View.GONE
+        buttonRight.text = "EDIT"
+        editText.isEnabled = false
+        editText.clearFocus()
+        editText.hideKeyboard()
     }
     
     fun isEmpty() : Boolean {
@@ -94,11 +128,13 @@ class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout
     }
 
     fun setButtonsBackgroundColor(color: Int) {
+        mBackgroundColor = color
         buttonLeft.setBackgroundColor(color)
         buttonRight.setBackgroundColor(color)
     }
 
     fun setButtonsTextColor(color: Int) {
+        mTextColor = color
         buttonLeft.setTextColor(color)
         buttonRight.setTextColor(color)
     }
@@ -138,11 +174,76 @@ class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout
         inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
     }
 
+    fun setCursorColor(color: Int) {
+        setCursorDrawableColor(editText, color)
+    }
+
+    fun setCursorDrawableColor(editText: TextView, @ColorInt color: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(color, color))
+            gradientDrawable.setSize(2.spToPx(editText.context).toInt(), editText.textSize.toInt())
+            editText.textCursorDrawable = gradientDrawable
+            return
+        }
+
+        try {
+            val editorField = try {
+                TextView::class.java.getDeclaredField("mEditor").apply { isAccessible = true }
+            } catch (t: Throwable) {
+                null
+            }
+            val editor = editorField?.get(editText) ?: editText
+            val editorClass: Class<*> = if (editorField == null) TextView::class.java else editor.javaClass
+
+            val tintedCursorDrawable = TextView::class.java.getDeclaredField("mCursorDrawableRes")
+                .apply { isAccessible = true }
+                .getInt(editText)
+                .let { ContextCompat.getDrawable(editText.context, it) ?: return }
+                .let { tintDrawable(it, color) }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                editorClass
+                    .getDeclaredField("mDrawableForCursor")
+                    .apply { isAccessible = true }
+                    .run { set(editor, tintedCursorDrawable) }
+            } else {
+                editorClass
+                    .getDeclaredField("mCursorDrawable")
+                    .apply { isAccessible = true }
+                    .run { set(editor, arrayOf(tintedCursorDrawable, tintedCursorDrawable)) }
+            }
+        } catch (t: Throwable) {
+            t.printStackTrace()
+        }
+    }
+
+    fun Number.spToPx(context: Context? = null): Float {
+        val res = context?.resources ?: android.content.res.Resources.getSystem()
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this.toFloat(), res.displayMetrics)
+    }
+
+    fun tintDrawable(drawable: Drawable, @ColorInt color: Int): Drawable {
+        (drawable as? VectorDrawableCompat)
+            ?.apply { setTintList(ColorStateList.valueOf(color)) }
+            ?.let { return it }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            (drawable as? VectorDrawable)
+                ?.apply { setTintList(ColorStateList.valueOf(color)) }
+                ?.let { return it }
+        }
+
+        val wrappedDrawable = DrawableCompat.wrap(drawable)
+        DrawableCompat.setTint(wrappedDrawable, color)
+        return DrawableCompat.unwrap(wrappedDrawable)
+    }
+
     /**
      *
      */
     interface OnMyProfileEditButtonClickListener {
-        fun onClick(myProfileEditCardView: MyProfileEditCardView)
+        fun scrollViewToPosition(myProfileEditCardView: MyProfileEditCardView)
+        fun uploadData()
     }
 
     companion object {

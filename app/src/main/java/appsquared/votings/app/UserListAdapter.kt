@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.webkit.URLUtil
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import framework.base.rest.Model
+import kotlinx.android.synthetic.main.activity_my_profile.*
 import kotlinx.android.synthetic.main.item_section.view.*
 import kotlinx.android.synthetic.main.item_user.view.*
 import kotlinx.android.synthetic.main.item_user.view.materialCardView
@@ -28,7 +31,7 @@ class UserListAdapter(private val items: MutableList<Model.User>, val attributes
                 ViewHolderUser(v1, attributes, listener)
             }
             SECTION -> {
-                val v2 = inflater.inflate(R.layout.item_section, viewGroup, false)
+                val v2 = inflater.inflate(R.layout.item_section_user, viewGroup, false)
                 ViewHolderSection(v2, attributes, listener)
             }
             else -> {
@@ -76,13 +79,23 @@ class UserListAdapter(private val items: MutableList<Model.User>, val attributes
                 materialCardView.strokeWidth = dpToPx(attributes.contentBorderWidth)
                 materialCardView.radius = dpToPx(attributes.contentCornerRadius).toFloat()
 
-                if(item.isOnline.equals("1")) {
+                if(item.isOnline == "1") {
                     circleImageViewStatus.visibility = View.VISIBLE
                     circleImageViewBackground.visibility = View.VISIBLE
                     circleImageViewBackground.circleBackgroundColor = attributes.contentBackgroundColor
                 } else {
                     circleImageViewStatus.visibility = View.GONE
                     circleImageViewBackground.visibility = View.GONE
+                }
+
+                if(item.avatarUrl.isNotEmpty() && URLUtil.isValidUrl(item.avatarUrl)) {
+                    Picasso.get()
+                        .load(item.avatarUrl)
+                        .into(circleImageView)
+                } else {
+                    circleImageView.setImageResource(R.drawable.ico_profil)
+                    //circleImageView.setColorFilter(attributes.tilesIconTintColor, PorterDuff.Mode.SRC_ATOP)
+                    circleImageView.circleBackgroundColor = attributes.tilesIconBackgroundColor
                 }
 
                 /*
@@ -138,7 +151,7 @@ class UserListAdapter(private val items: MutableList<Model.User>, val attributes
         fun bindItems(item: Model.User) {
             with(itemView) {
                 textViewSection.text = item.userId
-                textViewSection.setTextColor(attributes.contentAccentColor)
+                textViewSection.setTextColor(attributes.contentBackgroundColor)
 
                 constraintLayoutRoot.setBackgroundColor(attributes.headlinesBackgroundColor)
             }

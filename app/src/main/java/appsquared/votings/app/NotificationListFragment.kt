@@ -2,18 +2,36 @@ package appsquared.votings.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import framework.base.constant.Constant
+import framework.base.rest.ApiService
 import framework.base.rest.Model
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.recyclerView
+import kotlinx.android.synthetic.main.activity_user_list.*
 import kotlinx.android.synthetic.main.fragment_notificationlist.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 class NotificationListFragment : Fragment() {
+
+    val list = mutableListOf<Model.Notification>()
+
+    var disposable: Disposable? = null
+
+    val apiService by lazy {
+        ApiService.create(Constant.BASE_API)
+    }
 
     private var param1: Int = 0
 
@@ -45,11 +63,35 @@ class NotificationListFragment : Fragment() {
             )
         )
         recyclerViewNotification.layoutManager = GridLayoutManager(context, spanCount)
-
-        val list = mutableListOf<Model.Notification>()
-        list.add(Model.Notification("Titel", "dies ist eine Notification", "13.12.2020"))
         recyclerViewNotification.adapter = NotificationListAdapter(list, attributes)
 
+        loadNotificationList()
+    }
+
+    private fun loadNotificationList() {
+
+        val pref = PreferenceManager.getDefaultSharedPreferences(context)
+        val token = pref.getString(PreferenceNames.USER_TOKEN, "")
+        val workspace = pref.getString(PreferenceNames.WORKSPACE_NAME, "")
+
+        disposable = apiService.getNotificationList("Bearer $token", workspace!!)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result ->
+                    list.addAll(result)
+                    recyclerViewNotification.adapter!!.notifyDataSetChanged()
+                }, { error ->
+                    Log.d("LOGIN", error.message)
+
+                    if(error is retrofit2.HttpException) {
+                        if(error.code() == 401 || error.code() == 403) {
+                            pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
+                            return@subscribe
+                        }
+                    }
+                }
+            )
     }
 
     override fun onCreateView(

@@ -12,21 +12,21 @@ object Model {
 
     @JsonClass(generateAdapter = true)
     data class LoginResponse(
-            @field:Json(name = "workspace") val workspace:String = "",
-            @field:Json(name = "userId") val userId:String = "",
-            @field:Json(name = "userToken") val userToken:String = "",
-            @field:Json(name = "firstname") val firstName: String = "",
-            @field:Json(name = "lastname") val lastName: String = "",
-            @field:Json(name = "email") val email: String = "",
-            @field:Json(name = "phoneNo") val phoneNo: String = "",
-            @field:Json(name = "avatarUrl") var avatarUrl: String = "",
-            @field:Json(name = "userGroups") val userGroups: String = "",
-            @field:Json(name = "isActive") val isActive: String = "",
-            @field:Json(name = "isHidden") val isHidden: String = "",
-            @field:Json(name = "isAMSUser") val isAMSUser: String = "",
-            @field:Json(name = "dateCreated") val dateCreated: String = "",
-            @field:Json(name = "dateConfirmed") val dateConfirmed: String = "",
-            @field:Json(name = "dateLastAccess") val dateLastAccess: String = ""
+        @field:Json(name = "workspace") val workspace:String = "",
+        @field:Json(name = "userId") val userId:String = "",
+        @field:Json(name = "userToken") val userToken:String = "",
+        @field:Json(name = "firstname") var firstName: String = "",
+        @field:Json(name = "lastname") var lastName: String = "",
+        @field:Json(name = "email") var email: String = "",
+        @field:Json(name = "phoneNo") var phoneNo: String = "",
+        @field:Json(name = "avatarUrl") var avatarUrl: String = "",
+        @field:Json(name = "userGroups") val userGroups: String = "",
+        @field:Json(name = "isActive") val isActive: String = "",
+        @field:Json(name = "isHidden") val isHidden: String = "",
+        @field:Json(name = "isAMSUser") val isAMSUser: String = "",
+        @field:Json(name = "dateCreated") val dateCreated: String = "",
+        @field:Json(name = "dateConfirmed") val dateConfirmed: String = "",
+        @field:Json(name = "dateLastAccess") val dateLastAccess: String = ""
     )
 
     @JsonClass(generateAdapter = true)
@@ -39,7 +39,18 @@ object Model {
         @field:Json(name = "licence") val licence: String = "",
         @field:Json(name = "legalImprint") val legalImprint: String = "",
         @field:Json(name = "legalTerms") val legalTerms: String = "",
-        @field:Json(name = "legalPrivacy") val legalPrivacy: String = ""
+        @field:Json(name = "legalPrivacy") val legalPrivacy: String = "",
+        @field:Json(name = "version") val version: Version = Version()
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class Version(
+            @field:Json(name = "iOS_CurrentVersion") val iOS_CurrentVersion:String = "",
+            @field:Json(name = "iOS_RequiredVersion") val iOS_RequiredVersion:String = "",
+            @field:Json(name = "iOS_AppStoreLink") val iOS_AppStoreLink:String = "",
+            @field:Json(name = "android_CurrentVersion") val android_CurrentVersion:String = "",
+            @field:Json(name = "android_RequiredVersion") val android_RequiredVersion:String = "",
+            @field:Json(name = "android_AppStoreLink") val android_AppStoreLink:String = ""
     )
 
     @JsonClass(generateAdapter = true)
@@ -113,9 +124,9 @@ object Model {
 
     @JsonClass(generateAdapter = true)
     data class Notification(
-        @field:Json(name = "title") val title:String = "",
-        @field:Json(name = "content") val content:String = "",
-        @field:Json(name = "publishFrom") val publishFrom:String = ""
+        @field:Json(name = "id") val id:String = "",
+        @field:Json(name = "sentDate") val sentDate:String = "",
+        @field:Json(name = "message") val message:String = ""
     )
 
     @JsonClass(generateAdapter = true)

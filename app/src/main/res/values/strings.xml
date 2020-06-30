@@ -11,10 +11,10 @@
     <string name="button_qr_scan">SCAN QR CODE</string>
     <string name="button_password_reset">FORGOT PASSWORD</string>
     <string name="search_user">Suchen</string>
-    <string name="placeholder_name_first">Vorname</string>
-    <string name="placeholder_name_last">Nachname</string>
-    <string name="placeholder_email">lorem@ipsum.com</string>
-    <string name="placeholder_phone_number">+49 17123456789</string>
+    <string name="placeholder_name_first">forename</string>
+    <string name="placeholder_name_last">surname</string>
+    <string name="placeholder_email">email</string>
+    <string name="placeholder_phone_number">phone number</string>
 
     <string name="camera">Foto mit Kamera aufnehmen</string>
     <string name="gallery">Foto aus Album hochladen</string>
@@ -27,7 +27,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notification_channel_description">push notifications</string>
-    <string name="open">open</string>
+    <string name="open">public</string>
     <string name="secret">secret</string>
     <string name="show_information">show information</string>
     <string name="vote_now">vote now</string>

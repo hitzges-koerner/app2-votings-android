@@ -11,6 +11,7 @@ class VotingCustomItem() {
     var count: Int = 0
     var total: Int = 0
     var id: String = ""
+    var choiceId: String = ""
     var url: String = ""
     var title: String = ""
     var file: String = ""
@@ -52,14 +53,16 @@ class VotingCustomItem() {
      * @param id
      * @param nameFirst
      * @param nameLast
+     * @param choiceId
      */
-    constructor(type: Int, subType: Int, tag: Int, id: String, nameFirst: String, nameLast: String) : this() {
+    constructor(type: Int, subType: Int, tag: Int, id: String, nameFirst: String, nameLast: String, choiceId: String) : this() {
         this.type = type
         this.subType = subType
         this.tag = tag
         this.id = id
         this.nameFirst = nameFirst
         this.nameLast = nameLast
+        this.choiceId = choiceId
     }
 
     /**
@@ -68,6 +71,7 @@ class VotingCustomItem() {
      * @param tag
      * @param id
      * @param title
+     * @param selected
      */
     constructor(type: Int, subType: Int, tag: Int, id: String, title: String, selected: Boolean) : this() {
         this.type = type
