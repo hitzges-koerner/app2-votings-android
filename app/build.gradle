@@ -5,12 +5,6 @@ apply plugin: 'kotlin-kapt'
 
 android {
 
-    buildTypes {
-        debug {
-            applicationIdSuffix ".debug"
-        }
-    }
-
     dataBinding {
         enabled = true
     }

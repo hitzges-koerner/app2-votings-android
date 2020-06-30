@@ -28,7 +28,7 @@
     <string name="show_result">Ergebnis anzeigen</string>
     <string name="start">Start:</string>
     <string name="end">Ende:</string>
-    <string name="show_preliminary_result">zeige zwischenergebnis</string>
+    <string name="show_preliminary_result">Zeige Zwischenergebnis</string>
     <string name="not_voted">noch nicht abgestimmt</string>
     <string name="already_voted">bereits abgestimmt</string>
 </resources>
