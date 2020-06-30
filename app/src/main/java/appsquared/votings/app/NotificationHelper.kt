@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
 import android.provider.Settings.Global.getString
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import java.util.*
 
@@ -30,9 +31,9 @@ class NotificationHelper(val context: Context) {
                 mNotification = Notification.Builder(context, CHANNEL_ID)
                     // Set the intent that will fire when the user taps the notification
                     //.setContentIntent(pendingIntent)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-                    .setAutoCancel(true)
+                    .setSmallIcon(R.drawable.ic_notification_voting)
+                    .setColor(ContextCompat.getColor(context, R.color.colorAccent))
+                    .setAutoCancel(false)
                     .setContentTitle(context.resources.getString(R.string.app_name))
                     .setStyle(
                         Notification.BigTextStyle()
@@ -42,10 +43,9 @@ class NotificationHelper(val context: Context) {
                 mNotification = Notification.Builder(context)
                     // Set the intent that will fire when the user taps the notification
                     //.setContentIntent(pendingIntent)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-                    .setAutoCancel(true)
-                    .setPriority(Notification.PRIORITY_MAX)
+                    .setSmallIcon(R.drawable.ic_notification_voting)
+                    .setColor(ContextCompat.getColor(context, R.color.colorAccent))
+                    .setAutoCancel(false)
                     .setContentTitle(context.resources.getString(R.string.app_name))
                     .setStyle(
                         Notification.BigTextStyle()
@@ -77,7 +77,7 @@ class NotificationHelper(val context: Context) {
             notificationChannel.enableVibration(true)
             notificationChannel.setShowBadge(true)
             notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.parseColor("#e8334a")
+            notificationChannel.lightColor = ContextCompat.getColor(context, R.color.colorAccent)
             notificationChannel.description = context.getString(R.string.notification_channel_description)
             notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             notificationManager.createNotificationChannel(notificationChannel)
