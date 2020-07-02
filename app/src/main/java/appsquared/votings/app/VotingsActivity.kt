@@ -188,10 +188,14 @@ class VotingsActivity : BaseActivity() {
                     }
                     if(result.users.isNotEmpty() && mStatus != FUTURE) {
                         mVotings.add(VotingCustomItem(SECTION, USER, "Teilnehmer"))
-                        for((index, user) in result.users.withIndex()) {
-                            if(index == 0) mVotings.add(VotingCustomItem(USER, USER, 0, user.userId, user.firstName, user.lastName, user.votedChoiceId))
-                            else if(index == result.users.size-1) mVotings.add(VotingCustomItem(USER, USER, 1, user.userId, user.firstName, user.lastName, user.votedChoiceId))
-                            else mVotings.add(VotingCustomItem(USER, USER, -1, user.userId, user.firstName, user.lastName, user.votedChoiceId))
+                        if(result.users.size == 1) {
+                            mVotings.add(VotingCustomItem(USER, USER, 2, result.users[0].userId, result.users[0].firstName, result.users[0].lastName, result.users[0].votedChoiceId, getChoiceName(result.users[0].votedChoiceId, result.choices)))
+                        } else {
+                            for((index, user) in result.users.withIndex()) {
+                                if(index == 0) mVotings.add(VotingCustomItem(USER, USER, 0, user.userId, user.firstName, user.lastName, user.votedChoiceId, getChoiceName(user.votedChoiceId, result.choices)))
+                                else if(index == result.users.size-1) mVotings.add(VotingCustomItem(USER, USER, 1, user.userId, user.firstName, user.lastName, user.votedChoiceId, getChoiceName(user.votedChoiceId, result.choices)))
+                                else mVotings.add(VotingCustomItem(USER, USER, -1, user.userId, user.firstName, user.lastName, user.votedChoiceId, getChoiceName(user.votedChoiceId, result.choices)))
+                            }
                         }
                     }
 
@@ -301,6 +305,15 @@ class VotingsActivity : BaseActivity() {
                     }
                 }
             )
+    }
+
+    private fun getChoiceName(
+        votedChoiceId: String,
+        choices: MutableList<Model.Choice>
+    ): String {
+        val choice = choices.find { it.choiceId == votedChoiceId }
+        if(choice != null) return choice.choiceTitle
+        return ""
     }
 
     private fun showDialogConfirmationSendVoting(choiceIds: String) {

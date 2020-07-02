@@ -5,6 +5,8 @@ import android.graphics.drawable.GradientDrawable
 import android.service.voice.AlwaysOnHotwordDetector
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -140,8 +142,24 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
                     customView(materialCardViewUser, attributes.contentBackgroundColor, dpToPxFloat(10), "bottom")
                     constraintLayoutUserSmall.setPadding(dpToPx(8), dpToPx(4), dpToPx(8), dpToPx(8))
                 }
-                if(item.choiceId.isEmpty()) textViewUser.text = " \u25EF   ${item.nameLast}, ${item.nameFirst}"
-                else textViewUser.text = " \u29BF   ${item.nameLast}, ${item.nameFirst}"
+                // only one in list
+                if(item.tag == 2) {
+                    customView(materialCardViewUser, attributes.contentBackgroundColor, dpToPxFloat(10), "one")
+                    constraintLayoutUserSmall.setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8))
+                }
+                if(item.choiceId.isEmpty()) {
+                    textViewUserVotedIndicator.text = "\u25EF"
+                    textViewChoiceName.visibility = GONE
+                } else {
+                    textViewUserVotedIndicator.text = "\u29BF"
+                    textViewChoiceName.visibility = VISIBLE
+                }
+                textViewUser.text = "${item.nameLast}, ${item.nameFirst}"
+                textViewChoiceName.text = item.choiceName
+
+                textViewUser.setTextColor(attributes.contentTextColor)
+                textViewUserVotedIndicator.setTextColor(attributes.contentTextColor)
+                textViewChoiceName.setTextColor(attributes.contentTextColor)
             }
         }
 
@@ -159,6 +177,9 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
                 }
                 "bottom" -> {
                     shape.cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, cornerRadius, cornerRadius, cornerRadius, cornerRadius)
+                }
+                "one" -> {
+                    shape.cornerRadii = floatArrayOf(cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius)
                 }
             }
             shape.setColor(backgroundColor)
