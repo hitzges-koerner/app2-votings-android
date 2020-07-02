@@ -103,7 +103,7 @@ class ChangelogActivity : BaseActivity() {
         val includeEdge = false
 
         val spacing = dpToPx(16)
-        recyclerView.setPadding(0, getImageHeaderHeight(), 0, 0)
+        recyclerView.setPadding(0, getImageHeaderHeight() + spacing, 0, 0)
         recyclerView.addItemDecoration(
             GridSpacingItemDecoration(
                 spanCount,

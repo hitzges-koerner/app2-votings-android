@@ -1,12 +1,16 @@
 package appsquared.votings.app
 
+import android.R.color
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.BulletSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.item_changelog.view.*
+
 
 class ChangelogListAdapter(private val items: MutableList<Model.Changelog>, val attributes: Attributes, private val listener: (Int) -> Unit) : RecyclerView.Adapter<ChangelogListAdapter.ViewHolder>() {
 
@@ -28,7 +32,10 @@ class ChangelogListAdapter(private val items: MutableList<Model.Changelog>, val 
                 textViewChangelogTitle.text = item.version
                 textViewChangelogTitle.setTextColor(attributes.contentAccentColor)
 
-                textViewChangelogText.text = item.releaseNotes
+                val apiString = item.releaseNotes
+                val string = SpannableString(apiString)
+                string.setSpan(BulletSpan(dpToPx(8),attributes.contentTextColor), 0, apiString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                textViewChangelogText.text = string
                 textViewChangelogText.setTextColor(attributes.contentTextColor)
 
                 val releaseDate = getLocalDateStyle(item.releaseDate, context)
