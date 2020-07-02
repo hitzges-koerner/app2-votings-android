@@ -138,8 +138,8 @@ object Model {
         @field:Json(name = "votingTill") val votingTill:String = "",
         @field:Json(name = "votingType") val votingType:String = "",
         @field:Json(name = "votingStatus") var votingStatus:Int = 0,
-        @field:Json(name = "inRepresentationOfId") val inRepresentationOfId:String = "",
-        @field:Json(name = "inRepresentationOfName") val inRepresentationOfName:String = ""
+        @field:Json(name = "inRepresentationOfId") var inRepresentationOfId:String = "",
+        @field:Json(name = "inRepresentationOfName") var inRepresentationOfName:String = ""
     )
 
     @JsonClass(generateAdapter = true)

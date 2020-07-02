@@ -132,26 +132,25 @@ class VotingsListActivity : BaseActivity() {
 
             val votingSelectList = mVotingsAll.filter { it.isVoted ==  mVotings[position].isVoted && it.votingId == mVotings[position].votingId }
 
-            VotingSelectDialog(this, attributes) {
-                startActivity(
-                    Intent(this@VotingsListActivity, VotingsActivity::class.java)
-                    .putExtra("voting_id", it.votingId)
+            if(votingSelectList.size > 1) {
+                VotingSelectDialog(this, attributes) {
+                    startActivity(
+                        Intent(this@VotingsListActivity, VotingsActivity::class.java)
+                            .putExtra("voting_id", it.votingId)
+                            .putExtra(STATUS, mStatus)
+                            .putExtra("voting_representation_id", it.inRepresentationOfId)
+                            .putExtra("voting_representation_name", it.inRepresentationOfName))
+                }
+                    .generate()
+                    .setItems(votingSelectList.toMutableList())
+                    .show()
+            } else {
+                startActivity(Intent(this@VotingsListActivity, VotingsActivity::class.java)
+                    .putExtra("voting_id", mVotings[position].votingId)
                     .putExtra(STATUS, mStatus)
-                    .putExtra("voting_representation_id", it.inRepresentationOfId)
-                    .putExtra("voting_representation_name", it.inRepresentationOfName))
+                    .putExtra("voting_representation_id", mVotings[position].inRepresentationOfId)
+                    .putExtra("voting_representation_name", mVotings[position].inRepresentationOfName))
             }
-                .generate()
-                .setItems(votingSelectList.toMutableList())
-                .show()
-
-            /*
-            startActivity(Intent(this@VotingsListActivity, VotingsActivity::class.java)
-                .putExtra("voting_id", mVotings[position].votingId)
-                .putExtra(STATUS, mStatus)
-                .putExtra("voting_representation_id", mVotings[position].inRepresentationOfId)
-                .putExtra("voting_representation_name", mVotings[position].inRepresentationOfName))
-
-             */
         }
 
         loadVotingsList()
@@ -180,7 +179,12 @@ class VotingsListActivity : BaseActivity() {
 
                         val listNotVotedGrouped : MutableList<Model.VotingShort> = mutableListOf()
                         for(listNotVotedGroupedMapItem in listNotVotedGroupedMap) {
-                            listNotVotedGrouped.add(listNotVotedGroupedMapItem.value[0])
+                            if(listNotVotedGroupedMapItem.value.size > 1) {
+                                val item = listNotVotedGroupedMapItem.value[0]
+                                item.inRepresentationOfId = ""
+                                item.inRepresentationOfName = ""
+                                listNotVotedGrouped.add(item)
+                            } else listNotVotedGrouped.add(listNotVotedGroupedMapItem.value[0])
                         }
 
                         val listVotedGrouped : MutableList<Model.VotingShort> = mutableListOf()
