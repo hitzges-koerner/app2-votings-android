@@ -1,6 +1,5 @@
 package appsquared.votings.app
 
-import android.R.color
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.BulletSpan
@@ -32,10 +31,13 @@ class ChangelogListAdapter(private val items: MutableList<Model.Changelog>, val 
                 textViewChangelogTitle.text = item.version
                 textViewChangelogTitle.setTextColor(attributes.contentAccentColor)
 
+                val string = SpannableString("Text with\nBullet point")
+                string.setSpan(BulletSpan(), 10, 22, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
                 val apiString = item.releaseNotes
-                val string = SpannableString(apiString)
-                string.setSpan(BulletSpan(dpToPx(8),attributes.contentTextColor), 0, apiString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                textViewChangelogText.text = string
+                //val string = SpannableString(apiString)
+                //string.setSpan(BulletSpan(dpToPx(8),attributes.contentTextColor), 0, apiString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                textViewChangelogText.text = addBullets(apiString)
                 textViewChangelogText.setTextColor(attributes.contentTextColor)
 
                 val releaseDate = getLocalDateStyle(item.releaseDate, context)
@@ -47,6 +49,16 @@ class ChangelogListAdapter(private val items: MutableList<Model.Changelog>, val 
                 materialCardView.strokeWidth = dpToPx(attributes.contentBorderWidth)
                 materialCardView.radius = dpToPx(attributes.contentCornerRadius).toFloat()
             }
+        }
+
+        fun addBullets(text: String) : SpannableString {
+            val parts = text.split("\n")
+            val string = SpannableString(text)
+            for (part in parts) {
+                val index: Int = text.indexOf(part)
+                string.setSpan(BulletSpan(dpToPx(8),attributes.contentTextColor), index, index + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            return string
         }
     }
 }
