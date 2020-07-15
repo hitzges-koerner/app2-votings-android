@@ -104,6 +104,23 @@ class VotingCustomItem() {
         this.selected = selected
     }
 
+    /**
+     * @param type
+     * @param subType
+     * @param id
+     * @param title
+     * @param count
+     * @param total
+     */
+    constructor(type: Int, subType: Int, id: String, title: String, count: Int, total: Int) : this() {
+        this.type = type
+        this.subType = subType
+        this.id = id
+        this.title = title
+        this.count = count
+        this.total = total
+    }
+
     companion object {
         var TYPE = 0
         var TAG = 1
@@ -122,5 +139,6 @@ class VotingCustomItem() {
         var BUTTON = 5
         var USER = 6
         var INFO = 7
+        var RESULT = 8
     }
 }

@@ -10,6 +10,7 @@ import appsquared.votings.app.VotingCustomItem.Companion.BUTTON
 import appsquared.votings.app.VotingCustomItem.Companion.CHOICE
 import appsquared.votings.app.VotingCustomItem.Companion.DOCUMENT
 import appsquared.votings.app.VotingCustomItem.Companion.INFO
+import appsquared.votings.app.VotingCustomItem.Companion.RESULT
 import appsquared.votings.app.VotingCustomItem.Companion.SECTION
 import appsquared.votings.app.VotingCustomItem.Companion.STREAM
 import appsquared.votings.app.VotingCustomItem.Companion.USER
@@ -186,6 +187,29 @@ class VotingsActivity : BaseActivity() {
                             mVotings.add(VotingCustomItem(BUTTON, BUTTON, ""))
                         }
                     }
+                    when(result.votingResultsAvailableFrom.toLowerCase()) {
+                        // before voting
+                        "BEFORE".toLowerCase() -> {
+                            if(getTimeDifference(result.votingTill) > 0) mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
+                            else mVotings.add(VotingCustomItem(SECTION, RESULT, "Vorläufiges Ergebnis"))
+                            mVotings.addAll(buildResultList(result.choices))
+                        }
+                        // after voting
+                        "AFTER".toLowerCase() -> {
+                            if(mVoted) {
+                                if(getTimeDifference(result.votingTill) > 0) mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
+                                else mVotings.add(VotingCustomItem(SECTION, RESULT, "Vorläufiges Ergebnis"))
+                                mVotings.addAll(buildResultList(result.choices))
+                            }
+                        }
+                        // after voting ended
+                        "AT-END" -> {
+                            if(getTimeDifference(result.votingTill) > 0) {
+                                mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
+                                mVotings.addAll(buildResultList(result.choices))
+                            }
+                        }
+                    }
                     if(result.users.isNotEmpty() && mStatus != FUTURE) {
                         mVotings.add(VotingCustomItem(SECTION, USER, "Teilnehmer"))
                         if(result.users.size == 1) {
@@ -305,6 +329,18 @@ class VotingsActivity : BaseActivity() {
                     }
                 }
             )
+    }
+
+    private fun buildResultList(choices: MutableList<Model.Choice>): MutableList<VotingCustomItem> {
+        var total = 0
+        choices.forEach {
+            total += it.votesCnt.toInt()
+        }
+        val resultList = mutableListOf<VotingCustomItem>()
+        for(choice in choices) {
+            resultList.add(VotingCustomItem(RESULT, RESULT, choice.choiceId, choice.choiceTitle, choice.votesCnt.toInt(), total))
+        }
+        return resultList
     }
 
     private fun getChoiceName(

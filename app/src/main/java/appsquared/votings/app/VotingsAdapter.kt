@@ -14,6 +14,7 @@ import appsquared.votings.app.VotingCustomItem.Companion.BUTTON
 import appsquared.votings.app.VotingCustomItem.Companion.CHOICE
 import appsquared.votings.app.VotingCustomItem.Companion.DOCUMENT
 import appsquared.votings.app.VotingCustomItem.Companion.INFO
+import appsquared.votings.app.VotingCustomItem.Companion.RESULT
 import appsquared.votings.app.VotingCustomItem.Companion.SECTION
 import appsquared.votings.app.VotingCustomItem.Companion.STREAM
 import appsquared.votings.app.VotingCustomItem.Companion.USER
@@ -21,6 +22,7 @@ import kotlinx.android.synthetic.main.item_button.view.*
 import kotlinx.android.synthetic.main.item_choice.view.*
 import kotlinx.android.synthetic.main.item_document.view.*
 import kotlinx.android.synthetic.main.item_info.view.*
+import kotlinx.android.synthetic.main.item_result.view.*
 import kotlinx.android.synthetic.main.item_section.view.*
 import kotlinx.android.synthetic.main.item_stream.view.*
 import kotlinx.android.synthetic.main.item_user_small.view.*
@@ -57,6 +59,10 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
             CHOICE -> {
                 val v2 = inflater.inflate(R.layout.item_choice, viewGroup, false)
                 ViewHolderChoice(v2, attributes, status, voted, listener)
+            }
+            RESULT -> {
+                val v2 = inflater.inflate(R.layout.item_result, viewGroup, false)
+                ViewHolderResult(v2, attributes, listener)
             }
             INFO -> {
                 val v2 = inflater.inflate(R.layout.item_info, viewGroup, false)
@@ -100,6 +106,10 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
             }
             CHOICE -> {
                 val vh2 = viewHolder as ViewHolderChoice
+                vh2.bindItems(items[position])
+            }
+            RESULT -> {
+                val vh2 = viewHolder as ViewHolderResult
                 vh2.bindItems(items[position])
             }
             INFO -> {
@@ -270,6 +280,28 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
             with(itemView) {
                 if(item.selected) imageViewChoiceChecked.setImageResource(R.drawable.ic_round_checked)
                 else imageViewChoiceChecked.setImageResource(R.drawable.ic_round_unchecked)
+            }
+        }
+    }
+
+    class ViewHolderResult(itemView: View, private val attributes: Attributes, val listener : (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
+        fun bindItems(item: VotingCustomItem) {
+            with(itemView) {
+                textViewResultTitle.setTextColor(ContextCompat.getColor(context, R.color.black))
+                textViewResultPercent.setTextColor(ContextCompat.getColor(context, R.color.black))
+                textViewResultTitle.text = item.title
+                if(item.count == 0) {
+                    textViewResultPercent.text = "0,0% (0)"
+                    //guidelineResult.setGuidelinePercent(0.5f)
+                    textViewResultPercent.background.setLevel(0)
+                } else {
+                    val df = DecimalFormat("#.#")
+                    textViewResultPercent.text = "${df.format((item.count.toFloat() / item.total.toFloat()) * 100)} % (${item.count})"
+                    //guidelineResult.setGuidelinePercent((item.count.toFloat() / item.total.toFloat()))
+                    guidelineResult.setGuidelinePercent(0.5f)
+
+                    textViewResultPercent.background.setLevel((item.count.toFloat() / item.total.toFloat() * 10000).toInt())
+                }
             }
         }
     }
