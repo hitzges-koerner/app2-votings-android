@@ -31,4 +31,5 @@
     <string name="show_preliminary_result">Zeige Zwischenergebnis</string>
     <string name="not_voted">noch nicht abgestimmt</string>
     <string name="already_voted">bereits abgestimmt</string>
+    <string name="create_account">Neu registrieren</string>
 </resources>

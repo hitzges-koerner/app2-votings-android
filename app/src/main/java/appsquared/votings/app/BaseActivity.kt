@@ -24,6 +24,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private var mImageViewHeaderHeight: Int = 0
     lateinit var mTextViewScreenTitle: TextView
+    lateinit var mTextViewButtonLeft: TextView
     lateinit var mImageButtonBack: ImageButton
     lateinit var mImageViewHeader: ImageView
     lateinit var mImageViewBackground: ImageView
@@ -44,6 +45,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val constraintLayout: ConstraintLayout = layoutInflater.inflate(R.layout.activity_base, null) as ConstraintLayout
         val activityContainer: FrameLayout = constraintLayout.findViewById(R.id.layout_container)
         mTextViewScreenTitle = constraintLayout.findViewById(R.id.text_screen_title) as TextView
+        mTextViewButtonLeft = constraintLayout.findViewById(R.id.textViewButtonLeft) as TextView
         mImageButtonBack = constraintLayout.findViewById(R.id.image_back_button)
         mImageViewHeader = constraintLayout.findViewById(R.id.imageViewHeader)
         mImageViewBackground = constraintLayout.findViewById(R.id.imageViewBackground)
@@ -102,7 +104,7 @@ abstract class BaseActivity : AppCompatActivity() {
                         .load(mWorkspace.main.headerImageUrl)
                         .into(mImageViewHeader)
                 } else if (mWorkspace.settings.logoImageUrl.isNotEmpty()) {
-                    mImageViewHeader.visibility = View.VISIBLE
+                    mImageViewHeader.visibility = VISIBLE
                     Picasso.get()
                         .load(mWorkspace.settings.logoImageUrl)
                         .into(mImageViewHeader)
@@ -119,6 +121,8 @@ abstract class BaseActivity : AppCompatActivity() {
     open fun childOnlyMethod() {
 
     }
+
+    open fun clickToolbarCancelButton() {}
 
     fun removeToolbarShadow() {
         toolBar.elevation = 0F
@@ -137,12 +141,22 @@ abstract class BaseActivity : AppCompatActivity() {
         toolbar.title = title
     }
 
+    fun setCancelButtonActive(b: Boolean) {
+        if(b) {
+            removeBackButton()
+            mTextViewButtonLeft.visibility = VISIBLE
+            mTextViewButtonLeft.setOnClickListener {
+                clickToolbarCancelButton()
+            }
+        }
+    }
+
     fun removeBackButton() {
         mImageButtonBack.visibility = View.GONE
     }
 
     fun showToolbarLogo() {
-        image_logo.visibility = View.VISIBLE
+        image_logo.visibility = VISIBLE
     }
 
     fun getBackButton(): ImageButton {

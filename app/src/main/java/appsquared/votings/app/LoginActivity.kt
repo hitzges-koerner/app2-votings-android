@@ -105,6 +105,10 @@ class LoginActivity : AppCompatActivity() {
             editTextCardViewWorkspace.setText("clean")
         }
 
+        buttonCardViewQR.materialCardView.setOnClickListener {
+            startActivity(Intent(this, AccountRegistrationActivity::class.java))
+        }
+
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         if(pref.getString(PreferenceNames.WORKSPACE_NAME, "")!!.isNotEmpty()) editTextCardViewWorkspace.setText(pref.getString(PreferenceNames.WORKSPACE_NAME, "")!!)
         if(pref.getString(PreferenceNames.EMAIL, "")!!.isNotEmpty()) editTextCardViewMail.setText(pref.getString(PreferenceNames.EMAIL, "")!!)
@@ -143,7 +147,7 @@ class LoginActivity : AppCompatActivity() {
         viewFadeIn(editTextCardViewMail)
         viewFadeIn(editTextCardViewPassword)
         viewFadeIn(buttonCardViewLogin)
-        //viewFadeIn(buttonCardViewQR)
+        viewFadeIn(buttonCardViewQR)
 
         //Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
 
@@ -170,7 +174,7 @@ class LoginActivity : AppCompatActivity() {
         viewFadeOut(editTextCardViewMail)
         viewFadeOut(editTextCardViewPassword)
         viewFadeOut(buttonCardViewLogin)
-        //viewFadeOut(buttonCardViewQR)
+        viewFadeOut(buttonCardViewQR)
 
         apiLogin(editTextCardViewMail.getText(),
             editTextCardViewPassword.getText(),

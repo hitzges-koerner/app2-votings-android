@@ -37,4 +37,5 @@
     <string name="show_preliminary_result">show preliminary result</string>
     <string name="not_voted">not yet voted</string>
     <string name="already_voted">already voted</string>
+    <string name="create_account">Register account</string>
 </resources>

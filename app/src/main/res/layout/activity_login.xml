@@ -154,14 +154,13 @@
         app:text_color="@android:color/white" />
 
     <appsquared.votings.app.views.ButtonCardView
-        android:visibility="invisible"
         android:id="@+id/buttonCardViewQR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:background_color="@android:color/white"
         app:border_color="#EE7800"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:text="@string/button_password_reset"
+        app:text="@string/create_account"
         app:text_color="@color/colorAccent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

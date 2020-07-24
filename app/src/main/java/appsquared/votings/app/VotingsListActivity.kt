@@ -130,7 +130,9 @@ class VotingsListActivity : BaseActivity() {
 
         recyclerView.adapter = VotingsListAdapter(mVotings, attributes) { position: Int ->
 
-            val votingSelectList = mVotingsAll.filter { it.isVoted ==  mVotings[position].isVoted && it.votingId == mVotings[position].votingId }
+            val votingSelectList = mVotingsAll.filter {
+                it.isVoted == mVotings[position].isVoted && it.votingId == mVotings[position].votingId
+            }
 
             if(votingSelectList.size > 1) {
                 VotingSelectDialog(this, attributes) {
@@ -172,9 +174,13 @@ class VotingsListActivity : BaseActivity() {
                     mVotingsAll.addAll(getVotingsByStatus(result))
 
                     if(mStatus == CURRENT) {
-                        val listVoted = mVotingsAll.filter { it.isVoted == "1" }
+                        val listVoted = mVotingsAll.filter {
+                            it.isVoted == "1"
+                        }
                         val listVotedGroupedMap = listVoted.groupBy { it.votingId }
-                        val listNotVoted = mVotingsAll.filter { it.isVoted == "0" }
+                        val listNotVoted = mVotingsAll.filter {
+                            it.isVoted == "0"
+                        }
                         val listNotVotedGroupedMap = listNotVoted.groupBy { it.votingId }
 
                         val listNotVotedGrouped : MutableList<Model.VotingShort> = mutableListOf()
@@ -202,7 +208,9 @@ class VotingsListActivity : BaseActivity() {
                         }
                     } else {
 
-                        val listGroupedMap = mVotingsAll.groupBy { it.votingId }
+                        val listGroupedMap = mVotingsAll.groupBy {
+                            it.votingId
+                        }
 
                         val listGrouped : MutableList<Model.VotingShort> = mutableListOf()
                         for(listGroupedMapItem in listGroupedMap) {
