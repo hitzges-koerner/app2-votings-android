@@ -72,7 +72,7 @@
                 app:background_color="@color/white"
                 app:border_color="@color/colorAccent"
                 app:border_size="5"
-                app:text="+ Add new choice"
+                app:text="@string/add_new_choice"
                 app:text_color="@color/colorAccent" />
 
             <com.google.android.material.card.MaterialCardView

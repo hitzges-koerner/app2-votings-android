@@ -108,7 +108,7 @@ class VotingCreateActivity : BaseActivity(),
         VotingCreateData.userType = UserType.NONE
         VotingCreateData.users = mutableListOf()
 
-        setScreenTitle(getString(R.string.register_workspace))
+        setScreenTitle(getString(R.string.voting_create))
         setCancelButtonActive(true)
         removeImageHeader()
 

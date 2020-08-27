@@ -105,12 +105,13 @@
 
     <!-- tutorial -->
     <string name="tutorial">Tutorial</string>
-    <string name="tutorial_title_1">What do I have to do first?</string>
-    <string name="tutorial_title_2">Create a voting</string>
-    <string name="tutorial_title_3">Track the results</string>
-    <string name="tutorial_description_1">First create users and invite them to your workspace. Confirmed users can then be added as participants to a vote.</string>
-    <string name="tutorial_description_2">In the main view, ta on the plus sign in the upper right corner to create a new voting. Select the different options &amp; add the participants who should vote.</string>
-    <string name="tutorial_description_3">You can use the menu to track all active votes, view interim results or call up the results of previous votes.</string>
+    <string name="tutorial_title_1">Was muß ich als erstes tun?</string>
+    <string name="tutorial_title_2">Erstelle eine Abstimmung</string>
+    <string name="tutorial_title_3">Verfolge die Ergebnisse</string>
+    <string name="tutorial_description_1">Lege zunächst Benutzer an und lade sie zu deinem Workspace ein. Bestätigte Benutzer können dann als Teilnehmer zu einer Abstimmung hinzugefügt werden.</string>
+    <string name="tutorial_description_2">Tippe in der Hauptansicht auf das Plus-Zeichen oben rechts, um eine neue Abstimmung zu erstellen. Wähle die verschiedenen Optionen aus &amp; füge die Teilnehmer hinzu, die abstimmen sollen.</string>
+    <string name="tutorial_description_3">Über das Menü kannst du alle aktiven Abstimmungen verfolgen, Zwischenergebnisse einsehen oder Ergebnisse alter Abstimmungen abrufen.</string>
+
 
     <!-- create voting -->
     <string name="voting_create_info_title">Neue Abstimmung erstellen</string>
@@ -133,5 +134,7 @@
     <string name="voting_create_users_title">Choose your \nparticipants</string>
     <string name="voting_create_users_all">Alle Benutzer</string>
     <string name="voting_create_users_selected">Einzelne Benutzer</string>
+    <string name="voting_create">Neue Abstimmung</string>
+    <string name="add_new_choice">+ Neue Auswahl hinzufügen</string>
 
 </resources>
