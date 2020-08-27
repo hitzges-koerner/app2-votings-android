@@ -22,6 +22,8 @@
         android:translationZ="4dp">
 
         <TextView
+            android:maxLines="4"
+            android:ellipsize="end"
             android:textColor="@color/black"
             android:textSize="@dimen/news_title_size"
             android:textStyle="bold"

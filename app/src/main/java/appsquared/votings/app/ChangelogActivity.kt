@@ -41,7 +41,7 @@ class ChangelogActivity : BaseActivity() {
 
     override fun childOnlyMethod() {
 
-        setTitle("Changelog")
+        setScreenTitle(getString(R.string.changelog))
 
         val workspace: Model.WorkspaceResponse = mWorkspace
 

@@ -1,8 +1,9 @@
 package appsquared.votings.app
 
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
@@ -11,13 +12,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.FragmentActivity
 import com.squareup.picasso.Picasso
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_base.view.*
 import kotlinx.android.synthetic.main.activity_base.view.constraintLayoutRoot
-import kotlinx.android.synthetic.main.activity_base.view.imageViewBackground
+import kotlinx.android.synthetic.main.item_user.view.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -46,7 +45,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val activityContainer: FrameLayout = constraintLayout.findViewById(R.id.layout_container)
         mTextViewScreenTitle = constraintLayout.findViewById(R.id.text_screen_title) as TextView
         mTextViewButtonLeft = constraintLayout.findViewById(R.id.textViewButtonLeft) as TextView
-        mImageButtonBack = constraintLayout.findViewById(R.id.image_back_button)
+        mImageButtonBack = constraintLayout.findViewById(R.id.imageButtonBack)
         mImageViewHeader = constraintLayout.findViewById(R.id.imageViewHeader)
         mImageViewBackground = constraintLayout.findViewById(R.id.imageViewBackground)
 
@@ -123,6 +122,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun clickToolbarCancelButton() {}
+    open fun clickToolbarMenuButton() {}
 
     fun removeToolbarShadow() {
         toolBar.elevation = 0F
@@ -148,11 +148,11 @@ abstract class BaseActivity : AppCompatActivity() {
             mTextViewButtonLeft.setOnClickListener {
                 clickToolbarCancelButton()
             }
-        }
+        } else mTextViewButtonLeft.visibility = GONE
     }
 
     fun removeBackButton() {
-        mImageButtonBack.visibility = View.GONE
+        mImageButtonBack.visibility = GONE
     }
 
     fun showToolbarLogo() {
@@ -165,5 +165,18 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun getImageHeaderHeight() : Int {
         return mImageViewHeaderHeight
+    }
+
+    fun removeImageHeader() {
+        mImageViewHeader.visibility = GONE
+    }
+
+    fun setMenuButton(imageId: Int, color: Int) {
+        imageButtonMenu.visibility = VISIBLE
+        imageButtonMenu.setImageResource(imageId)
+        imageButtonMenu.imageTintList = ColorStateList.valueOf(color)
+        imageButtonMenu.setOnClickListener {
+            clickToolbarMenuButton()
+        }
     }
 }

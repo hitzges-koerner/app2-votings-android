@@ -1,81 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="10dp"
-    app:strokeWidth="2dp"
-    app:cardBackgroundColor="@color/colorAccent"
-    android:layout_marginBottom="8dp"
-    android:layout_marginTop="8dp"
-    android:id="@+id/materialCardViewChoice"
-    android:clickable="true"
-    android:focusable="true"
-    android:elevation="0dp"
-    app:cardElevation="0dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp">
+    android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="4dp"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        app:cardCornerRadius="10dp"
+        app:strokeWidth="2dp"
+        app:cardBackgroundColor="@color/colorAccent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/materialCardViewChoice"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="0dp"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
 
-        <TextView
-            android:id="@+id/textViewChoiceTitle"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="4dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:layout_weight="1"
-            android:textSize="@dimen/button_text_size"
-            app:layout_constraintEnd_toStartOf="@+id/imageViewChoiceChecked"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:visibility="gone"
-            android:textColor="@color/white"
-            android:id="@+id/textViewChoicePercent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_weight="1"
-            android:text="200 %"
-            android:textSize="@dimen/button_text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewChoiceTitle" />
+            <TextView
+                android:id="@+id/textViewChoiceTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/button_text_size"
+                app:layout_constraintEnd_toStartOf="@+id/imageViewChoiceChecked"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ProgressBar
-            android:visibility="gone"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:progressDrawable="@drawable/myprogressbar"
-            android:layout_marginLeft="8dp"
-            android:id="@+id/progressBarChoice"
-            android:layout_width="0dp"
-            android:layout_height="5dp"
-            android:max="100"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewChoicePercent"
-            app:layout_constraintEnd_toEndOf="@+id/textViewChoiceTitle"
-            app:layout_constraintStart_toEndOf="@+id/textViewChoicePercent"
-            app:layout_constraintTop_toTopOf="@+id/textViewChoicePercent" />
+            <TextView
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:id="@+id/textViewChoicePercent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_weight="1"
+                android:text="200 %"
+                android:textSize="@dimen/button_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewChoiceTitle" />
 
-        <ImageView
-            android:layout_marginRight="16dp"
-            android:id="@+id/imageViewChoiceChecked"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_round_unchecked"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <ProgressBar
+                android:visibility="gone"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/myprogressbar"
+                android:layout_marginLeft="8dp"
+                android:id="@+id/progressBarChoice"
+                android:layout_width="0dp"
+                android:layout_height="5dp"
+                android:max="100"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewChoicePercent"
+                app:layout_constraintEnd_toEndOf="@+id/textViewChoiceTitle"
+                app:layout_constraintStart_toEndOf="@+id/textViewChoicePercent"
+                app:layout_constraintTop_toTopOf="@+id/textViewChoicePercent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:layout_marginRight="16dp"
+                android:id="@+id/imageViewChoiceChecked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_round_unchecked"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-</com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

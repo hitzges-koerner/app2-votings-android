@@ -48,8 +48,8 @@
                 app:layout_constraintTop_toTopOf="@+id/guideline" >
 
                 <ImageView
-                    android:tint="@color/colorAccent"
-                    android:src="@drawable/ico_einstellungen"
+                    app:tint="@color/colorAccent"
+                    android:src="@drawable/tile_icon_einstellungen"
                     android:id="@+id/imageViewIcon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

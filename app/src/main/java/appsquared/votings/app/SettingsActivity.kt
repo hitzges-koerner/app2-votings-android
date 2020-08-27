@@ -7,10 +7,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.settings_changelog_card_view.*
+import kotlinx.android.synthetic.main.settings_changelog_card_view.materialCardViewChangelog
 import kotlinx.android.synthetic.main.settings_impress_card_view.*
 import kotlinx.android.synthetic.main.settings_notification_card_view.*
 import kotlinx.android.synthetic.main.settings_privacy_card_view.*
 import kotlinx.android.synthetic.main.settings_terms_card_view.*
+import kotlinx.android.synthetic.main.settings_tutorial_card_view.*
 import kotlin.math.roundToInt
 
 
@@ -29,7 +31,8 @@ class SettingsActivity : BaseActivity() {
 
     override fun childOnlyMethod() {
 
-        setScreenTitle("Einstellungen")
+        setScreenTitle(getString(R.string.tile_settings))
+        textViewVersionName.text = "${getString(R.string.version)} ${BuildConfig.VERSION_NAME}"
 
         val workspace = mWorkspace
 
@@ -84,24 +87,28 @@ class SettingsActivity : BaseActivity() {
         if(workspace.settings.contentCornerRadius.isNotEmpty()) contentCornerRadius = workspace.settings.contentCornerRadius.toDouble().roundToInt()
 
         textViewChangelog.setTextColor(contentTextColor)
+        textViewTutorial.setTextColor(contentTextColor)
         textViewNotification.setTextColor(contentTextColor)
         textViewImpress.setTextColor(contentTextColor)
         textViewPrivacy.setTextColor(contentTextColor)
         textViewTerms.setTextColor(contentTextColor)
 
-        textViewChangelog.text = "Changelog"
-        textViewNotification.text = "Benachrichtigungen"
-        textViewImpress.text = "Impressum"
-        textViewPrivacy.text = "Datenschutz"
-        textViewTerms.text = "Nutzungsbedingungen"
+        textViewChangelog.text = getString(R.string.changelog)
+        textViewTutorial.text = getString(R.string.tutorial)
+        textViewNotification.text = getString(R.string.tile_notifications)
+        textViewImpress.text = getString(R.string.title_imprint)
+        textViewPrivacy.text = getString(R.string.title_privacy)
+        textViewTerms.text = getString(R.string.title_terms_of_use)
 
         imageViewIconChangelog.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
+        imageViewIconTutorial.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
         imageViewIconNotification.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
         imageViewIconImpress.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
         imageViewIconPrivacy.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
         imageViewIconTerms.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
 
         imageViewCaretChangelog.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
+        imageViewCaretTutorial.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
         imageViewCaretImpress.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
         imageViewCaretPrivacy.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
         imageViewCaretTerms.setColorFilter(contentTextColor, PorterDuff.Mode.SRC_ATOP)
@@ -110,6 +117,11 @@ class SettingsActivity : BaseActivity() {
         materialCardViewChangelog.strokeWidth = borderWidth
         materialCardViewChangelog.setCardBackgroundColor(contentBackgroundColor)
         materialCardViewChangelog.radius = contentCornerRadius.toFloat()
+
+        materialCardViewTutorial.strokeColor = borderColor
+        materialCardViewTutorial.strokeWidth = borderWidth
+        materialCardViewTutorial.setCardBackgroundColor(contentBackgroundColor)
+        materialCardViewTutorial.radius = contentCornerRadius.toFloat()
 
         materialCardViewImpress.strokeColor = borderColor
         materialCardViewImpress.strokeWidth = borderWidth
@@ -143,6 +155,10 @@ class SettingsActivity : BaseActivity() {
 
         materialCardViewChangelog.setOnClickListener {
             startActivity(Intent(this, ChangelogActivity::class.java))
+        }
+
+        materialCardViewTutorial.setOnClickListener {
+            startActivity(Intent(this, TutorialActivity::class.java))
         }
 
         materialCardViewImpress.setOnClickListener {

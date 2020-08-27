@@ -6,10 +6,10 @@
     <string name="error_credentials_false">Wrong credentials. Please try again.</string>
     <string name="error_general">Something went wrong. Please retry.</string>
     <string name="error_login_again">Please login again.</string>
-    <string name="button_login">LOGIN</string>
-    <string name="button_logout">LOGOUT</string>
+    <string name="button_login">Login</string>
+    <string name="button_logout">Logout</string>
     <string name="button_qr_scan">SCAN QR CODE</string>
-    <string name="button_password_reset">FORGOT PASSWORD</string>
+    <string name="button_password_reset">Forgot password</string>
     <string name="search_user">Suchen</string>
     <string name="placeholder_name_first">forename</string>
     <string name="placeholder_name_last">surname</string>
@@ -25,8 +25,6 @@
     <string name="archiv">archivs</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="notification_channel_description">push notifications</string>
     <string name="open">public</string>
     <string name="secret">secret</string>
     <string name="show_information">show information</string>
@@ -38,4 +36,102 @@
     <string name="not_voted">not yet voted</string>
     <string name="already_voted">already voted</string>
     <string name="create_account">Register account</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel_account_registration">Do you want to cancel the registration?</string>
+    <string name="cancel_invite_user">Do you want to cancel the invitation?</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">ok</string>
+    <string name="check_send_choices">Are you sure to send your choices?</string>
+    <string name="what_is_your_e_mail">What is your \nE-Mail?</string>
+    <string name="e_mail_address">E-Mail-Address</string>
+    <string name="please_indicate_a_valid_email">Please indicate a valid email</string>
+    <string name="next_step">Next step</string>
+    <string name="one_step_back">One step back</string>
+    <string name="ok_lets_go">Ok, let\'s go</string>
+    <string name="what_is_your_workspace">What is your \nWorkspace?</string>
+    <string name="workspace">Workspace</string>
+    <string name="lastname">Lastname</string>
+    <string name="firstname">Firstname</string>
+    <string name="please_enter_a_valid_firstname">Please enter a valid firstname</string>
+    <string name="please_enter_a_valid_lastname">Please enter a valid lastname</string>
+    <string name="register_workspace_info_text">If you want to register a new worksapce, we need some basic information from you.\n\nAfter successfully registration you will receive an email to donfirm you worksoacne and ro set apasword for your account.\n\nFinally you will be able to login into you own rokspace, invite users and create votings :)</string>
+    <string name="register_a_new_workspace">Register a\nnew workspace</string>
+    <string name="workspace_taken">This workspace has already been taken</string>
+    <string name="error_workspace_empty">Please choose a name for your workspace</string>
+    <string name="error_workspace_pre_postfix">Minus sign as first or last character are not allowed</string>
+    <string name="error_workspace_letters">At least 4 letters, numbers or minus signs</string>
+    <string name="hello_what_is_your_name">What is your \nname?</string>
+    <string name="workspace_info">The workspace is your own space for you and your team.\n\nOnly invited people have access here. In the workspace conduct all your votings with your team.</string>
+
+    <!-- how it works dialog -->
+    <string name="how_it_works_title">How it works</string>
+    <string name="how_it_works_button">OK, got it</string>
+    <string name="how_it_works_message">If you have received an invitation email and have set your password, you can log into the VOTINGS.APP directly.\n\nOtherwise, register a new workspace and easily invite friends, family and colleagues to votings or surveys.\n\nThe workspace is your work area in which you create and manage projects.\n\nUse the free version with basic functions for simple projects for up to 20 participants.</string>
+    <string name="notification_channel_description" translatable="false">channel for votings.app notifications</string>
+    <string name="register_workspace">Register Workspace</string>
+    <string name="terms_of_use"><u>Terms of Use</u></string>
+    <string name="i_accept_the">I accept the </string>
+    <string name="please_accept_terms_of_use">You have to accept the terms of use</string>
+    <string name="title_terms_of_use">Terms of Use</string>
+    <string name="title_imprint">Imprint</string>
+    <string name="title_privacy">Privacy</string>
+    <string name="title_users">Users</string>
+    <string name="add_new_user">Add new user</string>
+    <string name="title_invite_user">Invite User</string>
+    <string name="invite_user">Send invite</string>
+
+    <!-- tiles -->
+    <string name="tile_my_profil">My Profile</string>
+    <string name="tile_users">Users</string>
+    <string name="tile_current_votings">Current Votings</string>
+    <string name="tile_archive">Archive</string>
+    <string name="tile_notifications">Push Notification</string>
+    <string name="tile_faq">FAQ</string>
+    <string name="tile_pro_version">Pro Version</string>
+    <string name="tile_settings">Settings</string>
+    <string name="successfully_registered">Successfully registered</string>
+    <string name="successfully_registered_info_text">Your workspace is successfully registered now. Please check you mail inbox (perhaps take a look at your spam folder!) and confirm your registration.\n\nYou will be redirected acordingly to set your password.\n\nAfter these final steps you are ready to login, invite your participants and conduct your votings.</string>
+    <string name="ok_fine">Okay, fine.</string>
+
+    <!-- create voting -->
+    <string name="add">Add</string>
+    <string name="tile_welcome">Welcome</string>
+    <string name="tile_news">News</string>
+    <string name="tile_upcoming_votings">Upcoming Votings</string>
+    <string name="changelog">Changelog</string>
+    <string name="version">Version</string>
+    <string name="voting_create_error_too_much_user_selected">Too many participants are selected. Reduce the number of participants or upgrade your workspace.</string>
+    <string name="voting_create_error_at_least_two_participants">At least 2 participants are required</string>
+
+    <!-- tutorial -->
+    <string name="tutorial">Tutorial</string>
+    <string name="tutorial_title_1">Was muß ich als erstes tun?</string>
+    <string name="tutorial_title_2">Erstelle eine Abstimmung</string>
+    <string name="tutorial_title_3">Verfolge die Ergebnisse</string>
+    <string name="tutorial_description_1">Lege zunächst Benutzer an und lade sie zu deinem Workspace ein. Bestätigte Benutzer können dann als Teilnehmer zu einer Abstimmung hinzugefügt werden.</string>
+    <string name="tutorial_description_2">Tippe in der Hauptansicht auf das Plus-Zeichen oben rechts, um eine neue Abstimmung zu erstellen. Wähle die verschiedenen Optionen aus &amp; füge die Teilnehmer hinzu, die abstimmen sollen.</string>
+    <string name="tutorial_description_3">Über das Menü kannst du alle aktiven Abstimmungen verfolgen, Zwischenergebnisse einsehen oder Ergebnisse alter Abstimmungen abrufen.</string>
+
+
+    <!-- create voting -->
+    <string name="create_voting_choices_title">Provide the \npossible answers</string>
+    <string name="create_voting_choices_error">At least 2 answers are required</string>
+    <string name="create_voting_choices_info">At least 2 possible answers must be provided.\n\nChange sort order:\nThe order of answers can be changed by dragging and dropping.</string>
+    <string name="voting_create_confirmation_title">Voting successfully created</string>
+    <string name="voting_create_confirmation_text">The voting was successfully created and is now visible to all assigned participants.\n\nThe voting will end automatically as soon as all participants have voted.</string>
+    <string name="voting_create_info_title">Create new voting</string>
+    <string name="voting_create_info_text">Now create a new voting: ask your question, give all possible answers and determine the participating users.\n\nThe voting starts immediately. You will receive a push notification when all participants have voted.\n\nPlease note that at least 2 participants from the confirmed app users must be selected for a vote. To invite users, go back to the main view and select the \'Users\' tile.</string>
+    <string name="voting_create_titledetails_voting_title">Voting title</string>
+    <string name="voting_create_titledetails_voting_titlehint">Enter the title for the voting</string>
+    <string name="voting_create_titledetails_voting_title_error">Please enter a valid title for the voting</string>
+    <string name="voting_create_titledetails_voting_detail">Voting details</string>
+    <string name="voting_create_titledetails_voting_detailhint">Enter a detailed description and explanation about this voting (optional)</string>
+    <string name="voting_create_type_title">Choose the \ntype of voting</string>
+    <string name="voting_create_type_single">Single Choice</string>
+    <string name="voting_create_multiple">Multiple Choice</string>
+    <string name="voting_create_type_error">Please select one</string>
+    <string name="voting_create_users_title">Choose your \nparticipants</string>
+    <string name="voting_create_users_all">All users</string>
+    <string name="voting_create_users_selected">Selected users</string>
 </resources>

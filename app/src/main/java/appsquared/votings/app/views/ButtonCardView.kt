@@ -28,6 +28,7 @@ class ButtonCardView(context: Context, attrs: AttributeSet): LinearLayout(contex
 
         materialCardView.setCardBackgroundColor(attributes.getColor(R.styleable.ButtonCardView_background_color, Color.WHITE))
         materialCardView.strokeColor = attributes.getColor(R.styleable.ButtonCardView_border_color, Color.WHITE)
+        materialCardView.strokeWidth = attributes.getInteger(R.styleable.ButtonCardView_border_size, 0)
 
         if(attributes.getString(R.styleable.ButtonCardView_button_type).equals("small")) {
             val lp = FrameLayout.LayoutParams(

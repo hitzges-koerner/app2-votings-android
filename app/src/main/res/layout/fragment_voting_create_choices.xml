@@ -1,0 +1,130 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="appsquared.votings.app.fragments.VotingCreateChoicesFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="32dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_voting_choices_title"
+            android:textSize="@dimen/headline_big"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCardViewVotingCreateChoicesPrevious"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewVotingCreateChoices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:gravity="center"
+                android:text="@string/create_voting_choices_error"
+                android:id="@+id/textViewVotingCreateChoicesError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/error"
+                android:textSize="12sp"
+                android:visibility="invisible"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerViewVotingCreateChoices" />
+
+            <appsquared.votings.app.views.ButtonCardView
+                android:id="@+id/buttonCardViewVotingCreateChoicesNew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:button_type="small"
+                app:background_color="@color/white"
+                app:border_color="@color/colorAccent"
+                app:border_size="5"
+                app:text="+ Add new choice"
+                app:text_color="@color/colorAccent" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/grey_230"
+                app:cardCornerRadius="5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="16dp"
+                    android:text="@string/create_voting_choices_info" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:paddingBottom="32dp"
+        android:paddingTop="16dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <appsquared.votings.app.views.ButtonCardView
+            android:id="@+id/buttonCardViewVotingCreateChoicesPrevious"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:background_color="@color/white"
+            app:text_color="@color/colorAccent"
+            app:border_size="5"
+            app:border_color="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@+id/buttonCardViewVotingCreateChoicesNext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:text="@string/one_step_back" />
+
+        <appsquared.votings.app.views.ButtonCardView
+            app:background_color="@color/colorAccent"
+            app:text="@string/next_step"
+            android:id="@+id/buttonCardViewVotingCreateChoicesNext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </LinearLayout>
+
+</LinearLayout>

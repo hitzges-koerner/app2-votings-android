@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import appsquared.votings.app.views.DecisionDialog
@@ -21,6 +22,11 @@ class MainActivity : BaseActivity() {
 
     }
 
+    override fun clickToolbarMenuButton() {
+        super.clickToolbarMenuButton()
+        startActivity(Intent(this, VotingCreateActivity::class.java))
+    }
+
     override fun childOnlyMethod() {
 
         val workspace: Model.WorkspaceResponse = mWorkspace
@@ -29,6 +35,7 @@ class MainActivity : BaseActivity() {
 
         removeBackButton()
         showToolbarLogo()
+        setMenuButton(R.drawable.ic_baseline_add_circle_24, ContextCompat.getColor(this, R.color.colorAccent))
 
         /*
         ViewCompat.setOnApplyWindowInsetsListener(toolbarCustom) { view, insets ->
@@ -54,14 +61,29 @@ class MainActivity : BaseActivity() {
         //toolBar.logo = ResourcesCompat.getDrawable(resources, R.drawable.logo, null)
 
         val list = mutableListOf<Item>()
-        list.add(Item("Willkommen", R.drawable.tile_icons_info, Item.INFO))
-        list.add(Item("Mein Profil", R.drawable.tile_icons_profil, Item.PROFIL))
-        list.add(Item("Aktuelle Abstimmungen", R.drawable.tile_icons_voting, Item.VOTING_ACTIV))
-        list.add(Item("Neuigkeiten", R.drawable.tile_icons_news, Item.NEWS))
-        list.add(Item("Kommende Abstimmungen", R.drawable.tile_icons_kalender, Item.VOTING_FUTURE))
-        list.add(Item("Archiv", R.drawable.tile_icons_vergangene_abstimmungen, Item.VOTING_PAST))
-        list.add(Item("Teilnehmer", R.drawable.tile_icons_teilnehmer, Item.ATTENDEES))
-        list.add(Item("Einstellungen", R.drawable.ico_einstellungen, Item.SETIINGS))
+        when(workspace.planName.toLowerCase()) {
+            "free" -> {
+                list.add(Item(getString(R.string.tile_my_profil), R.drawable.tile_icons_profil, Item.PROFIL))
+                list.add(Item(getString(R.string.tile_users), R.drawable.tile_icons_teilnehmer, Item.ATTENDEES))
+                list.add(Item(getString(R.string.tile_current_votings), R.drawable.tile_icons_voting, Item.VOTING_ACTIV))
+                list.add(Item(getString(R.string.tile_archive), R.drawable.tile_icons_vergangene_abstimmungen, Item.VOTING_PAST))
+                list.add(Item(getString(R.string.tile_notifications), R.drawable.tile_icons_push, Item.NOTIFICATION))
+                list.add(Item(getString(R.string.tile_faq), R.drawable.tile_icons_faq, Item.FAQ))
+                list.add(Item(getString(R.string.tile_pro_version), R.drawable.tile_icons_pro, Item.PRO))
+                list.add(Item(getString(R.string.tile_settings), R.drawable.tile_icons_einstellungen, Item.SETIINGS))
+            }
+            "trial",
+            "pro"-> {
+                list.add(Item(getString(R.string.tile_welcome), R.drawable.tile_icons_info, Item.WELCOME))
+                list.add(Item(getString(R.string.tile_my_profil), R.drawable.tile_icons_profil, Item.PROFIL))
+                list.add(Item(getString(R.string.tile_current_votings), R.drawable.tile_icons_voting, Item.VOTING_ACTIV))
+                list.add(Item(getString(R.string.tile_news), R.drawable.tile_icons_news, Item.NEWS))
+                list.add(Item(getString(R.string.tile_upcoming_votings), R.drawable.tile_icons_kalender, Item.VOTING_FUTURE))
+                list.add(Item(getString(R.string.tile_archive), R.drawable.tile_icons_vergangene_abstimmungen, Item.VOTING_PAST))
+                list.add(Item(getString(R.string.tile_users), R.drawable.tile_icons_teilnehmer, Item.ATTENDEES))
+                list.add(Item(getString(R.string.tile_settings), R.drawable.tile_icons_einstellungen, Item.SETIINGS))
+            }
+        }
         var attributes = Attributes()
 
         if(workspace.settings.style.isNotEmpty()) {
@@ -167,16 +189,18 @@ class MainActivity : BaseActivity() {
         recyclerView.layoutManager = GridLayoutManager(this@MainActivity, spanCount)
 
         recyclerView.adapter = TilesAdapter(list, attributes) { position: Int ->
-
-            when(position) {
-                Item.INFO -> {
-                    startActivityTemp(WelcomeActivity())
-                }
+            when(list[position].type) {
                 Item.PROFIL -> {
                     startActivityTemp(MyProfileActivity())
                 }
+                Item.NOTIFICATION -> {
+                    startActivityTemp(NotificationListActivity())
+                }
                 Item.NEWS -> {
                     startActivityTemp(NewsListActivity())
+                }
+                Item.WELCOME -> {
+                    startActivityTemp(WelcomeActivity())
                 }
                 Item.ATTENDEES -> {
                     startActivityTemp(UserListActivity())
@@ -187,11 +211,17 @@ class MainActivity : BaseActivity() {
                 Item.VOTING_ACTIV -> {
                     startActivity(Intent(this@MainActivity, VotingsListActivity::class.java).putExtra(VotingsListActivity.STATUS, VotingsListActivity.CURRENT))
                 }
+                Item.VOTING_PAST -> {
+                    startActivity(Intent(this@MainActivity, VotingsListActivity::class.java).putExtra(VotingsListActivity.STATUS, VotingsListActivity.PAST))
+                }
                 Item.VOTING_FUTURE -> {
                     startActivity(Intent(this@MainActivity, VotingsListActivity::class.java).putExtra(VotingsListActivity.STATUS, VotingsListActivity.FUTURE))
                 }
-                Item.VOTING_PAST -> {
-                    startActivity(Intent(this@MainActivity, VotingsListActivity::class.java).putExtra(VotingsListActivity.STATUS, VotingsListActivity.PAST))
+                Item.PRO -> {
+                    startActivity(Intent(this@MainActivity, ProVersionActivity::class.java))
+                }
+                Item.FAQ -> {
+                    startActivity(Intent(this@MainActivity, FaqListActivity::class.java))
                 }
                 else -> {
                     startActivityTemp(LoginActivity())

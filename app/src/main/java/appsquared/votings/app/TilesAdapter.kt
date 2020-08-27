@@ -44,10 +44,12 @@ class TilesAdapter(private val items: MutableList<Item>, val attributes: Attribu
                     override fun onGlobalLayout() {
                         materialCardViewIcon.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                        val materialCardViewIconWidth = materialCardViewIcon.width //height is ready
-                        val radius = materialCardViewIconWidth.toFloat() / 100 * attributes.tilesIconCornerRadius.toFloat()
+                        val materialCardViewIconWidth = materialCardViewIcon.width //width is ready
+                        //val radius = materialCardViewIconWidth.toFloat() / 100 * attributes.tilesIconCornerRadius.toFloat()
+                        val radius = materialCardViewIconWidth/2
 
-                        materialCardViewIcon.radius = dpToPx(radius.toInt()).toFloat()
+                        //materialCardViewIcon.radius = dpToPx(radius.toInt()).toFloat()
+                        materialCardViewIcon.radius = radius.toFloat()
                     }
                 })
 

@@ -39,6 +39,7 @@ class EditTextWithClear : AppCompatEditText {
     }
 
     private fun setupButton() {
+        maxLines = 1
         mClearButtonImage = ResourcesCompat.getDrawable(resources,
             R.drawable.ic_clear_opaque_24dp, null)!!
 
@@ -50,7 +51,7 @@ class EditTextWithClear : AppCompatEditText {
                     setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
                 } else {
                     mClearButtonImage = ResourcesCompat.getDrawable(resources,
-                        R.drawable.ic_clear_black_24dp, null)!!
+                        R.drawable.ic_clear_grey_24dp, null)!!
                     setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, mClearButtonImage, null)
 
                     if (onEditWithClearClickListener != null) {
@@ -69,13 +70,14 @@ class EditTextWithClear : AppCompatEditText {
         })
 
         // touch in X button to clear the current text
-        setOnTouchListener(View.OnTouchListener { _, event ->
+        setOnTouchListener(OnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= (this.right - this.compoundPaddingRight)) {
                     this.setText("")
                     if (onEditWithClearClickListener != null) {
                         onEditWithClearClickListener!!.onItemClick("")
                     }
+                    this.requestFocus()
                     return@OnTouchListener true
                 }
             }

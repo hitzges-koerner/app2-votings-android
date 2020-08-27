@@ -1,20 +1,17 @@
 package appsquared.votings.app
 
-import android.R.attr.*
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import android.view.View.VISIBLE
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
-import android.widget.AbsListView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import appsquared.votings.app.views.EditTextWithClear
 import framework.base.constant.Constant
 import framework.base.rest.ApiService
@@ -46,9 +43,15 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
 
     }
 
+    override fun clickToolbarMenuButton() {
+        super.clickToolbarMenuButton()
+        startActivity(Intent(this, InviteUserActivity::class.java))
+    }
+
     override fun childOnlyMethod() {
 
-        setScreenTitle("Teilnehmer-Liste")
+        setScreenTitle(getString(R.string.title_users))
+        setMenuButton(R.drawable.ic_baseline_person_add_24, ContextCompat.getColor(this, R.color.colorAccent))
 
         val workspace: Model.WorkspaceResponse = mWorkspace
 
@@ -238,7 +241,8 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
                     mUserList.addAll(addSection(mUserListDownloaded))
                     recyclerView.adapter?.notifyDataSetChanged()
 
-                    materialCardViewSearch.visibility = VISIBLE
+                    //TODO commented out because of visual bugs
+                    //materialCardViewSearch.visibility = VISIBLE
 
                 }, { error ->
                     Log.d("LOGIN", error.message)

@@ -47,7 +47,13 @@
         <activity android:name=".LegalDocsActivity" />
         <activity android:name=".ChangelogActivity" />
         <activity android:name=".VotingsActivity" />
-        <activity android:name=".AccountRegistrationActivity" />
+        <activity android:name=".AccountRegisterActivity" />
+        <activity android:name=".InviteUserActivity" />
+        <activity android:name=".ProVersionActivity" />
+        <activity android:name=".NotificationListActivity" />
+        <activity android:name=".VotingCreateActivity" />
+        <activity android:name=".FaqListActivity" />
+        <activity android:name=".TutorialActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

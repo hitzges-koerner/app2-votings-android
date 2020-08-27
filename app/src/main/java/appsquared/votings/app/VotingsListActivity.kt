@@ -246,6 +246,14 @@ class VotingsListActivity : BaseActivity() {
                 }
                 continue
             }
+            if(voting.votingTill.isEmpty()) {
+                Log.i("app", "votingTill is empty -> free voting -> ends when all user voted")
+                if(mStatus == CURRENT) {
+                    voting.votingStatus = CURRENT
+                    votingsTemp.add(voting)
+                }
+                continue
+            }
             if (parseStringToDate(voting.votingTill)!! < currentTime) {
                 Log.i("app", "votingTill is before currentTime -> voting ended")
                 if(mStatus == PAST) {

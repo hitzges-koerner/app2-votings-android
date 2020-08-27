@@ -3,6 +3,7 @@
     <color name="colorPrimary">#FF8000</color>
     <color name="colorPrimaryDark">#CC6600</color>
     <color name="colorAccent">#FF8000</color>
+    <color name="colorAccentDisabled">#80FF8000</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="error">#FF0000</color>

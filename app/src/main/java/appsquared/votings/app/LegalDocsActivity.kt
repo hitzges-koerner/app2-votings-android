@@ -1,6 +1,7 @@
 package appsquared.votings.app
 
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import kotlinx.android.synthetic.main.activity_welcome.*
 import kotlin.math.roundToInt
@@ -21,10 +22,10 @@ class LegalDocsActivity : BaseActivity() {
 
     override fun childOnlyMethod() {
 
-        val workspace = mWorkspace
-
         val spacing = dpToPx(16)
         scrollView.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
+
+        val workspace = mWorkspace
 
         var borderColor = getColorTemp(R.color.transparent)
         var borderWidth = 0
@@ -79,19 +80,30 @@ class LegalDocsActivity : BaseActivity() {
         materialCardView.radius = dpToPx(contentCornerRadius).toFloat()
 
         val type = intent.extras?.getInt(LEGAL_DOC_TYPE) ?: 0
+        val startedFromAccountRegister = intent.extras?.getBoolean(ACCOUNT_REGISTER_TERMS) ?: false
+
+        if(startedFromAccountRegister) {
+            materialCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
+            materialCardView.strokeColor = ContextCompat.getColor(this, R.color.transparent)
+            materialCardView.strokeWidth = ContextCompat.getColor(this, R.color.transparent)
+            materialCardView.radius = 0f
+
+            contentAccentColor = ContextCompat.getColor(this, R.color.black)
+            contentTextColor = ContextCompat.getColor(this, R.color.black)
+        }
 
         when(type) {
             0 -> finish()
             IMPRINT -> {
-                setScreenTitle("Impressum")
+                setScreenTitle(getString(R.string.title_imprint))
                 setText(workspace.legalImprint, contentAccentColor, contentTextColor)
             }
             PRIVACY -> {
-                setScreenTitle("Datenschutz")
+                setScreenTitle(getString(R.string.title_privacy))
                 setText(workspace.legalPrivacy, contentAccentColor, contentTextColor)
             }
             TERMS -> {
-                setScreenTitle("Terms of Use")
+                setScreenTitle(getString(R.string.title_terms_of_use))
                 setText(workspace.legalTerms, contentAccentColor, contentTextColor)
             }
         }
@@ -114,6 +126,7 @@ class LegalDocsActivity : BaseActivity() {
 
     companion object {
         val LEGAL_DOC_TYPE = "legal_doc_type"
+        val ACCOUNT_REGISTER_TERMS = "account_register_terms"
 
         val IMPRINT = 1
         val PRIVACY = 2

@@ -36,11 +36,14 @@ object Model {
         @field:Json(name = "settings") val settings: Settings = Settings(),
         @field:Json(name = "news") val news: MutableList<News> = mutableListOf(),
         @field:Json(name = "votings") val votings: MutableList<VotingShort> = mutableListOf(),
-        @field:Json(name = "licence") val licence: String = "",
         @field:Json(name = "legalImprint") val legalImprint: String = "",
         @field:Json(name = "legalTerms") val legalTerms: String = "",
         @field:Json(name = "legalPrivacy") val legalPrivacy: String = "",
-        @field:Json(name = "version") val version: Version = Version()
+        @field:Json(name = "version") val version: Version = Version(),
+        @field:Json(name = "planName") val planName: String = "",
+        @field:Json(name = "planMaxParticipants") val planMaxParticipants: String = "",
+        @field:Json(name = "proVersionText") val proVersionText: String = ""
+
     )
 
     @JsonClass(generateAdapter = true)
@@ -119,7 +122,9 @@ object Model {
         @field:Json(name = "firstname") val firstName:String = "",
         @field:Json(name = "lastname") val lastName:String = "",
         @field:Json(name = "avatarUrl") val avatarUrl: String = "",
-        @field:Json(name = "isOnline") val isOnline: String = ""
+        @field:Json(name = "isOnline") val isOnline: String = "",
+        @field:Json(name = "isConfirmed") val isConfirmed: String = "",
+        var isSelected: Boolean = false
     )
 
     @JsonClass(generateAdapter = true)
@@ -127,6 +132,17 @@ object Model {
         @field:Json(name = "id") val id:String = "",
         @field:Json(name = "sentDate") val sentDate:String = "",
         @field:Json(name = "message") val message:String = ""
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class Faq(
+        @field:Json(name = "section") var section:Boolean = false,
+        @field:Json(name = "topic") val topic:String = "",
+        @field:Json(name = "topicPos") val topicPos:Int = 0,
+        @field:Json(name = "question") val question:String = "",
+        @field:Json(name = "questionPos") val questionPos:Int = 0,
+        @field:Json(name = "answer") val answer:String = "",
+        @field:Json(name = "affectedPlans") val affectedPlans:String = ""
     )
 
     @JsonClass(generateAdapter = true)

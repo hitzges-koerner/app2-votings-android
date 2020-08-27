@@ -1,19 +1,22 @@
 package appsquared.votings.app
 
+import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.View.*
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.preference.PreferenceManager
+import appsquared.votings.app.views.InfoDialog
 import framework.base.constant.Constant
 import framework.base.rest.ApiService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,6 +25,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.button_card_view.view.*
 import org.json.JSONObject
+import java.util.*
 import java.util.concurrent.Executor
 
 
@@ -37,47 +41,38 @@ class LoginActivity : AppCompatActivity() {
         ApiService.create(Constant.BASE_API)
     }
 
-    fun biometric() {
-        executor = ContextCompat.getMainExecutor(this)
-        biometricPrompt = BiometricPrompt(this, executor,
-            object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationError(errorCode: Int,
-                                                   errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                    Toast.makeText(applicationContext,
-                        "Authentication error: $errString", Toast.LENGTH_SHORT)
-                        .show()
-                }
+    override fun onStart() {
+        super.onStart()
 
-                override fun onAuthenticationSucceeded(
-                    result: BiometricPrompt.AuthenticationResult) {
-                    super.onAuthenticationSucceeded(result)
-                    Toast.makeText(applicationContext,
-                        "Authentication succeeded!", Toast.LENGTH_SHORT)
-                        .show()
-                    prepLogin()
-                }
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        val workspaceName = pref.getString(PreferenceNames.WORKSPACE_NAME, "") ?: ""
+        val email = pref.getString(PreferenceNames.EMAIL, "") ?: ""
+        val password = pref.getString(PreferenceNames.PASSWORD, "") ?: ""
 
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    Toast.makeText(applicationContext, "Authentication failed",
-                        Toast.LENGTH_SHORT)
-                        .show()
-                }
-            })
-
-        promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Biometric login for my app")
-            .setSubtitle("Log in using your biometric credential")
-            .setNegativeButtonText("Use account password")
-            .build()
-
-        biometricPrompt.authenticate(promptInfo)
+        if(workspaceName.isEmpty() && email.isEmpty() && password.isEmpty()) {
+            InfoDialog(this) {
+            }.generate().setButtonName(R.string.how_it_works_button)
+                .setTitle(R.string.how_it_works_title)
+                .setMessage(R.string.how_it_works_message)
+                .show()
+        }
+        if(workspaceName.isNotEmpty()) editTextCardViewWorkspace.setText(workspaceName)
+        if(email.isNotEmpty()) editTextCardViewMail.setText(email)
+        if(password.isNotEmpty()) editTextCardViewPassword.setText(password)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        val isDebuggable = 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
+        if(!isDebuggable) {
+            intent.extras?.let {
+                if(it.containsKey("app_start")) {
+                    if(it.get("app_start") as Boolean) sendTelemetry()
+                }
+            }
+        }
 
         setLightStatusBar(window, true)
 
@@ -89,30 +84,9 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        buttonCardViewAppsquared.materialCardView.setOnClickListener {
-            editTextCardViewWorkspace.setText("app-squared")
-        }
-
-        buttonCardViewRich.materialCardView.setOnClickListener {
-            editTextCardViewWorkspace.setText("rich")
-        }
-
-        buttonCardViewMinimal.materialCardView.setOnClickListener {
-            editTextCardViewWorkspace.setText("minimal")
-        }
-
-        buttonCardViewClean.materialCardView.setOnClickListener {
-            editTextCardViewWorkspace.setText("clean")
-        }
-
         buttonCardViewQR.materialCardView.setOnClickListener {
-            startActivity(Intent(this, AccountRegistrationActivity::class.java))
+            startActivity(Intent(this, AccountRegisterActivity::class.java))
         }
-
-        val pref = PreferenceManager.getDefaultSharedPreferences(this)
-        if(pref.getString(PreferenceNames.WORKSPACE_NAME, "")!!.isNotEmpty()) editTextCardViewWorkspace.setText(pref.getString(PreferenceNames.WORKSPACE_NAME, "")!!)
-        if(pref.getString(PreferenceNames.EMAIL, "")!!.isNotEmpty()) editTextCardViewMail.setText(pref.getString(PreferenceNames.EMAIL, "")!!)
-        if(pref.getString(PreferenceNames.PASSWORD, "")!!.isNotEmpty()) editTextCardViewPassword.setText(pref.getString(PreferenceNames.PASSWORD, "")!!)
 
         // TODO DISABLED, TESTING ONLY
         /*
@@ -130,7 +104,12 @@ class LoginActivity : AppCompatActivity() {
         //editTextCardViewWorkspace.setText("app-squared")
 
         buttonCardViewLogin.materialCardView.setOnClickListener {
-            prepLogin()
+
+            // check if inputs are not empty
+            if(editTextCardViewMail.isEmpty() || editTextCardViewPassword.isEmpty() || editTextCardViewWorkspace.isEmpty()) {
+                showErrorToast(getString(R.string.error_missing_input))
+                return@setOnClickListener
+            } else prepLogin()
         }
 
         textCardViewError.setOnClickListener {
@@ -161,12 +140,6 @@ class LoginActivity : AppCompatActivity() {
         // show spinning progress indicator
         linearLayoutStartIndicator.visibility = VISIBLE
 
-        // check if inputs are not empty
-        if(editTextCardViewMail.isEmpty() || editTextCardViewPassword.isEmpty() || editTextCardViewWorkspace.isEmpty()) {
-            showErrorToast(getString(R.string.error_missing_input))
-            return
-        }
-
         // disable login button
         buttonCardViewLogin.isEnabled = false
         // fade out all views
@@ -176,9 +149,11 @@ class LoginActivity : AppCompatActivity() {
         viewFadeOut(buttonCardViewLogin)
         viewFadeOut(buttonCardViewQR)
 
-        apiLogin(editTextCardViewMail.getText(),
+        apiLogin(
+            editTextCardViewMail.getText(),
             editTextCardViewPassword.getText(),
-            editTextCardViewWorkspace.getText())
+            editTextCardViewWorkspace.getText()
+        )
     }
 
     private fun apiLogin(email: String, password: String, workspace: String) {
@@ -211,8 +186,8 @@ class LoginActivity : AppCompatActivity() {
 
                     Log.d("LOGIN", error.message)
 
-                    if(error is retrofit2.HttpException) {
-                        if(error.code() == 401 || error.code() == 403) {
+                    if (error is retrofit2.HttpException) {
+                        if (error.code() == 401 || error.code() == 403) {
                             showErrorToast(getString(R.string.error_credentials_false))
                             return@subscribe
                         }
@@ -241,17 +216,26 @@ class LoginActivity : AppCompatActivity() {
             .subscribe(
                 { result ->
 
-                    val showNotification = pref.getBoolean(PreferenceNames.NOTIFICATION_SHOW + "_" + PreferenceNames.WORKSPACE_NAME, true)
-                    if(showNotification) sendFirebaseTokenToServer()
+                    val showNotification = pref.getBoolean(
+                        PreferenceNames.NOTIFICATION_SHOW + "_" + PreferenceNames.WORKSPACE_NAME,
+                        true
+                    )
+                    if (showNotification) sendFirebaseTokenToServer()
                     AppData().saveObjectToSharedPreference(this, PreferenceNames.WORKSPACE, result)
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+
+                    if(pref.getBoolean(PreferenceNames.FIRST_START, true) && result.planName.toUpperCase() == "FREE".toUpperCase()) {
+                        startActivity(Intent(this, TutorialActivity::class.java))
+                        finish()
+                    } else {
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }
 
                 }, { error ->
                     Log.d("LOGIN", error.message)
 
-                    if(error is retrofit2.HttpException) {
-                        if(error.code() == 401 || error.code() == 403) {
+                    if (error is retrofit2.HttpException) {
+                        if (error.code() == 401 || error.code() == 403) {
                             showErrorToast(getString(R.string.error_login_again))
                             pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
                             return@subscribe
@@ -275,7 +259,11 @@ class LoginActivity : AppCompatActivity() {
         jsonObject.put(JsonParamNames.PLATFORM, "fcm")
 
         if(userToken!!.isNotEmpty())  {
-            disposable = apiService.sendFirebaseToken("Bearer $userToken", workspace!!, jsonObject.toString())
+            disposable = apiService.sendFirebaseToken(
+                "Bearer $userToken",
+                workspace!!,
+                jsonObject.toString()
+            )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -286,5 +274,95 @@ class LoginActivity : AppCompatActivity() {
                     }
                 )
         }
+    }
+
+    fun getDeviceId(context: Context): String {
+        return UUID.randomUUID().toString().toUpperCase()
+    }
+
+    private fun sendTelemetry() {
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+
+        var deviceID = pref.getString(PreferenceNames.DEVICE_ID, "") ?: ""
+        if(deviceID.isEmpty()) deviceID = getDeviceId(this)
+
+        val deviceName = Build.MODEL
+        Log.d("MODEL", deviceName)
+        val deviceMan = Build.MANUFACTURER
+        Log.d("MANUFACTURER", deviceMan)
+        val device = "$deviceMan $deviceName"
+
+        val displayMetrics: DisplayMetrics = getResources().getDisplayMetrics()
+        val dpHeight = displayMetrics.heightPixels / displayMetrics.density
+        val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+
+        var hardware = "[${dpHeight}x${dpWidth}]"
+        if(resources.getBoolean(R.bool.isTablet)) hardware = "$device -TABLET- $hardware"
+        else hardware = "$device -PHONE- $hardware"
+
+        val jsonObject = JSONObject()
+        jsonObject.put(JsonParamNames.ID, deviceID)
+        jsonObject.put(JsonParamNames.OS, "ANDROID ${Build.VERSION.SDK_INT}")
+        jsonObject.put(JsonParamNames.HARDWARE, hardware)
+        jsonObject.put(JsonParamNames.APP_VERSION, BuildConfig.VERSION_NAME)
+        jsonObject.put(JsonParamNames.LANGUAGE, Locale.getDefault().language)
+
+        disposable = apiService.sendTelemetry(jsonObject.toString())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result ->
+                    Log.d("TELEMETRY", "telemetry data sent")
+                }, { error ->
+                    Log.d("TELEMETRY", "telemetry data NOT sent")
+                }
+            )
+    }
+
+    fun biometric() {
+        executor = ContextCompat.getMainExecutor(this)
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(
+                    errorCode: Int,
+                    errString: CharSequence
+                ) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(
+                        applicationContext,
+                        "Authentication error: $errString", Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+
+                override fun onAuthenticationSucceeded(
+                    result: BiometricPrompt.AuthenticationResult
+                ) {
+                    super.onAuthenticationSucceeded(result)
+                    Toast.makeText(
+                        applicationContext,
+                        "Authentication succeeded!", Toast.LENGTH_SHORT
+                    )
+                        .show()
+                    prepLogin()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(
+                        applicationContext, "Authentication failed",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            })
+
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Use account password")
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
     }
 }

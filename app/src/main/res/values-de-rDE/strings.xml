@@ -6,9 +6,9 @@
     <string name="error_credentials_false">Zugangsdaten nicht gültig. Bitte erneut einloggen.</string>
     <string name="error_general">Es ging etwas schief … bitte nochmal versuchen.</string>
     <string name="error_login_again">Bitte erneut einloggen.</string>
-    <string name="button_login">ANMELDEN</string>
+    <string name="button_login">Anmelden</string>
     <string name="button_qr_scan">QR-CODE SCANNEN</string>
-    <string name="button_password_reset">PASSWORT VERGESSEN</string>
+    <string name="button_password_reset">Passwort vergessen</string>
     <string name="search_user">Suchen</string>
     <string name="placeholder_name_first">Vorname</string>
     <string name="placeholder_name_last">Nachname</string>
@@ -32,4 +32,106 @@
     <string name="not_voted">noch nicht abgestimmt</string>
     <string name="already_voted">bereits abgestimmt</string>
     <string name="create_account">Neu registrieren</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+
+    <!-- register new workspace -->
+    <string name="cancel_account_registration">Möchten Sie die Registrierung wirklich abbrechen?</string>
+    <string name="e_mail_address">E-Mail Adresse</string>
+    <string name="what_is_your_e_mail">Wie lautet deine \nE-Mail?</string>
+    <string name="check_send_choices">Möchten Sie Ihre Auswahl endgültig absenden?</string>
+    <string name="please_indicate_a_valid_email">Bitte geben Sie eine gültige E-Mail Adresse an</string>
+    <string name="what_is_your_workspace">Wie lautet dein \nWorkspace?</string>
+    <string name="workspace">Workspace</string>
+    <string name="lastname">Nachname</string>
+    <string name="firstname">Vorname</string>
+    <string name="next_step">Nächster Schritt</string>
+    <string name="one_step_back">Einen Schritt zurück</string>
+    <string name="ok_lets_go">Alles klar. Los.</string>
+    <string name="please_enter_a_valid_firstname">Bitte geben Sie einen Vorname an</string>
+    <string name="please_enter_a_valid_lastname">Bitte geben Sie einen Nachnamen an</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok">ok</string>
+    <string name="register_workspace_info_text">Wenn du einen neuen Workspace registrieren möchtest, benötigen wir einige Angaben von dir.\n\nNach erfolgreicher Registrierung wirst du eine Email zur Bestätigung und dem Festlegen deines Passworts erhalten.\n\nDanach kannst du dich in die App einloggen, neue Benutzer einladen und deine Umfragen durchführen :)</string>
+    <string name="register_a_new_workspace">Neuen Workspace registrieren</string>
+    <string name="workspace_taken">Dieser Workspace ist bereits registriert</string>
+    <string name="error_workspace_empty">Bitte wählen Sie einen Namen für Iihren Workspace</string>
+    <string name="error_workspace_pre_postfix">Minuszeichen sind am Anfang oder Ende nicht gestattet</string>
+    <string name="error_workspace_letters">Mindestens 4 Buchstaben, Ziffern oder Minuszeichen</string>
+    <string name="hello_what_is_your_name">Hallo! \nWie heißt du?</string>
+    <string name="workspace_info">Der Workspace ist der eigene Arbeitsbereich für dich und dein Team.\n\nNur eingeladenen Personen haben hier Zugang. Im Workspace führst du mit deinem Team alle deine Umfragen durch.</string>
+
+    <!-- how it works dialog -->
+    <string name="how_it_works_title">So geht´s</string>
+    <string name="how_it_works_button">OK, verstanden</string>
+    <string name="how_it_works_message">Wenn Du eine Einladungs-Email erhalten und Dein Passwort festgelegt hast, kannst Du Dich direkt in in die VOTINGS.APP einloggen.\n\nAnsonsten registriere einen neuen Workspace und lade Freunde, Familie und Kollegen unkompliziert zu Abstimmungen oder Umfragen ein.\n\nDer Workspace ist Dein Arbeitsbereich, in dem Du Vorhaben anlegst und verwaltest.\n\nNutze die Free-Variante mit Grundfunktionen für einfache Vorhaben für bis zu 20 Teilnehmer.</string>
+
+    <!-- screen titles -->
+    <string name="register_workspace">Neuer Workspace</string>
+    <string name="terms_of_use"><u>Nutzungsbedingungen</u></string>
+    <string name="i_accept_the">Ich akzeptiere die</string>
+    <string name="please_accept_terms_of_use">Die Nutzungsbedingungen müssen akzeptiert werden.</string>
+    <string name="title_terms_of_use">Nutzungsbedingungen</string>
+    <string name="title_imprint">Impressum</string>
+    <string name="title_privacy">Datenschutz</string>
+    <string name="title_users">Benutzer</string>
+    <string name="add_new_user">Einen neuen Benutzer hinzufügen</string>
+    <string name="title_invite_user">Benutzer einladen</string>
+    <string name="invite_user">Einladung abschicken</string>
+
+
+    <string name="cancel_invite_user">Möchten Sie die Einladung wirklich abbrechen?</string>
+    <string name="tile_my_profil">Mein Profil</string>
+    <string name="tile_users">Benutzer</string>
+    <string name="tile_current_votings">Aktuelle Abstimmungen</string>
+    <string name="tile_archive">Archiv</string>
+    <string name="tile_notifications">Benachrichtigungen</string>
+    <string name="tile_faq">FAQ</string>
+    <string name="tile_pro_version">Pro-Version</string>
+    <string name="tile_settings">Einstellungen</string>
+    <string name="tile_welcome">Willkommen</string>
+    <string name="tile_news">Neuigkeiten</string>
+    <string name="tile_upcoming_votings">Kommende Abstimmungen</string>
+    <string name="successfully_registered">Registrierung erfolgreich</string>
+    <string name="successfully_registered_info_text">Der Workspace wurde erfolgreich für dich registriert. Bitte checke jetzt deine Emails (prüfe ggf. auch den Spam-Ordner) und bestätige deine Registrierung.\n\nDu legst dort auch dein Passwort fest.\n\nDanach kannst du dich in die App einloggen, neue Benutzer einladen und deine Umfragen durchführen.</string>
+    <string name="ok_fine">Verstanden</string>
+
+    <!-- create voting -->
+    <string name="add">Hinzufügen</string>
+    <string name="changelog">Versions-Historie</string>
+    <string name="version">Version</string>
+    <string name="voting_create_error_too_much_user_selected">Es sind zu viele Teilnehmer ausgewählt. Reduzieren Sie die Anzahl Teilnehmer oder updraden Sie ihren Workspace.</string>
+    <string name="voting_create_error_at_least_two_participants">Mindestens 2 Benutzer auswählen</string>
+
+    <!-- tutorial -->
+    <string name="tutorial">Tutorial</string>
+    <string name="tutorial_title_1">What do I have to do first?</string>
+    <string name="tutorial_title_2">Create a voting</string>
+    <string name="tutorial_title_3">Track the results</string>
+    <string name="tutorial_description_1">First create users and invite them to your workspace. Confirmed users can then be added as participants to a vote.</string>
+    <string name="tutorial_description_2">In the main view, ta on the plus sign in the upper right corner to create a new voting. Select the different options &amp; add the participants who should vote.</string>
+    <string name="tutorial_description_3">You can use the menu to track all active votes, view interim results or call up the results of previous votes.</string>
+
+    <!-- create voting -->
+    <string name="voting_create_info_title">Neue Abstimmung erstellen</string>
+    <string name="voting_create_info_text">Erstelle nun eine neue Abstimmung: Stelle deine Frage, gib alle möglichen Antworten vor und lege die teilnehmenden Benutzer fest.\n\nDie Abstimmung startet sofort. Du erhältst eine Push-Nachricht, wenn alle Teilnehmer abgestimmt haben.\n\nBitte beachte, daß mindestens 2 Teilnehmer aus den bestätigten App-Benutzern für eine Abstimmung ausgewählt werden müssen. Um Benutzer einzuladen, gehe zurück zur Hauptansicht und wähle die Kachel „Benutzer“ aus.</string>
+
+    <string name="create_voting_choices_title">Geben Sie die möglichen \nAntworten an</string>
+    <string name="create_voting_choices_error">Mindestens 2 Antworten nötig</string>
+    <string name="create_voting_choices_info">Es müssen mindestens 2 mögliche Antworten erfasst werden.\n\n**Sortierreihenfolge ändern:**\nDurch Ziehen und Ablegen kann die Reihenfolge der Antworten geändert werden.</string>
+    <string name="voting_create_confirmation_title">Abstimmung erfolgreich erstellt</string>
+    <string name="voting_create_confirmation_text">Die Abstimmung wurde erfolgreich erstellt und ist nun für alle zugewiesenen Teilnehmer sichtbar.\n\nDie Abstimmung wird automatisch beendet, sobald alle Teilnehmer abgestimmt haben.</string>
+    <string name="voting_create_titledetails_voting_title">Titel der Abstimmung</string>
+    <string name="voting_create_titledetails_voting_titlehint">Titel der Abstimmung</string>
+    <string name="voting_create_titledetails_voting_title_error">Gibt bitte ein Titel für die Abstimmung an</string>
+    <string name="voting_create_titledetails_voting_detail">Details zur Abstimmung</string>
+    <string name="voting_create_titledetails_voting_detailhint">Ausführliche Beschreibung und Erklärungen zu dieser Abstimmung eingeben (optional)</string>
+    <string name="voting_create_type_title">Wählen Sie die Art der Abstimmung</string>
+    <string name="voting_create_type_single">Single Choice</string>
+    <string name="voting_create_multiple">Multiple Choice</string>
+    <string name="voting_create_type_error">Bitte eine Auswahl treffen</string>
+    <string name="voting_create_users_title">Choose your \nparticipants</string>
+    <string name="voting_create_users_all">Alle Benutzer</string>
+    <string name="voting_create_users_selected">Einzelne Benutzer</string>
+
 </resources>

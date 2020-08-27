@@ -8,6 +8,7 @@ import android.util.Log
 import android.util.Patterns
 import android.view.KeyEvent
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.webkit.URLUtil
 import android.widget.TextView
@@ -47,6 +48,8 @@ class MyProfileActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_profile)
 
+        this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         buttonCardViewLogout.materialCardView.setOnClickListener {
 
             val pref = PreferenceManager.getDefaultSharedPreferences(this)
@@ -62,6 +65,9 @@ class MyProfileActivity : BaseActivity(),
     }
 
     override fun childOnlyMethod() {
+
+        setScreenTitle(R.string.tile_my_profil)
+
         val workspace = mWorkspace
         val loginData = mLoginData
 
@@ -247,10 +253,6 @@ class MyProfileActivity : BaseActivity(),
         return attributes
     }
 
-    fun isEmailValid(email: CharSequence): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
     private fun sendUserData() {
 
         //val firstName = if(myProfileEditCardViewNameOne.getText().isNotEmpty()) myProfileEditCardViewNameOne.getText() else mLoginData.firstName
@@ -339,7 +341,6 @@ class MyProfileActivity : BaseActivity(),
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    Toast.makeText(this, "Super dupa", Toast.LENGTH_LONG).show()
                     imageViewProfile.setImageResource(R.drawable.icon_placeholder)
                     imageViewProfile.setColorFilter(mAttributes.contentTextColor, PorterDuff.Mode.SRC_ATOP)
 

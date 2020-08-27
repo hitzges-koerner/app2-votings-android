@@ -40,6 +40,7 @@ class VotingsActivity : BaseActivity() {
     private var mStatus: Int? = 0
     private var mVoted: Boolean = false
     private val mVotings = mutableListOf<VotingCustomItem>()
+    private val mChoices = mutableListOf<VotingCustomItem>()
 
     var mAttributes = Attributes()
 
@@ -163,50 +164,62 @@ class VotingsActivity : BaseActivity() {
                         }
                     }
                     if(result.choices.isNotEmpty()) {
-                        when(mStatus) {
-                            FUTURE -> {
-                                mVotings.add(VotingCustomItem(SECTION, CHOICE, "Optionen"))
-                            }
-                            CURRENT -> {
-                                mVotings.add(VotingCustomItem(SECTION, CHOICE, "Ich stimme mit"))
-                            }
-                            PAST -> {
-                                mVotings.add(VotingCustomItem(SECTION, CHOICE, "Ergebnisse"))
-                            }
-                        }
-                        var total = 0
-                        result.choices.forEach {
-                            total += it.votesCnt.toInt()
-                        }
                         for(choice in result.choices) {
                             val selected = ownVotes.contains(choice.choiceId)
                             if(selected) mVoted = true
-                            mVotings.add(VotingCustomItem(CHOICE, CHOICE, choice.choiceId, choice.choiceTitle, choice.votesCnt.toInt(), total, selected))
                         }
-                        if(mStatus == CURRENT && !mVoted) {
-                            mVotings.add(VotingCustomItem(BUTTON, BUTTON, ""))
+                        if(!mVoted) {
+                            when(mStatus) {
+                                FUTURE -> {
+                                    mVotings.add(VotingCustomItem(SECTION, CHOICE, "Optionen"))
+                                }
+                                CURRENT -> {
+                                    mVotings.add(VotingCustomItem(SECTION, CHOICE, "Ich stimme mit"))
+                                }
+                                PAST -> {
+                                    mVotings.add(VotingCustomItem(SECTION, CHOICE, "Ergebnisse"))
+                                }
+                            }
+                            var total = 0
+                            result.choices.forEach {
+                                total += it.votesCnt.toInt()
+                            }
+                            for(choice in result.choices) {
+                                val selected = ownVotes.contains(choice.choiceId)
+                                if(selected) mVoted = true
+                                mVotings.add(VotingCustomItem(CHOICE, CHOICE, choice.choiceId, choice.choiceTitle, choice.votesCnt.toInt(), total, selected))
+                            }
+                            if(mStatus == CURRENT && !mVoted) {
+                                mVotings.add(VotingCustomItem(BUTTON, BUTTON, ""))
+                            }
                         }
                     }
                     when(result.votingResultsAvailableFrom.toLowerCase()) {
                         // before voting
                         "BEFORE".toLowerCase() -> {
-                            if(getTimeDifference(result.votingTill) > 0) mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
+                            if(result.votingTill.isEmpty()) {
+                                mVotings.add(VotingCustomItem(SECTION, RESULT, "Vorläufiges Ergebnis"))
+                            } else if(getTimeDifference(result.votingTill) > 0) mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
                             else mVotings.add(VotingCustomItem(SECTION, RESULT, "Vorläufiges Ergebnis"))
-                            mVotings.addAll(buildResultList(result.choices))
+                            mVotings.addAll(buildResultList(result.choices.sortedByDescending { it.votesCnt } as MutableList<Model.Choice>))
                         }
                         // after voting
                         "AFTER".toLowerCase() -> {
                             if(mVoted) {
-                                if(getTimeDifference(result.votingTill) > 0) mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
+                                if(result.votingTill.isEmpty()) {
+                                    mVotings.add(VotingCustomItem(SECTION, RESULT, "Vorläufiges Ergebnis"))
+                                } else if(getTimeDifference(result.votingTill) > 0) mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
                                 else mVotings.add(VotingCustomItem(SECTION, RESULT, "Vorläufiges Ergebnis"))
-                                mVotings.addAll(buildResultList(result.choices))
+                                mVotings.addAll(buildResultList(result.choices.sortedByDescending { it.votesCnt } as MutableList<Model.Choice>))
                             }
                         }
                         // after voting ended
                         "AT-END" -> {
-                            if(getTimeDifference(result.votingTill) > 0) {
-                                mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
-                                mVotings.addAll(buildResultList(result.choices))
+                            if(result.votingTill.isNotEmpty()) {
+                                if(getTimeDifference(result.votingTill) > 0) {
+                                    mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
+                                    mVotings.addAll(buildResultList(result.choices.sortedByDescending { it.votesCnt } as MutableList<Model.Choice>))
+                                }
                             }
                         }
                     }
@@ -313,6 +326,23 @@ class VotingsActivity : BaseActivity() {
                                     }
                                 }
                             }
+
+                            SECTION -> {
+                                val visibility = mVotings[position].visible
+                                Log.d("visibility: ", visibility.toString())
+                                val type = mVotings[position].type
+                                Log.d("type: ", type.toString())
+                                val subType = mVotings[position].subType
+                                Log.d("subType: ", subType.toString())
+
+                                mVotings[position].visible = !visibility
+                                mVotings.forEachIndexed { index, it ->
+                                    if(it.type == subType && it.subType == subType) {
+                                        mVotings[index].visible = !visibility
+                                    }
+                                }
+                                recyclerView.adapter?.notifyDataSetChanged()
+                            }
                         }
                     }
 
@@ -359,9 +389,9 @@ class VotingsActivity : BaseActivity() {
                 sendVoting(choiceIds)
             }
         }.generate()
-            .setButtonRightName("Ja")
-            .setButtonLeftName("Abbrechen")
-            .setMessage("Möchten Sie Ihre Auswahl endgültig absenden?")
+            .setButtonRightName(getString(R.string.yes))
+            .setButtonLeftName(getString(R.string.no))
+            .setMessage(getString(R.string.check_send_choices))
             .show()
     }
 
@@ -382,7 +412,7 @@ class VotingsActivity : BaseActivity() {
             if (it == DecisionDialog.RIGHT) return@DecisionDialog
         }.generate()
             .setTitle("Achtung")
-            .setButtonRightName("OK")
+            .setButtonRightName(getString(R.string.ok))
             .setMessage(errorMessage)
             .show()
     }

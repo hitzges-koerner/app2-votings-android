@@ -1,11 +1,11 @@
 package appsquared.votings.app
 
-import android.graphics.PorterDuff
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.webkit.URLUtil
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -88,14 +88,22 @@ class UserListAdapter(private val items: MutableList<Model.User>, val attributes
                     circleImageViewBackground.visibility = View.GONE
                 }
 
+                if(item.isConfirmed == "1") {
+                    imageViewConfirmedStatus.setImageResource(R.drawable.ic_baseline_how_to_reg_24)
+                    imageViewConfirmedStatus.imageTintList = ColorStateList.valueOf(attributes.contentTextColor)
+                } else {
+                    imageViewConfirmedStatus.setImageResource(R.drawable.ic_baseline_error_24)
+                    imageViewConfirmedStatus.imageTintList = ColorStateList.valueOf(attributes.contentTextColor)
+                }
+
                 if(item.avatarUrl.isNotEmpty() && URLUtil.isValidUrl(item.avatarUrl)) {
                     Picasso.get()
                         .load(item.avatarUrl)
                         .into(circleImageView)
                 } else {
                     circleImageView.setImageResource(R.drawable.ico_profil)
-                    //circleImageView.setColorFilter(attributes.tilesIconTintColor, PorterDuff.Mode.SRC_ATOP)
-                    circleImageView.circleBackgroundColor = attributes.tilesIconBackgroundColor
+                    circleImageView.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent))
+                    circleImageView.circleBackgroundColor = ContextCompat.getColor(context, R.color.white)
                 }
 
                 /*

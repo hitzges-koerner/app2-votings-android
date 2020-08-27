@@ -41,5 +41,10 @@ class JsonParamNames {
         const val EMAIL = "email"
         const val NEWSLETTER = "newsletter"
 
+
+        const val ID = "id"
+        const val HARDWARE = "hardware"
+        const val LANGUAGE = "language"
+
     }
 }

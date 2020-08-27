@@ -44,13 +44,16 @@ class Item() : Parcelable {
         }
 
 
-        var INFO = 0
-        var PROFIL = 1
+        var PROFIL = 0
+        var ATTENDEES = 1
         var VOTING_ACTIV = 2
-        var NEWS = 3
+        var VOTING_PAST = 3
         var VOTING_FUTURE = 4
-        var VOTING_PAST = 5
-        var ATTENDEES = 6
-        var SETIINGS = 7
+        var NOTIFICATION = 5
+        var FAQ = 6
+        var PRO = 7
+        var SETIINGS = 8
+        var NEWS = 9
+        var WELCOME = 10
     }
 }

@@ -25,6 +25,7 @@
         <attr name="text" format="string"/>
         <attr name="text_color" format="color"/>
         <attr name="border_color" format="color"/>
+        <attr name="border_size" format="integer"/>
         <attr name="background_color" format="color"/>
         <attr name="button_type" format="string"/>
     </declare-styleable>

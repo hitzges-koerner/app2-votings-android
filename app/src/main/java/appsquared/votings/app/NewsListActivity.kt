@@ -24,6 +24,9 @@ class NewsListActivity : BaseActivity() {
     }
 
     override fun childOnlyMethod() {
+
+        setScreenTitle(getString(R.string.tile_news))
+
         val workspace: Model.WorkspaceResponse = mWorkspace
 
         if (workspace.settings.style.isNotEmpty()) {

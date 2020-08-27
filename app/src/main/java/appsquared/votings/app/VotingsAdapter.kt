@@ -2,7 +2,6 @@ package appsquared.votings.app
 
 import android.graphics.PorterDuff
 import android.graphics.drawable.GradientDrawable
-import android.service.voice.AlwaysOnHotwordDetector
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -170,6 +169,9 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
                 textViewUser.setTextColor(attributes.contentTextColor)
                 textViewUserVotedIndicator.setTextColor(attributes.contentTextColor)
                 textViewChoiceName.setTextColor(attributes.contentTextColor)
+
+                if(item.visible)  constraintLayoutUserSmall.visibility = VISIBLE
+                    else constraintLayoutUserSmall.visibility = GONE
             }
         }
 
@@ -204,6 +206,13 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
                 textViewSection.setTextColor(ContextCompat.getColor(context, R.color.black))
 
                 constraintLayoutRoot.setBackgroundColor(attributes.headlinesBackgroundColor)
+
+                if(item.visible) imageViewExpand.setImageResource(R.drawable.doppel_caret_down)
+                else imageViewExpand.setImageResource(R.drawable.doppel_caret_up)
+
+                itemView.setOnClickListener {
+                    listener(layoutPosition)
+                }
             }
         }
     }
@@ -269,11 +278,14 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
                         materialCardViewChoice.isClickable = false
                         materialCardViewChoice.isFocusable = false
 
-                        textViewChoicePercent.visibility = View.GONE
-                        progressBarChoice.visibility = View.GONE
-                        imageViewChoiceChecked.visibility = View.GONE
+                        textViewChoicePercent.visibility = GONE
+                        progressBarChoice.visibility = GONE
+                        imageViewChoiceChecked.visibility = GONE
                     }
                 }
+
+                if(item.visible)  materialCardViewChoice.visibility = VISIBLE
+                    else materialCardViewChoice.visibility = GONE
             }
         }
         fun bindItemsPayload(item: VotingCustomItem) {
@@ -302,6 +314,8 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
 
                     textViewResultPercent.background.setLevel((item.count.toFloat() / item.total.toFloat() * 10000).toInt())
                 }
+                if(item.visible)  linearLayoutResult.visibility = VISIBLE
+                    else linearLayoutResult.visibility = GONE
             }
         }
     }

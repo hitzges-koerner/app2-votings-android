@@ -1,6 +1,7 @@
 package appsquared.votings.app
 
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import kotlinx.android.synthetic.main.activity_welcome.*
 import kotlin.math.roundToInt
@@ -80,6 +81,7 @@ class WelcomeActivity : BaseActivity() {
         materialCardView.strokeWidth = borderWidth
         materialCardView.radius = dpToPx(contentCornerRadius).toFloat()
 
-        PseudoMarkDown.styleTextView(workspace.welcome.text, textViewContent, contentAccentColor, contentTextColor)
+        if(workspace.welcome.text.isNotEmpty()) PseudoMarkDown.styleTextView(workspace.welcome.text, textViewContent, contentAccentColor, contentTextColor)
+        else materialCardView.visibility = View.GONE
     }
 }

@@ -1,6 +1,5 @@
 package appsquared.votings.app
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,9 +14,6 @@ import framework.base.rest.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.recyclerView
-import kotlinx.android.synthetic.main.activity_user_list.*
 import kotlinx.android.synthetic.main.fragment_notificationlist.*
 
 private const val ARG_PARAM1 = "param1"

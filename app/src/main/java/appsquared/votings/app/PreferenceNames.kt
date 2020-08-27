@@ -8,6 +8,7 @@ class PreferenceNames {
         const val WORKSPACE_NAME = "workspace_name"
         const val LOGIN_DATA = "login_data"
         const val WORKSPACE = "workspace"
+        const val FIRST_START = "first_start"
 
         const val REALM = "realm"
 

@@ -4,10 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
 import framework.base.rest.Model
-import kotlinx.android.synthetic.main.item_news.view.*
-import kotlinx.android.synthetic.main.item_news.view.materialCardView
 import kotlinx.android.synthetic.main.item_notification.view.*
 
 class NotificationListAdapter(private val items: MutableList<Model.Notification>, val attributes: Attributes) : RecyclerView.Adapter<NotificationListAdapter.ViewHolder>() {

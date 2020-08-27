@@ -26,11 +26,21 @@
 
             <include layout="@layout/settings_changelog_card_view"/>
 
+            <include layout="@layout/settings_tutorial_card_view"/>
+
             <include layout="@layout/settings_impress_card_view"/>
 
             <include layout="@layout/settings_privacy_card_view"/>
 
             <include layout="@layout/settings_terms_card_view"/>
+
+            <TextView
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:gravity="end"
+                android:id="@+id/textViewVersionName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

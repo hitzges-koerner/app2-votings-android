@@ -44,6 +44,9 @@ interface ApiService {
     fun getNotificationList(@Header("Authorization") token : String,
                     @Path("WORKSPACE") workspace : String) : Observable<MutableList<Model.Notification>>
 
+    @GET("faq")
+    fun getFaq(@Header("Authorization") token : String) : Observable<MutableList<Model.Faq>>
+
     @GET("{WORKSPACE}/votings")
     fun getVotingList(@Header("Authorization") token : String,
                     @Path("WORKSPACE") workspace : String) : Observable<MutableList<Model.VotingShort>>
@@ -59,6 +62,27 @@ interface ApiService {
                      @Path("WORKSPACE") workspace : String,
                      @Path("VOTING_ID") votingId : String,
                      @Body data: String) : Observable<ResponseBody>
+
+    @POST("telemetry")
+    fun sendTelemetry(@Body data: String) : Observable<ResponseBody>
+
+    @POST("{WORKSPACE}/user")
+    fun inviteUser(@Header("Authorization") token : String,
+                     @Path("WORKSPACE") workspace : String,
+                     @Body data: String) : Observable<ResponseBody>
+
+    @POST("register")
+    fun registerAccount(@Body data: String) : Observable<ResponseBody>
+
+    @POST("{WORKSPACE}/quickvoting")
+    @Headers("Content-type: application/json", "Accept: application/json")
+    fun createVoting(@Header("Authorization") token : String,
+                     @Path("WORKSPACE") workspace : String,
+                     @Body data: String) : Observable<ResponseBody>
+
+    @GET(".")
+    fun checkWorkspaceAvailable(
+        @Query("q") workspace: String) : Observable<ResponseBody>
 
     @GET("{WORKSPACE}/changelog/android")
     fun getChangelog(@Header("Authorization") token : String,

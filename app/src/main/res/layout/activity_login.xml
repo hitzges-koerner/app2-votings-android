@@ -22,59 +22,12 @@
         app:layout_constraintHeight_max="100dp"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <appsquared.votings.app.views.ButtonCardView
-        android:visibility="gone"
-        android:id="@+id/buttonCardViewAppsquared"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/editTextCardViewWorkspace"
-        app:layout_constraintEnd_toStartOf="@id/buttonCardViewRich"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:text="a²"
-        app:text_color="@color/colorAccent"  />
-
-    <appsquared.votings.app.views.ButtonCardView
-        android:visibility="gone"
-        android:id="@+id/buttonCardViewRich"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/editTextCardViewWorkspace"
-        app:layout_constraintEnd_toStartOf="@id/buttonCardViewMinimal"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@id/buttonCardViewAppsquared"
-        app:text="ri"
-        app:text_color="@color/colorAccent"  />
-
-    <appsquared.votings.app.views.ButtonCardView
-        android:visibility="gone"
-        android:id="@+id/buttonCardViewMinimal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/editTextCardViewWorkspace"
-        app:layout_constraintEnd_toStartOf="@id/buttonCardViewClean"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@id/buttonCardViewRich"
-        app:text="mi"
-        app:text_color="@color/colorAccent"  />
-
-    <appsquared.votings.app.views.ButtonCardView
-        android:visibility="gone"
-        android:id="@+id/buttonCardViewClean"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/editTextCardViewWorkspace"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@id/buttonCardViewMinimal"
-        app:text="cl"
-        app:text_color="@color/colorAccent"  />
-
     <appsquared.votings.app.views.EditTextCardView
         android:id="@+id/editTextCardViewWorkspace"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:hint="Workspace"
+        app:type="name"
         app:layout_constraintBottom_toTopOf="@+id/editTextCardViewMail" />
 
     <appsquared.votings.app.views.EditTextCardView
@@ -144,6 +97,8 @@
     </LinearLayout>
 
     <appsquared.votings.app.views.ButtonCardView
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:id="@+id/buttonCardViewLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -154,6 +109,8 @@
         app:text_color="@android:color/white" />
 
     <appsquared.votings.app.views.ButtonCardView
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:id="@+id/buttonCardViewQR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

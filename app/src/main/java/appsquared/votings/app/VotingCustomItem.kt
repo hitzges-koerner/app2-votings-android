@@ -19,6 +19,7 @@ class VotingCustomItem() {
     var nameFirst: String = ""
     var nameLast: String = ""
     var selected: Boolean = false
+    var visible: Boolean = true
 
     /**
      * constructor for stream files

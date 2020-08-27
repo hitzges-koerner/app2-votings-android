@@ -14,7 +14,7 @@
     android:layout_marginBottom="6dp"
     android:layout_marginTop="6dp">
 
-    <EditText
+    <appsquared.votings.app.views.EditTextWithClear
         android:textColorHint="@color/colorAccent"
         android:textColor="@color/colorAccent"
         android:background="@null"
