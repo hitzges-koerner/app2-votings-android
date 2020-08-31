@@ -71,7 +71,7 @@ class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout
                 editMode = EDIT_MODE_ON
                 mTempText = getText()
                 buttonLeft.visibility = View.VISIBLE
-                buttonRight.text = "SAVE"
+                buttonRight.text = context.getString(R.string.save)
                 editText.isEnabled = true
                 editText.setSelection(editText.text.length)
                 editText.showKeyboard()
@@ -92,7 +92,7 @@ class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout
         setText(mTempText)
         editMode = EDIT_MODE_OFF
         buttonLeft.visibility = View.GONE
-        buttonRight.text = "EDIT"
+        buttonRight.text = context.getString(R.string.edit)
         editText.isFocusable = false
         editText.clearFocus()
         editText.hideKeyboard()
@@ -101,7 +101,7 @@ class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout
     fun editSave() {
         editMode = EDIT_MODE_OFF
         buttonLeft.visibility = View.GONE
-        buttonRight.text = "EDIT"
+        buttonRight.text = context.getString(R.string.edit)
         editText.isEnabled = false
         editText.clearFocus()
         editText.hideKeyboard()

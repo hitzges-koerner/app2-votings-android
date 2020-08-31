@@ -135,4 +135,26 @@
     <string name="voting_create_users_selected">Selected users</string>
     <string name="voting_create">New voting</string>
     <string name="add_new_choice">+ Add new choice</string>
+    <string name="voting_create_send_dialog_text">Should this voting be created now? It can then no longer be changed (but can be deleted), begins immediately and ends as soon as all participants have cast their vote.</string>
+    <string name="edit">edit</string>
+    <string name="voting_create_choice_dialog_title">Add new choice</string>
+    <string name="voting_create_choice_dialog_hint">choice title</string>
+    <string name="voting_create_choice_dialog_text">Enter the title for the new choice:</string>
+    <string name="error_sending_photo">There was an error while sending the photo.</string>
+    <string name="permission_camera_error">Permission to access the camera wasn\'t granted.</string>
+
+
+    <string name="new_version_available_dialog_title">Update available</string>
+    <string name="new_version_available_dialog_download">OK</string>
+    <string name="new_version_available_dialog_cancel">Cancel</string>
+    <string name="new_version_available_dialog_messagge">A new version (%1$s) is available in the App Store.\n\nPlease download the latest version from the App Store.</string>
+
+
+    <string name="new_version_required_dialog_title">Neue Version erforderlich</string>
+    <string name="new_version_required_dialog_download">OK</string>
+    <string name="new_version_required_dialog_close">Close</string>
+    <string name="new_version_required_dialog_messagge">A new version (%1$s) is available in the App Store. The installed version (%1$s) is no longer supported.\n\nPlease download the latest version from the App Store.</string>
+    <string name="learn_more">Learn More</string>
+    <string name="please_select">Select please</string>
+    <string name="save">save</string>
 </resources>

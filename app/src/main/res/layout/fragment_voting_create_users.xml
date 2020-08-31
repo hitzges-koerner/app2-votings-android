@@ -6,28 +6,6 @@
     android:orientation="vertical"
     tools:context="appsquared.votings.app.fragments.VotingCreateUsersFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="32dp"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:paddingBottom="16dp">
-
-        <TextView
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold"
-            android:id="@+id/textViewTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/voting_create_users_title"
-            android:textSize="@dimen/headline_big"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </LinearLayout>
-
     <ScrollView
         android:scrollbars="none"
         android:clipToPadding="false"
@@ -45,6 +23,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="32dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="bold"
+                    android:id="@+id/textViewTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/voting_create_users_title"
+                    android:textSize="@dimen/headline_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/materialCardViewUserAll"

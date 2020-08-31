@@ -36,6 +36,11 @@
 
     </ScrollView>
 
+    <View
+        android:background="@color/grey_190"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+
     <LinearLayout
         android:gravity="center"
         android:id="@+id/linearLayout"
@@ -45,7 +50,7 @@
         android:padding="16dp">
 
         <Button
-            android:text="Learn More"
+            android:text="@string/learn_more"
             android:id="@+id/buttonProLearnMore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

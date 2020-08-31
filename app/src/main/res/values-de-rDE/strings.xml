@@ -136,5 +136,25 @@
     <string name="voting_create_users_selected">Einzelne Benutzer</string>
     <string name="voting_create">Neue Abstimmung</string>
     <string name="add_new_choice">+ Neue Auswahl hinzufügen</string>
+    <string name="voting_create_send_dialog_text">Soll diese Abstimmung jetzt erstellt werden? Sie kann dann nicht mehr verändert (aber gelöscht) werden, beginnt sofort und ended sobald alle Teilnehmer ihre Stimme abgegeben haben.</string>
+    <string name="edit">bearbeiten</string>
+    <string name="voting_create_choice_dialog_title">Auswahl hinzufügen</string>
+    <string name="voting_create_choice_dialog_hint">Name für Auswahl</string>
+    <string name="voting_create_choice_dialog_text">Gib einen Namen für die Auswahl an:</string>
+    <string name="error_sending_photo">Beim Senden des Fotos ist ein Fehler ausgetreten.</string>
+    <string name="permission_camera_error">Zugriff auf Kamera wurde nicht gewährt.</string>
+
+    <string name="new_version_available_dialog_title">Neue Version verfügbar</string>
+    <string name="new_version_available_dialog_download">Ok</string>
+    <string name="new_version_available_dialog_cancel">Abbrechen</string>
+    <string name="new_version_available_dialog_messagge">Im Play Store steht eine neue Version (%1$s) zur Verfügung.\n\nBitte laden Sie die neueste Version aus dem Play Store herunter.</string>
+
+    <string name="new_version_required_dialog_title">Neue Version erforderlich</string>
+    <string name="new_version_required_dialog_download">Ok</string>
+    <string name="new_version_required_dialog_close">Beenden</string>
+    <string name="new_version_required_dialog_messagge">Im Play Store steht eine neue Version (%1$s) zur Verfügung. Die installierte Version (%1$s) wird nicht mehr unterstützt.\n\nBitte laden Sie die neueste Version aus dem Play Store herunter.</string>
+    <string name="learn_more">mehr erfahren</string>
+    <string name="please_select">Bitte auswählen</string>
+    <string name="save">speichern</string>
 
 </resources>

@@ -331,7 +331,7 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
     class ViewHolderButton(itemView: View, private val attributes: Attributes, val listener : (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(item: VotingCustomItem) {
             with(itemView) {
-                textViewButton.text = "Jetzt abstimmen"
+                textViewButton.text = context.getString(R.string.vote_now)
                 textViewButton.setTextColor(attributes.contentTextColor)
                 materialCardViewButton.setCardBackgroundColor(attributes.contentBackgroundColor)
                 materialCardViewButton.setOnClickListener {

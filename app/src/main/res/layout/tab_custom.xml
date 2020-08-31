@@ -18,7 +18,7 @@
 
         <TextView
             android:gravity="center"
-            android:text="News"
+            android:text="@string/tile_news"
             android:padding="8dp"
             android:id="@+id/textViewTabLeft"
             android:layout_width="0dp"
@@ -33,7 +33,7 @@
             android:foreground="?attr/selectableItemBackground"/>
 
         <TextView
-            android:text="Benachichtigungen"
+            android:text="@string/tile_notifications"
             android:gravity="center"
             android:padding="8dp"
             android:id="@+id/textViewTabRight"

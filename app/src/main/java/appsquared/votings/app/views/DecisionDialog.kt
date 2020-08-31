@@ -14,6 +14,9 @@ class DecisionDialog(val context: Context, val listener: (Int) -> Unit) {
 
     val dialog = Dialog(context)
 
+    var mDismissWhenRightButtonClicked = true
+    var mDismissWhenLeftButtonClicked = true
+
     fun generate() : DecisionDialog {
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.dialog_decision)
@@ -24,12 +27,12 @@ class DecisionDialog(val context: Context, val listener: (Int) -> Unit) {
 
         dialog.buttonLeft.setOnClickListener{
             listener(LEFT)
-            dialog.dismiss()
+            if(mDismissWhenLeftButtonClicked) dialog.dismiss()
         }
 
         dialog.buttonRight.setOnClickListener{
             listener(RIGHT)
-            dialog.dismiss()
+            if(mDismissWhenRightButtonClicked) dialog.dismiss()
         }
         return this
     }
@@ -40,7 +43,21 @@ class DecisionDialog(val context: Context, val listener: (Int) -> Unit) {
         return this
     }
 
+    fun setButtonLeftName(text: String, dismissWhenClicked: Boolean) : DecisionDialog {
+        mDismissWhenLeftButtonClicked = dismissWhenClicked
+        dialog.buttonLeft.visibility = View.VISIBLE
+        dialog.buttonLeft.text = text
+        return this
+    }
+
     fun setButtonRightName(text: String) : DecisionDialog {
+        dialog.buttonRight.visibility = View.VISIBLE
+        dialog.buttonRight.text = text
+        return this
+    }
+
+    fun setButtonRightName(text: String, dismissWhenClicked: Boolean) : DecisionDialog {
+        mDismissWhenRightButtonClicked = dismissWhenClicked
         dialog.buttonRight.visibility = View.VISIBLE
         dialog.buttonRight.text = text
         return this

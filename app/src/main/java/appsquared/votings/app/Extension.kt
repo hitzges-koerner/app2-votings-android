@@ -326,6 +326,9 @@ fun Context.toast(message: CharSequence) =
 fun Context.toastLong(message: CharSequence) =
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
+fun Context.toastShort(message: CharSequence) =
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
 fun getResId(resName: String, c: Class<*>): Int {
     try {
         val idField = c.getDeclaredField(resName)

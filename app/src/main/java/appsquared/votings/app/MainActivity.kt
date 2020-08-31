@@ -282,19 +282,17 @@ class MainActivity : BaseActivity() {
         val url = mWorkspace.version.android_AppStoreLink
 
         when(type) {
-            VersionChecker.OUTDATED -> {
-                DecisionDialog(this) {
-                    if (it == DecisionDialog.LEFT) return@DecisionDialog
-                    if (it == DecisionDialog.RIGHT) {
-                        openPlayStoreUrl(url)
-                    }
-                }.generate()
-                    .setTitle("Neue Version verfügbar")
-                    .setButtonRightName("Herunterladen")
-                    .setButtonLeftName("Nein, danke")
-                    .setMessage("Im Play Store steht eine neue Version ($currentVersion) zur Verfügung.\n\nBitte laden Sie die neueste Version aus dem Play Store herunter.")
-                    .show()
-            }
+            VersionChecker.OUTDATED -> DecisionDialog(this) {
+                if (it == DecisionDialog.LEFT) return@DecisionDialog
+                if (it == DecisionDialog.RIGHT) {
+                    openPlayStoreUrl(url)
+                }
+            }.generate()
+                .setTitle(getString(R.string.new_version_available_dialog_title))
+                .setButtonRightName(getString(R.string.new_version_available_dialog_download), false)
+                .setButtonLeftName(getString(R.string.new_version_available_dialog_cancel))
+                .setMessage(String.format(getString(R.string.new_version_available_dialog_messagge), currentVersion))
+                .show()
             VersionChecker.DEPRECATED -> {
                 DecisionDialog(this) {
                     if (it == DecisionDialog.LEFT) {
@@ -306,10 +304,10 @@ class MainActivity : BaseActivity() {
                     }
                 }.generate()
                     .setCancelable(false)
-                    .setTitle("Neue Version erforderlich")
-                    .setButtonRightName("Herunterladen")
-                    .setButtonLeftName("Beenden")
-                    .setMessage("Im Play Store steht eine neue Version ($currentVersion) zur Verfügung. Die installierte Version (${getAppVersion()}) wird nicht mehr unterstützt.\n\nBitte laden Sie die neueste Version aus dem Play Store herunter.")
+                    .setTitle(getString(R.string.new_version_required_dialog_title))
+                    .setButtonRightName(getString(R.string.new_version_required_dialog_download), false)
+                    .setButtonLeftName(getString(R.string.new_version_required_dialog_close))
+                    .setMessage(String.format(getString(R.string.new_version_required_dialog_messagge), currentVersion, BuildConfig.VERSION_NAME))
                     .show()
             }
         }

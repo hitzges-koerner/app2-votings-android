@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:text="Bitte auswählen"
+        android:text="@string/please_select"
         android:layout_marginLeft="16dp"
         android:id="@+id/text_screen_title"
         style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"

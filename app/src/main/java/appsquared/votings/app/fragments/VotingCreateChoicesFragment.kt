@@ -65,9 +65,9 @@ class VotingCreateChoicesFragment : Fragment() {
                     }
                 }
             }.generate()
-                .setTitle("Add new choice")
-                .setMessage("Enter the title for the new choice:")
-                .setHint("choice title")
+                .setTitle(getString(R.string.voting_create_choice_dialog_title))
+                .setMessage(getString(R.string.voting_create_choice_dialog_text))
+                .setHint(getString(R.string.voting_create_choice_dialog_hint))
                 .setButtonLeftName(getString(R.string.cancel)).setButtonRightName(getString(R.string.add))
                 .show()
         }

@@ -52,7 +52,7 @@
                     android:layout_gravity="bottom"
                     android:background="@color/colorAccent"
                     android:gravity="center"
-                    android:text="edit" />
+                    android:text="@string/edit" />
 
             </com.google.android.material.card.MaterialCardView>
 

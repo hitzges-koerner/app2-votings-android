@@ -132,7 +132,7 @@ class MyProfileActivity : BaseActivity(),
         if(workspaceSettings.contentAccentContrastColor.isNotEmpty()) mAttributes.contentAccentContrastColor = convertStringToColor(workspaceSettings.contentAccentContrastColor)
 
         myProfileEditCardViewNameOne.setBackgroundColor(mAttributes.contentBackgroundColor)
-        myProfileEditCardViewNameOne.setTextButtonLeft("cancel")
+        myProfileEditCardViewNameOne.setTextButtonLeft(getString(R.string.cancel))
         myProfileEditCardViewNameOne.setButtonsBackgroundColor(mAttributes.contentAccentColor)
         myProfileEditCardViewNameOne.setButtonsTextColor(mAttributes.contentAccentContrastColor)
         myProfileEditCardViewNameOne.setIconTintColor(mAttributes.contentTextColor)
@@ -144,7 +144,7 @@ class MyProfileActivity : BaseActivity(),
         myProfileEditCardViewNameOne.setOnMyProfileEditButtonClickListener(this)
 
         myProfileEditCardViewNameTwo.setBackgroundColor(mAttributes.contentBackgroundColor)
-        myProfileEditCardViewNameTwo.setTextButtonLeft("cancel")
+        myProfileEditCardViewNameTwo.setTextButtonLeft(getString(R.string.cancel))
         myProfileEditCardViewNameTwo.setButtonsBackgroundColor(mAttributes.contentAccentColor)
         myProfileEditCardViewNameTwo.setButtonsTextColor(mAttributes.contentAccentContrastColor)
         myProfileEditCardViewNameTwo.setIconTintColor(mAttributes.contentTextColor)
@@ -156,7 +156,7 @@ class MyProfileActivity : BaseActivity(),
         myProfileEditCardViewNameTwo.setOnMyProfileEditButtonClickListener(this)
 
         myProfileEditCardViewMail.setBackgroundColor(mAttributes.contentBackgroundColor)
-        myProfileEditCardViewMail.setTextButtonLeft("cancel")
+        myProfileEditCardViewMail.setTextButtonLeft(getString(R.string.cancel))
         myProfileEditCardViewMail.setButtonsBackgroundColor(mAttributes.contentAccentColor)
         myProfileEditCardViewMail.setButtonsTextColor(mAttributes.contentAccentContrastColor)
         myProfileEditCardViewMail.setIconTintColor(mAttributes.contentTextColor)
@@ -169,7 +169,7 @@ class MyProfileActivity : BaseActivity(),
         myProfileEditCardViewMail.disabledEdit()
 
         myProfileEditCardViewPhoneNo.setBackgroundColor(mAttributes.contentBackgroundColor)
-        myProfileEditCardViewPhoneNo.setTextButtonLeft("cancel")
+        myProfileEditCardViewPhoneNo.setTextButtonLeft(getString(R.string.cancel))
         myProfileEditCardViewPhoneNo.setButtonsBackgroundColor(mAttributes.contentAccentColor)
         myProfileEditCardViewPhoneNo.setButtonsTextColor(mAttributes.contentAccentContrastColor)
         myProfileEditCardViewPhoneNo.setIconTintColor(mAttributes.contentTextColor)

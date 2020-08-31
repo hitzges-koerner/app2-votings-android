@@ -189,7 +189,7 @@ class CameraActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if(grantResults.contains(PackageManager.PERMISSION_DENIED)) {
-            toastLong("Zugriff auf Kamera wurde nicht gewährt.")
+            toastLong(getString(R.string.permission_camera_error))
             finish()
         } else {
             dispatchTakePictureIntent()
@@ -270,7 +270,7 @@ class CameraActivity : AppCompatActivity() {
                     finish()
 
                 }, { error ->
-                    toast("error sending photo")
+                    toast(getString(R.string.error_sending_photo))
                 }
             )
     }
