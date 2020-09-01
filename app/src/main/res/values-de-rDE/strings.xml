@@ -156,5 +156,7 @@
     <string name="learn_more">mehr erfahren</string>
     <string name="please_select">Bitte auswählen</string>
     <string name="save">speichern</string>
+    <string name="dialog_error_create_voting_title">Achtung</string>
+    <string name="dialog_error_create_voting_message">Sie benötigen Administrator-Rechte um eine neue Abstimmung zu erstellen.</string>
 
 </resources>

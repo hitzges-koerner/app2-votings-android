@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import appsquared.votings.app.views.DecisionDialog
+import appsquared.votings.app.views.InfoDialog
 import framework.base.constant.Constant
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,7 +27,14 @@ class MainActivity : BaseActivity() {
 
     override fun clickToolbarMenuButton() {
         super.clickToolbarMenuButton()
-        startActivity(Intent(this, VotingCreateActivity::class.java))
+        if (mLoginData.isAMSUser == "1") startActivity(Intent(this, VotingCreateActivity::class.java))
+        else {
+            InfoDialog(this) {
+            }.generate().setButtonName(R.string.ok)
+                .setTitle(R.string.dialog_error_create_voting_title)
+                .setMessage(R.string.dialog_error_create_voting_message)
+                .show()
+        }
     }
 
     override fun childOnlyMethod() {

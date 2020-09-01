@@ -157,4 +157,6 @@
     <string name="learn_more">Learn More</string>
     <string name="please_select">Select please</string>
     <string name="save">save</string>
+    <string name="dialog_error_create_voting_title">Attention</string>
+    <string name="dialog_error_create_voting_message">You need administrator rights to create a new voting.</string>
 </resources>
