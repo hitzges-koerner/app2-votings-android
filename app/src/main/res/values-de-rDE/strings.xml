@@ -158,5 +158,6 @@
     <string name="save">speichern</string>
     <string name="dialog_error_create_voting_title">Achtung</string>
     <string name="dialog_error_create_voting_message">Sie benötigen Administrator-Rechte um eine neue Abstimmung zu erstellen.</string>
+    <string name="your_workspace">Dein Workspace:</string>
 
 </resources>

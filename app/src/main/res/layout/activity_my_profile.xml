@@ -56,17 +56,17 @@
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
-                android:textStyle="bold"
                 android:layout_marginBottom="8dp"
-                android:textSize="24sp"
-                android:id="@+id/textViewWorkspaceName"
+                android:text="@string/your_workspace"
+                android:textSize="18sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:textStyle="bold"
                 android:layout_marginBottom="16dp"
-                android:text="Aktueller Workspace"
-                android:textSize="18sp"
+                android:textSize="24sp"
+                android:id="@+id/textViewWorkspaceName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -99,6 +99,7 @@
                 app:profil_type="phone"/>
 
             <appsquared.votings.app.views.ButtonCardView
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:id="@+id/buttonCardViewLogout"
