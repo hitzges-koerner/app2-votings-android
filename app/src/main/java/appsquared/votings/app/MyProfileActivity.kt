@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo
 import android.webkit.URLUtil
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import appsquared.votings.app.views.ListDialog
@@ -66,6 +67,7 @@ class MyProfileActivity : BaseActivity(),
 
     override fun childOnlyMethod() {
 
+        textViewWorkspaceName.text = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceNames.WORKSPACE_NAME, "")
         setScreenTitle(R.string.tile_my_profil)
 
         val workspace = mWorkspace
@@ -131,57 +133,25 @@ class MyProfileActivity : BaseActivity(),
         if(workspaceSettings.contentPlaceholderColor.isNotEmpty()) mAttributes.contentPlaceholderColor = convertStringToColor(workspaceSettings.contentPlaceholderColor)
         if(workspaceSettings.contentAccentContrastColor.isNotEmpty()) mAttributes.contentAccentContrastColor = convertStringToColor(workspaceSettings.contentAccentContrastColor)
 
-        myProfileEditCardViewNameOne.setBackgroundColor(mAttributes.contentBackgroundColor)
-        myProfileEditCardViewNameOne.setTextButtonLeft(getString(R.string.cancel))
-        myProfileEditCardViewNameOne.setButtonsBackgroundColor(mAttributes.contentAccentColor)
-        myProfileEditCardViewNameOne.setButtonsTextColor(mAttributes.contentAccentContrastColor)
-        myProfileEditCardViewNameOne.setIconTintColor(mAttributes.contentTextColor)
-        myProfileEditCardViewNameOne.setTextColor(mAttributes.contentTextColor)
-        myProfileEditCardViewNameOne.setCursorColor(mAttributes.contentTextColor)
-        myProfileEditCardViewNameOne.setPlaceholderColor(mAttributes.contentPlaceholderColor)
         if(loginData.firstName.isNotEmpty()) myProfileEditCardViewNameOne.setText(loginData.firstName) else myProfileEditCardViewNameOne.setPlaceHolderText(getString(
             R.string.placeholder_name_first))
         myProfileEditCardViewNameOne.setOnMyProfileEditButtonClickListener(this)
 
-        myProfileEditCardViewNameTwo.setBackgroundColor(mAttributes.contentBackgroundColor)
-        myProfileEditCardViewNameTwo.setTextButtonLeft(getString(R.string.cancel))
-        myProfileEditCardViewNameTwo.setButtonsBackgroundColor(mAttributes.contentAccentColor)
-        myProfileEditCardViewNameTwo.setButtonsTextColor(mAttributes.contentAccentContrastColor)
-        myProfileEditCardViewNameTwo.setIconTintColor(mAttributes.contentTextColor)
-        myProfileEditCardViewNameTwo.setTextColor(mAttributes.contentTextColor)
-        myProfileEditCardViewNameTwo.setCursorColor(mAttributes.contentTextColor)
-        myProfileEditCardViewNameTwo.setPlaceholderColor(mAttributes.contentPlaceholderColor)
         if(loginData.lastName.isNotEmpty()) myProfileEditCardViewNameTwo.setText(loginData.lastName) else myProfileEditCardViewNameTwo.setPlaceHolderText(getString(
             R.string.placeholder_name_last))
         myProfileEditCardViewNameTwo.setOnMyProfileEditButtonClickListener(this)
 
-        myProfileEditCardViewMail.setBackgroundColor(mAttributes.contentBackgroundColor)
-        myProfileEditCardViewMail.setTextButtonLeft(getString(R.string.cancel))
-        myProfileEditCardViewMail.setButtonsBackgroundColor(mAttributes.contentAccentColor)
-        myProfileEditCardViewMail.setButtonsTextColor(mAttributes.contentAccentContrastColor)
-        myProfileEditCardViewMail.setIconTintColor(mAttributes.contentTextColor)
-        myProfileEditCardViewMail.setTextColor(mAttributes.contentTextColor)
-        myProfileEditCardViewMail.setCursorColor(mAttributes.contentTextColor)
-        myProfileEditCardViewMail.setPlaceholderColor(mAttributes.contentPlaceholderColor)
         if(loginData.email.isNotEmpty()) myProfileEditCardViewMail.setText(loginData.email) else myProfileEditCardViewMail.setPlaceHolderText(getString(
             R.string.placeholder_email))
         myProfileEditCardViewMail.setOnMyProfileEditButtonClickListener(this)
         myProfileEditCardViewMail.disabledEdit()
 
-        myProfileEditCardViewPhoneNo.setBackgroundColor(mAttributes.contentBackgroundColor)
-        myProfileEditCardViewPhoneNo.setTextButtonLeft(getString(R.string.cancel))
-        myProfileEditCardViewPhoneNo.setButtonsBackgroundColor(mAttributes.contentAccentColor)
-        myProfileEditCardViewPhoneNo.setButtonsTextColor(mAttributes.contentAccentContrastColor)
-        myProfileEditCardViewPhoneNo.setIconTintColor(mAttributes.contentTextColor)
-        myProfileEditCardViewPhoneNo.setTextColor(mAttributes.contentTextColor)
-        myProfileEditCardViewPhoneNo.setCursorColor(mAttributes.contentTextColor)
-        myProfileEditCardViewPhoneNo.setPlaceholderColor(mAttributes.contentPlaceholderColor)
         if(loginData.phoneNo.isNotEmpty()) myProfileEditCardViewPhoneNo.setText(loginData.phoneNo) else myProfileEditCardViewPhoneNo.setPlaceHolderText(getString(
             R.string.placeholder_phone_number))
         myProfileEditCardViewPhoneNo.setOnMyProfileEditButtonClickListener(this)
 
         // profile image
-        imageViewProfile.setBackgroundColor(mAttributes.contentBackgroundColor)
+        imageViewProfile.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_144))
         if(loginData.avatarUrl.isNotEmpty() && URLUtil.isValidUrl(loginData.avatarUrl)) {
             Picasso.get()
                 .load(loginData.avatarUrl)
@@ -304,7 +274,6 @@ class MyProfileActivity : BaseActivity(),
 
                     myProfileEditCardViewNameOne.editSave()
                     myProfileEditCardViewNameTwo.editSave()
-                    myProfileEditCardViewMail.editSave()
                     myProfileEditCardViewPhoneNo.editSave()
 
                     mLoginData.firstName = firstName

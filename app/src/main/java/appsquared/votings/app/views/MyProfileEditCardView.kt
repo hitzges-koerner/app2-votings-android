@@ -12,6 +12,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -21,7 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import appsquared.votings.app.R
-import kotlinx.android.synthetic.main.my_profile_edit_card_view.view.*
+import kotlinx.android.synthetic.main.my_profile_edit_card_view_redesign.view.*
 
 
 class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout(context, attrs) {
@@ -49,9 +50,9 @@ class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout
     private var editMode = EDIT_MODE_OFF
 
     init {
-        inflate(context, R.layout.my_profile_edit_card_view, this)
+        inflate(context, R.layout.my_profile_edit_card_view_redesign, this)
 
-        editText = findViewById(R.id.editTextView)
+        editText = findViewById(R.id.editText)
         val attributes = context.obtainStyledAttributes(attrs,
             R.styleable.MyProfileEditCardView
         )
@@ -60,39 +61,53 @@ class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout
         attributes.recycle()
 
         editText.isEnabled = false
-        buttonLeft.visibility = GONE
+        editText.setOnEditorActionListener { textView, actionId, keyEvent ->
+            if(actionId == EditorInfo.IME_ACTION_DONE) {
+                editSave()
+                onMyProfileEditButtonClickListener?.uploadData()
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
 
-        buttonLeft.setOnClickListener {
+        imageViewEdit.visibility = VISIBLE
+        imageViewCancel.visibility = GONE
+        imageViewSave.visibility = GONE
+
+        imageViewEdit.setOnClickListener {
+            editMode = EDIT_MODE_ON
+            mTempText = getText()
+            imageViewEdit.visibility = GONE
+            imageViewCancel.visibility = VISIBLE
+            imageViewSave.visibility = VISIBLE
+            editText.isEnabled = true
+            editText.requestFocus()
+            editText.isFocusable = true
+            editText.setSelection(editText.text.length)
+            editText.showKeyboard()
+            onMyProfileEditButtonClickListener?.scrollViewToPosition(this)
+        }
+
+        imageViewCancel.setOnClickListener {
             editCancel()
         }
 
-        buttonRight.setOnClickListener {
-            if(editMode == EDIT_MODE_OFF) {
-                editMode = EDIT_MODE_ON
-                mTempText = getText()
-                buttonLeft.visibility = View.VISIBLE
-                buttonRight.text = context.getString(R.string.save)
-                editText.isEnabled = true
-                editText.setSelection(editText.text.length)
-                editText.showKeyboard()
-                onMyProfileEditButtonClickListener?.scrollViewToPosition(this)
-            } else {
-                editSave()
-                onMyProfileEditButtonClickListener?.uploadData()
-            }
+        imageViewSave.setOnClickListener {
+            editSave()
+            onMyProfileEditButtonClickListener?.uploadData()
         }
     }
 
     fun disabledEdit() {
-        buttonRight.visibility = View.INVISIBLE
-        buttonRight.isFocusable = false
+        imageViewEdit.visibility = GONE
     }
 
     fun editCancel() {
         setText(mTempText)
         editMode = EDIT_MODE_OFF
-        buttonLeft.visibility = View.GONE
-        buttonRight.text = context.getString(R.string.edit)
+        imageViewSave.visibility = GONE
+        imageViewCancel.visibility = GONE
+        imageViewEdit.visibility = VISIBLE
         editText.isFocusable = false
         editText.clearFocus()
         editText.hideKeyboard()
@@ -100,8 +115,9 @@ class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout
 
     fun editSave() {
         editMode = EDIT_MODE_OFF
-        buttonLeft.visibility = View.GONE
-        buttonRight.text = context.getString(R.string.edit)
+        imageViewSave.visibility = GONE
+        imageViewCancel.visibility = GONE
+        imageViewEdit.visibility = VISIBLE
         editText.isEnabled = false
         editText.clearFocus()
         editText.hideKeyboard()
@@ -125,30 +141,6 @@ class MyProfileEditCardView(context: Context, attrs: AttributeSet): LinearLayout
 
     fun setPlaceHolderText(text: String) {
         editText.hint = text
-    }
-
-    fun setButtonsBackgroundColor(color: Int) {
-        mBackgroundColor = color
-        buttonLeft.setBackgroundColor(color)
-        buttonRight.setBackgroundColor(color)
-    }
-
-    fun setButtonsTextColor(color: Int) {
-        mTextColor = color
-        buttonLeft.setTextColor(color)
-        buttonRight.setTextColor(color)
-    }
-
-    fun setTextButtonLeft(text: String) {
-        buttonLeft.text = text
-    }
-
-    fun setTextButtonRight(text: String) {
-        buttonRight.text = text
-    }
-
-    override fun setBackgroundColor(color: Int) {
-        materialCardViewMyProfile.setCardBackgroundColor(color)
     }
 
     fun setTextColor(color: Int) {
