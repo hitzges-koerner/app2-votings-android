@@ -3,7 +3,7 @@ package framework.base.constant
 class Constant {
 
     companion object {
-        var TAG = "VotingsApp"
+        var TAG = "Votings.App"
         var BASE_API = "https://api.votings.app/v1.0/"
         var BASE_ADM = "https://adm.votings.app/v1.0/"
 

@@ -105,7 +105,7 @@
 
     <!-- tutorial -->
     <string name="tutorial">Tutorial</string>
-    <string name="tutorial_title_1">Was muß ich als erstes tun?</string>
+    <string name="tutorial_title_1">Was muss ich als erstes tun?</string>
     <string name="tutorial_title_2">Erstelle eine Abstimmung</string>
     <string name="tutorial_title_3">Verfolge die Ergebnisse</string>
     <string name="tutorial_description_1">Lege zunächst Benutzer an und lade sie zu deinem Workspace ein. Bestätigte Benutzer können dann als Teilnehmer zu einer Abstimmung hinzugefügt werden.</string>

@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import appsquared.votings.app.views.DecisionDialog
+import framework.base.constant.Constant
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -261,6 +263,10 @@ class MainActivity : BaseActivity() {
     private fun checkVersion(currentVersion : String, requiredVersion: String) : Boolean {
         var currentVersionInner = currentVersion
         var requiredVersionInner = requiredVersion
+
+        Log.d(Constant.TAG, "installed version ${getAppVersion()}")
+        Log.d(Constant.TAG, "current version $currentVersionInner")
+        Log.d(Constant.TAG, "required version $requiredVersionInner")
 
         if(currentVersionInner.isEmpty()) currentVersionInner = "0.0.0"
         if(requiredVersionInner.isEmpty())  requiredVersionInner = "0.0.0"

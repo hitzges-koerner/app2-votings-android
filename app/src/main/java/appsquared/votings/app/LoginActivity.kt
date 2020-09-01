@@ -67,6 +67,7 @@ class LoginActivity : AppCompatActivity() {
 
         val isDebuggable = 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
         if(!isDebuggable) {
+            Log.d(Constant.TAG, "telemetry sent")
             intent.extras?.let {
                 if(it.containsKey("app_start")) {
                     if(it.get("app_start") as Boolean) sendTelemetry()
