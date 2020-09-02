@@ -155,7 +155,9 @@ object Model {
         @field:Json(name = "votingType") val votingType:String = "",
         @field:Json(name = "votingStatus") var votingStatus:Int = 0,
         @field:Json(name = "inRepresentationOfId") var inRepresentationOfId:String = "",
-        @field:Json(name = "inRepresentationOfName") var inRepresentationOfName:String = ""
+        @field:Json(name = "inRepresentationOfName") var inRepresentationOfName:String = "",
+        @field:Json(name = "isQuickVoting") var isQuickVoting :String = "0", //String -> “0” or “1”
+        @field:Json(name = "ownerId") var ownerId :String = ""
     )
 
     @JsonClass(generateAdapter = true)
@@ -174,7 +176,9 @@ object Model {
         @field:Json(name = "inRepresentationOfName") val inRepresentationOfName:String = "",
         @field:Json(name = "documents") val documents:MutableList<Document> = mutableListOf(),
         @field:Json(name = "choices") val choices:MutableList<Choice> = mutableListOf(),
-        @field:Json(name = "users") val users:MutableList<UserVoting> = mutableListOf()
+        @field:Json(name = "users") val users:MutableList<UserVoting> = mutableListOf(),
+        @field:Json(name = "isQuickVoting") var isQuickVoting :String = "0", //String -> “0” or “1”
+        @field:Json(name = "ownerId") var ownerId :String = ""
     )
 
     @JsonClass(generateAdapter = true)
@@ -187,7 +191,9 @@ object Model {
         @field:Json(name = "votedChoiceId") val votedChoiceId: String = "",
         @field:Json(name = "representedByUserId") val representedByUserId: String = "",
         @field:Json(name = "representedByUserFirstname") val representedByUserFirstname: String = "",
-        @field:Json(name = "representedByUserLastname") val representedByUserLastname: String = ""
+        @field:Json(name = "representedByUserLastname") val representedByUserLastname: String = "",
+        @field:Json(name = "isQuickVoting") var isQuickVoting :String = "0", //String -> “0” or “1”
+        @field:Json(name = "ownerId") var ownerId :String = ""
     )
 
     @JsonClass(generateAdapter = true)
@@ -211,5 +217,4 @@ object Model {
         @field:Json(name = "releaseDate") val releaseDate:String = "",
         @field:Json(name = "releaseNotes") val releaseNotes:String = ""
     )
-
 }
