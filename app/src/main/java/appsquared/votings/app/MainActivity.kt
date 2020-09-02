@@ -10,6 +10,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import appsquared.votings.app.views.DecisionDialog
 import appsquared.votings.app.views.InfoDialog
+import appsquared.votings.app.views.ListDialog
 import framework.base.constant.Constant
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,8 +28,27 @@ class MainActivity : BaseActivity() {
 
     override fun clickToolbarMenuButton() {
         super.clickToolbarMenuButton()
-        if (mLoginData.isAMSUser == "1") startActivity(Intent(this, VotingCreateActivity::class.java))
-        else {
+        if (mLoginData.isAMSUser == "1") {
+            val votingAvailable = AppData().isSavedObjectFromPreferenceAvailable(this, PreferenceNames.VOTING_CREATE_DATA)
+            if(votingAvailable) {
+                ListDialog(this) { tag: String ->
+                    when (tag) {
+                        "open" -> {
+                            startActivity(Intent(this, VotingCreateActivity::class.java))
+                        }
+                        "discard" -> {
+                            AppData().deleteSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA)
+                            startActivity(Intent(this, VotingCreateActivity::class.java))
+                        }
+                    }
+                }
+                    .generate()
+                    .addButton("open", R.string.voting_dialog_create_button_open)
+                    .addButton("discard", R.string.voting_dialog_create_button_discard)
+                    .addCancelButton()
+                    .show()
+            } else startActivity(Intent(this, VotingCreateActivity::class.java))
+        } else {
             InfoDialog(this) {
             }.generate().setButtonName(R.string.ok)
                 .setTitle(R.string.dialog_error_create_voting_title)

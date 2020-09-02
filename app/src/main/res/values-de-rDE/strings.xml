@@ -159,5 +159,10 @@
     <string name="dialog_error_create_voting_title">Achtung</string>
     <string name="dialog_error_create_voting_message">Sie benötigen Administrator-Rechte um eine neue Abstimmung zu erstellen.</string>
     <string name="your_workspace">Dein Workspace:</string>
+    <string name="voting_dialog_cancel_button_discard">Ja, verwerfen</string>
+    <string name="voting_dialog_cancel_button_save">Als Entwurf speichern</string>
+    <string name="voting_dialog_cancel_title">Alle Eingaben verwerfen?</string>
+    <string name="voting_dialog_create_button_open">Erstellung fortführen</string>
+    <string name="voting_dialog_create_button_discard">Neues Voting erstellen</string>
 
 </resources>

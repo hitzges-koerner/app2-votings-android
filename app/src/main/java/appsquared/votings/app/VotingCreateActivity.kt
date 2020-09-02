@@ -6,7 +6,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import appsquared.votings.app.fragments.*
-import appsquared.votings.app.views.DecisionDialog
+import appsquared.votings.app.views.ListDialog
 import framework.base.constant.Constant
 import framework.base.rest.ApiService
 import framework.base.rest.Model
@@ -18,6 +18,7 @@ import io.reactivex.schedulers.Schedulers
 class VotingCreateActivity : BaseActivity(),
     FragmentInteractionListener {
 
+    private lateinit var mVotingCreateData: VotingCreateData
     var disposable: Disposable? = null
 
     val apiService by lazy {
@@ -26,14 +27,14 @@ class VotingCreateActivity : BaseActivity(),
 
     val mUserList = mutableListOf<Model.User>()
 
-    object VotingCreateData {
-        var title: String = ""
-        var description: String = ""
-        var choiceType = ChoiceType.NONE
-        var choices: MutableList<String> = mutableListOf()
-        var userType = UserType.NONE
-        var users = mutableListOf<Model.User>()
-    }
+    data class VotingCreateData(
+        var title: String = "",
+        var description: String = "",
+        var choiceType: ChoiceType = ChoiceType.NONE,
+        var choices: MutableList<String> = mutableListOf(),
+        var userType: UserType = UserType.NONE,
+        var users: MutableList<Model.User> = mutableListOf<Model.User>()
+    )
 
     private var mFragmentId: Int = 0
 
@@ -99,14 +100,8 @@ class VotingCreateActivity : BaseActivity(),
 
     override fun childOnlyMethod() {
 
-        VotingCreateData.title = ""
-        VotingCreateData.description = ""
-        VotingCreateData.title = ""
-        VotingCreateData.description = ""
-        VotingCreateData.choiceType = ChoiceType.NONE
-        VotingCreateData.choices = mutableListOf()
-        VotingCreateData.userType = UserType.NONE
-        VotingCreateData.users = mutableListOf()
+        mVotingCreateData = AppData().getSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA, VotingCreateData::class.java)
+            ?: VotingCreateData()
 
         setScreenTitle(getString(R.string.voting_create))
         setCancelButtonActive(true)
@@ -142,6 +137,7 @@ class VotingCreateActivity : BaseActivity(),
 
         if(mFragmentId == 0) finish()
         else {
+            /*
             DecisionDialog(this) {
                 if (it == DecisionDialog.LEFT) return@DecisionDialog
                 if (it == DecisionDialog.RIGHT) {
@@ -152,55 +148,75 @@ class VotingCreateActivity : BaseActivity(),
                 .setButtonLeftName(getString(R.string.no))
                 .setMessage("Do you want to cancel creating a new voting?")
                 .show()
+             */
+
+            ListDialog(this) { tag: String ->
+                when (tag) {
+                    "discard" -> {
+                        AppData().deleteSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA)
+                        finish()
+                    }
+                    "save" -> {
+                        AppData().saveObjectToSharedPreference(this, PreferenceNames.VOTING_CREATE_DATA, mVotingCreateData)
+                        finish()
+                    }
+                }
+            }
+                .generate()
+                .setTitle(R.string.voting_dialog_cancel_title)
+                .addButton("discard", R.string.voting_dialog_cancel_button_discard)
+                .addButton("save", R.string.voting_dialog_cancel_button_save)
+                .addCancelButton()
+                .show()
         }
     }
 
     fun setVotingTitle(title: String) {
-        VotingCreateData.title = title
+        mVotingCreateData.title = title
     }
 
     fun setDescription(description: String) {
-        VotingCreateData.description = description
+        mVotingCreateData.description = description
     }
 
     fun getVotingTitle() : String {
-        return VotingCreateData.title
+        return mVotingCreateData.title
     }
 
     fun getDescription() : String {
-        return VotingCreateData.description
+        return mVotingCreateData.description
     }
 
     fun setChoiceType(choiceType: ChoiceType) {
-        VotingCreateData.choiceType = choiceType
+        mVotingCreateData.choiceType = choiceType
     }
 
     fun getChoiceType(): ChoiceType {
-        return VotingCreateData.choiceType
+        return mVotingCreateData.choiceType
     }
 
     fun setUserType(userType: UserType) {
-        VotingCreateData.userType = userType
+        mVotingCreateData.userType = userType
     }
 
     fun getUserType(): UserType {
-        return VotingCreateData.userType
+        return mVotingCreateData.userType
     }
 
     fun setUsers(users: MutableList<Model.User>) {
-        VotingCreateData.users = users
+        mVotingCreateData.users = users
     }
 
     fun getUsers(): MutableList<Model.User> {
-        return VotingCreateData.users
+        return mVotingCreateData.users
     }
 
     fun setChoices(choices: MutableList<String>) {
-        VotingCreateData.choices = choices
+        mVotingCreateData.choices = choices
     }
 
     fun getChoices(): MutableList<String> {
-        return VotingCreateData.choices
+        return mVotingCreateData.choices
     }
 
     enum class ChoiceType {

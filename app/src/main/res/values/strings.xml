@@ -160,4 +160,9 @@
     <string name="dialog_error_create_voting_title">Attention</string>
     <string name="dialog_error_create_voting_message">You need administrator rights to create a new voting.</string>
     <string name="your_workspace">Your Workspace:</string>
+    <string name="voting_dialog_cancel_button_discard">Yes, discard</string>
+    <string name="voting_dialog_cancel_button_save">Save as draft</string>
+    <string name="voting_dialog_cancel_title">Discard entered data?</string>
+    <string name="voting_dialog_create_button_open">Open existing draft</string>
+    <string name="voting_dialog_create_button_discard">Discard and create new voting</string>
 </resources>

@@ -18,7 +18,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.button_card_view.view.*
-import kotlinx.android.synthetic.main.fragment_voting_create_choices.*
 import kotlinx.android.synthetic.main.fragment_voting_create_users.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -175,7 +174,7 @@ class VotingCreateUsersFragment : Fragment() {
         jsonData.put("users",  getUsers())
         jsonData.put("isAllUsers",  isAllUsers())
 
-        disposable = apiService.createVoting("Bearer $token", workspace, jsonData.toString())
+        disposable = apiService.createQuickVoting("Bearer $token", workspace, jsonData.toString())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

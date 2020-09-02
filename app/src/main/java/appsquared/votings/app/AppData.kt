@@ -35,4 +35,24 @@ class AppData {
         }
         return null
     }
+
+    fun deleteSavedObjectFromPreference(
+        context: Context,
+        preferenceKey: String?
+    ) {
+        val sharedPreferences: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(context)
+        if (sharedPreferences.contains(preferenceKey)) {
+            sharedPreferences.edit().remove(preferenceKey).apply()
+        }
+    }
+
+    fun isSavedObjectFromPreferenceAvailable(
+        context: Context,
+        preferenceKey: String?
+    ) : Boolean {
+        val sharedPreferences: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(context)
+        return sharedPreferences.contains(preferenceKey)
+    }
 }
