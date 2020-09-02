@@ -25,38 +25,73 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/materialCardViewProfile"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_margin="16dp"
-                android:clickable="true"
-                android:elevation="0dp"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:translationZ="0dp"
-                app:cardCornerRadius="75dp"
-                app:strokeWidth="0dp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <ImageView
+                    android:layout_margin="16dp"
+                    android:src="@drawable/background_round_grey"
                     android:id="@+id/imageViewProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop" />
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
-                <TextView
-                    android:id="@+id/textViewImageEdit"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_gravity="bottom"
-                    android:background="@color/colorAccent"
-                    android:gravity="center"
-                    android:text="@string/edit" />
+                <ImageView
+                    android:id="@+id/imageViewEdit"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/background_round_with_border"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_baseline_edit_24"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewProfile"
+                    app:layout_constraintDimensionRatio="H,1:1"
+                    app:layout_constraintEnd_toEndOf="@+id/imageViewProfile"
+                    app:tint="@color/white" />
 
-            </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:visibility="gone"
+                    android:id="@+id/materialCardViewProfile"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="16dp"
+                    android:clickable="true"
+                    android:elevation="0dp"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:translationZ="0dp"
+                    app:cardCornerRadius="75dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:strokeWidth="0dp">
+
+                    <TextView
+                        android:id="@+id/textViewImageEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_gravity="bottom"
+                        android:background="@color/colorAccent"
+                        android:gravity="center"
+                        android:text="@string/edit"
+                        android:visibility="gone" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
                 android:text="@string/your_workspace"
                 android:textSize="18sp"
                 android:layout_width="wrap_content"
@@ -64,7 +99,7 @@
 
             <TextView
                 android:textStyle="bold"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="32dp"
                 android:textSize="24sp"
                 android:id="@+id/textViewWorkspaceName"
                 android:layout_width="wrap_content"
@@ -99,7 +134,7 @@
                 app:profil_type="phone"/>
 
             <appsquared.votings.app.views.ButtonCardView
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:id="@+id/buttonCardViewLogout"

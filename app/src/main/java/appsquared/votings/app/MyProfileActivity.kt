@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
-import android.util.Patterns
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
@@ -13,7 +12,6 @@ import android.view.inputmethod.EditorInfo
 import android.webkit.URLUtil
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import appsquared.votings.app.views.ListDialog
@@ -151,10 +149,12 @@ class MyProfileActivity : BaseActivity(),
         myProfileEditCardViewPhoneNo.setOnMyProfileEditButtonClickListener(this)
 
         // profile image
-        imageViewProfile.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_144))
+        //imageViewProfile.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_144))
+        imageViewProfile.setBackgroundResource(R.drawable.background_round_grey)
         if(loginData.avatarUrl.isNotEmpty() && URLUtil.isValidUrl(loginData.avatarUrl)) {
             Picasso.get()
                 .load(loginData.avatarUrl)
+                .transform(CircleTransform())
                 .into(imageViewProfile)
         } else {
             imageViewProfile.setImageResource(R.drawable.icon_placeholder)
@@ -164,7 +164,7 @@ class MyProfileActivity : BaseActivity(),
         textViewImageEdit.setBackgroundColor(mAttributes.contentAccentColor)
         textViewImageEdit.setTextColor(mAttributes.contentAccentContrastColor)
 
-        materialCardViewProfile.setOnClickListener {
+        imageViewProfile.setOnClickListener {
 
             ListDialog(this) { tag: String ->
                 when (tag) {
@@ -379,6 +379,7 @@ class MyProfileActivity : BaseActivity(),
                         imageViewProfile.colorFilter = null
                         Picasso.get()
                             .load(it)
+                            .transform(CircleTransform())
                             .into(imageViewProfile)
                     }
                 }
