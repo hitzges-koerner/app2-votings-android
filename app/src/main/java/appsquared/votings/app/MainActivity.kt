@@ -29,25 +29,7 @@ class MainActivity : BaseActivity() {
     override fun clickToolbarMenuButton() {
         super.clickToolbarMenuButton()
         if (mLoginData.isAMSUser == "1") {
-            val votingAvailable = AppData().isSavedObjectFromPreferenceAvailable(this, PreferenceNames.VOTING_CREATE_DATA)
-            if(votingAvailable) {
-                ListDialog(this) { tag: String ->
-                    when (tag) {
-                        "open" -> {
-                            startActivity(Intent(this, VotingCreateActivity::class.java))
-                        }
-                        "discard" -> {
-                            AppData().deleteSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA)
-                            startActivity(Intent(this, VotingCreateActivity::class.java))
-                        }
-                    }
-                }
-                    .generate()
-                    .addButton("open", R.string.voting_dialog_create_button_open)
-                    .addButton("discard", R.string.voting_dialog_create_button_discard)
-                    .addCancelButton()
-                    .show()
-            } else startActivity(Intent(this, VotingCreateActivity::class.java))
+            startActivity(Intent(this, VotingCreateActivity::class.java))
         } else {
             InfoDialog(this) {
             }.generate().setButtonName(R.string.ok)
@@ -65,7 +47,7 @@ class MainActivity : BaseActivity() {
 
         removeBackButton()
         showToolbarLogo()
-        setMenuButton(R.drawable.ic_baseline_add_circle_24, ContextCompat.getColor(this, R.color.colorAccent))
+        setMenuImageButton(R.drawable.ic_baseline_add_circle_24, ContextCompat.getColor(this, R.color.colorAccent))
 
         /*
         ViewCompat.setOnApplyWindowInsetsListener(toolbarCustom) { view, insets ->

@@ -1,5 +1,6 @@
 package appsquared.votings.app
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.res.ResourcesCompat
@@ -18,7 +19,7 @@ import io.reactivex.schedulers.Schedulers
 class VotingCreateActivity : BaseActivity(),
     FragmentInteractionListener {
 
-    private lateinit var mVotingCreateData: VotingCreateData
+    private var mVotingCreateData: VotingCreateData = VotingCreateData()
     var disposable: Disposable? = null
 
     val apiService by lazy {
@@ -87,6 +88,29 @@ class VotingCreateActivity : BaseActivity(),
             .beginTransaction()
             .replace(R.id.frameLayout, fragment)
             .commit()
+
+        if(fragmentClass == VotingCreateInfoFragment::class.java) {
+            val votingAvailable = AppData().isSavedObjectFromPreferenceAvailable(this, PreferenceNames.VOTING_CREATE_DATA)
+            if(votingAvailable) {
+                ListDialog(this) { tag: String ->
+                    when (tag) {
+                        "open" -> {
+                            mVotingCreateData = AppData().getSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA, VotingCreateData::class.java)
+                                ?: VotingCreateData()
+                            nextFragment()
+                        }
+                        "discard" -> {
+                            AppData().deleteSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA)
+                        }
+                    }
+                }
+                    .generate()
+                    .addButton("open", R.string.voting_dialog_create_button_open)
+                    .addButton("discard", R.string.voting_dialog_create_button_discard)
+                    .addCancelButton()
+                    .show()
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,9 +123,6 @@ class VotingCreateActivity : BaseActivity(),
     }
 
     override fun childOnlyMethod() {
-
-        mVotingCreateData = AppData().getSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA, VotingCreateData::class.java)
-            ?: VotingCreateData()
 
         setScreenTitle(getString(R.string.voting_create))
         setCancelButtonActive(true)
@@ -135,7 +156,7 @@ class VotingCreateActivity : BaseActivity(),
     override fun clickToolbarCancelButton() {
         super.clickToolbarCancelButton()
 
-        if(mFragmentId == 0) finish()
+        if(mFragmentId == 0 || votingsDataIsEmpty()) finish()
         else {
             /*
             DecisionDialog(this) {
@@ -169,6 +190,12 @@ class VotingCreateActivity : BaseActivity(),
                 .addCancelButton()
                 .show()
         }
+    }
+
+    private fun votingsDataIsEmpty(): Boolean {
+        if(mVotingCreateData.title.isNotEmpty()) return false
+        if(mVotingCreateData.description.isNotEmpty()) return false
+        return true
     }
 
     fun setVotingTitle(title: String) {
