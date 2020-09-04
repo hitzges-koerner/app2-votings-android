@@ -7,17 +7,26 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import appsquared.votings.app.views.ListDialog
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.item_section.view.*
 import kotlinx.android.synthetic.main.item_voting.view.*
 
 
-class VotingsListAdapter(private val items: MutableList<Model.VotingShort>, val attributes: Attributes, private val listener: (Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class VotingsListAdapter(private val items: MutableList<Model.VotingShort>, val attributes: Attributes, private val listener: (Int, Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val SECTION = 0
     val VOTING = 1
+
+    var mEditMode = false
+
+    fun setEditMode(editMode: Boolean) {
+        mEditMode = editMode
+    }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -30,7 +39,7 @@ class VotingsListAdapter(private val items: MutableList<Model.VotingShort>, val 
                 ViewHolder(v1, attributes, listener)
             }
             SECTION -> {
-                val v2 = inflater.inflate(R.layout.item_section_big, viewGroup, false)
+                val v2 = inflater.inflate(R.layout.item_section, viewGroup, false)
                 ViewHolderSection(v2, attributes, listener)
             }
             else -> {
@@ -51,7 +60,7 @@ class VotingsListAdapter(private val items: MutableList<Model.VotingShort>, val 
         when (viewHolder.itemViewType) {
             VOTING -> {
                 val vh2 = viewHolder as ViewHolder
-                vh2.bindItems(items[position])
+                vh2.bindItems(items[position], mEditMode)
             }
             SECTION -> {
                 val vh2 = viewHolder as ViewHolderSection
@@ -60,15 +69,31 @@ class VotingsListAdapter(private val items: MutableList<Model.VotingShort>, val 
         }
     }
 
-    class ViewHolder(itemView: View, private val attributes: Attributes, val listener : (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
-        fun bindItems(item: Model.VotingShort) {
-            with(itemView) {
+    class ViewHolder(itemView: View, private val attributes: Attributes, val listener : (Int, Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
-                textViewInRepresentation.visibility = View.GONE
+        fun bindItems(item: Model.VotingShort, editMode: Boolean) {
+            with(itemView) {
+                if(editMode) imageViewEditVotingList.visibility = VISIBLE
+                else imageViewEditVotingList.visibility = GONE
+
+                val pref = PreferenceManager.getDefaultSharedPreferences(context)
+                if((item.isQuickVoting == "1" && item.ownerId == pref.getString(PreferenceNames.USERID, "")) || item.votingStatus == VotingsListActivity.PAST) {
+                    imageViewEditVotingList.setBackgroundResource(R.drawable.background_round)
+                    imageViewEditVotingList.setOnClickListener {
+                        listener(EDIT_BUTTON, layoutPosition)
+                    }
+                } else {
+                    imageViewEditVotingList.setBackgroundResource(R.drawable.background_round_grey)
+                    imageViewEditVotingList.setOnClickListener {
+                        Toast.makeText(context, "no permissions to edit voting", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                textViewInRepresentation.visibility = GONE
                 if(item.inRepresentationOfId.isNotEmpty()) {
-                    textViewInRepresentation.visibility = View.VISIBLE
+                    textViewInRepresentation.visibility = VISIBLE
                     textViewInRepresentation.setTextColor(ContextCompat.getColor(context, R.color.black))
-                    textViewInRepresentation.text = "In Vertretung für: ${item.inRepresentationOfName}"
+                    textViewInRepresentation.text = context.getString(R.string.in_representation_for) + item.inRepresentationOfName
                 }
 
                 when(item.votingType.toUpperCase()) {
@@ -130,7 +155,7 @@ class VotingsListAdapter(private val items: MutableList<Model.VotingShort>, val 
                 materialCardView.radius = dpToPx(attributes.contentCornerRadius).toFloat()
 
                 materialCardViewButtonVote.setOnClickListener {
-                    listener(layoutPosition)
+                    listener(VOTING_BUTTON, layoutPosition)
                 }
             }
         }
@@ -140,7 +165,7 @@ class VotingsListAdapter(private val items: MutableList<Model.VotingShort>, val 
         }
     }
 
-    class ViewHolderSection(itemView: View, private val attributes: Attributes, val listener : (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolderSection(itemView: View, private val attributes: Attributes, val listener : (Int, Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(item: Model.VotingShort) {
             with(itemView) {
                 textViewSection.text = item.votingTitle
@@ -149,5 +174,12 @@ class VotingsListAdapter(private val items: MutableList<Model.VotingShort>, val 
                 constraintLayoutRoot.setBackgroundColor(attributes.headlinesBackgroundColor)
             }
         }
+    }
+
+
+
+    companion object {
+        val VOTING_BUTTON = 0
+        val EDIT_BUTTON = 1
     }
 }

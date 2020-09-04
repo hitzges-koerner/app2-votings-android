@@ -8,11 +8,20 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import appsquared.votings.app.R
+import kotlinx.android.synthetic.main.dialog_input.*
 import kotlinx.android.synthetic.main.dialog_list.*
+import kotlinx.android.synthetic.main.dialog_list.textViewMessage
+import kotlinx.android.synthetic.main.dialog_list.textViewTitle
 
-class ListDialog(val context: Context, val listener: (String) -> Unit) {
+class ListDialog(val context: Context) {
 
     val dialog = Dialog(context)
+    lateinit var mListener : (String) -> Unit
+
+    fun callBack(listener: (String) -> Unit) : ListDialog {
+        mListener = listener
+        return this
+    }
 
     fun generate() : ListDialog {
         dialog.setCancelable(true)
@@ -36,7 +45,7 @@ class ListDialog(val context: Context, val listener: (String) -> Unit) {
             button.backgroundTintList = context.resources.getColorStateList(R.color.colorPrimary)
         }
         button.setOnClickListener {
-            listener(tag)
+            mListener(tag)
             dialog.dismiss()
         }
 
@@ -56,7 +65,7 @@ class ListDialog(val context: Context, val listener: (String) -> Unit) {
             button.backgroundTintList = context.resources.getColorStateList(R.color.colorPrimary)
         }
         button.setOnClickListener {
-            listener(tag)
+            mListener(tag)
             dialog.dismiss()
         }
 
@@ -64,7 +73,7 @@ class ListDialog(val context: Context, val listener: (String) -> Unit) {
         return this
     }
 
-    fun addCancelButton() : ListDialog {
+    fun addCancelButton(listener: () -> Unit) : ListDialog {
         val button = Button(context)
         button.text = context.getString(android.R.string.cancel)
         button.layoutParams =
@@ -77,6 +86,7 @@ class ListDialog(val context: Context, val listener: (String) -> Unit) {
             button.backgroundTintList = context.resources.getColorStateList(R.color.white)
         }
         button.setOnClickListener {
+            listener()
             dialog.dismiss()
         }
 
@@ -101,6 +111,26 @@ class ListDialog(val context: Context, val listener: (String) -> Unit) {
     fun setTitle(text: Int) : ListDialog {
         dialog.textViewTitle.visibility = View.VISIBLE
         dialog.textViewTitle.text = context.getString(text)
+        return this
+    }
+
+    /**
+     * TODO
+     * @param text
+     */
+    fun setMessage(text: String) : ListDialog {
+        dialog.textViewMessage.visibility = View.VISIBLE
+        dialog.textViewMessage.text = text
+        return this
+    }
+
+    /**
+     * TODO
+     * @param text
+     */
+    fun setMessage(text: Int) : ListDialog {
+        dialog.textViewMessage.visibility = View.VISIBLE
+        dialog.textViewMessage.text = context.getString(text)
         return this
     }
 

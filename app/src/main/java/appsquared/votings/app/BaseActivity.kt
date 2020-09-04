@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_base.view.constraintLayoutRoot
+import kotlinx.android.synthetic.main.dialog_info.*
 import kotlinx.android.synthetic.main.item_user.view.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 
@@ -171,11 +172,20 @@ abstract class BaseActivity : AppCompatActivity() {
         mImageViewHeader.visibility = GONE
     }
 
-    fun setMenuButton(imageId: Int, color: Int) {
+    fun setMenuImageButton(imageId: Int, color: Int) {
         imageButtonMenu.visibility = VISIBLE
         imageButtonMenu.setImageResource(imageId)
         imageButtonMenu.imageTintList = ColorStateList.valueOf(color)
         imageButtonMenu.setOnClickListener {
+            clickToolbarMenuButton()
+        }
+    }
+
+    fun setMenuButton(stringId: Int, color: Int) {
+        buttonMenu.visibility = VISIBLE
+        buttonMenu.setTextColor(color)
+        buttonMenu.setText(getString(stringId))
+        buttonMenu.setOnClickListener {
             clickToolbarMenuButton()
         }
     }

@@ -76,9 +76,19 @@ interface ApiService {
 
     @POST("{WORKSPACE}/quickvoting")
     @Headers("Content-type: application/json", "Accept: application/json")
-    fun createVoting(@Header("Authorization") token : String,
-                     @Path("WORKSPACE") workspace : String,
-                     @Body data: String) : Observable<ResponseBody>
+    fun createQuickVoting(@Header("Authorization") token : String,
+                          @Path("WORKSPACE") workspace : String,
+                          @Body data: String) : Observable<ResponseBody>
+
+    @PUT("{WORKSPACE}/quickvoting/{VOTING_ID}")
+    fun closeQuickVoting(@Header("Authorization") token : String,
+                         @Path("WORKSPACE") workspace : String,
+                         @Path("VOTING_ID") votingId : String) : Observable<ResponseBody>
+
+    @DELETE("{WORKSPACE}/quickvoting/{VOTING_ID}")
+    fun deleteQuickVoting(@Header("Authorization") token : String,
+                         @Path("WORKSPACE") workspace : String,
+                         @Path("VOTING_ID") votingId : String) : Observable<ResponseBody>
 
     @GET(".")
     fun checkWorkspaceAvailable(

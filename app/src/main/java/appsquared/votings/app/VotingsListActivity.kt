@@ -3,10 +3,14 @@ package appsquared.votings.app
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import appsquared.votings.app.views.ListDialog
 import appsquared.votings.app.views.VotingSelectDialog
+import com.google.android.material.snackbar.Snackbar
 import framework.base.constant.Constant
 import framework.base.rest.ApiService
 import framework.base.rest.Model
@@ -19,7 +23,9 @@ import kotlin.math.roundToInt
 
 class VotingsListActivity : BaseActivity() {
 
+    private lateinit var mVotingsListAdapter: VotingsListAdapter
     private var mStatus: Int? = 0
+    private var mEditMode: Boolean = false
     private val mVotings = mutableListOf<Model.VotingShort>()
     private val mVotingsAll = mutableListOf<Model.VotingShort>()
 
@@ -39,21 +45,46 @@ class VotingsListActivity : BaseActivity() {
         if(recyclerView.adapter != null) loadVotingsList()
     }
 
-    override fun childOnlyMethod() {
+    override fun clickToolbarMenuButton() {
+        super.clickToolbarMenuButton()
+        toggleEditMode()
+    }
 
+    private fun toggleEditMode() {
+        mEditMode = !mEditMode
+        refreshEditMode()
+    }
+
+    private fun setEditMode(enable: Boolean) {
+        mEditMode = enable
+        refreshEditMode()
+    }
+
+    private fun refreshEditMode() {
+        if(mEditMode) {
+            setMenuButton(R.string.done, ContextCompat.getColor(this, R.color.colorAccent))
+        } else {
+            setMenuButton(R.string.edit, ContextCompat.getColor(this, R.color.colorAccent))
+        }
+        mVotingsListAdapter.setEditMode(mEditMode)
+        recyclerView.adapter?.notifyDataSetChanged()
+    }
+
+    override fun childOnlyMethod() {
+        setMenuButton(R.string.edit, ContextCompat.getColor(this, R.color.colorAccent))
         mStatus = intent.extras?.getInt(STATUS)
         // exit activity when status is not set
         if(mStatus == 0) finish()
 
         when(mStatus) {
             FUTURE -> {
-                setScreenTitle("Kommende Abstimmungen")
+                setScreenTitle(getString(R.string.tile_upcoming_votings))
             }
             CURRENT -> {
-                setScreenTitle("Aktuelle Abstimmungen")
+                setScreenTitle(getString(R.string.tile_current_votings))
             }
             PAST -> {
-                setScreenTitle("Archiv")
+                setScreenTitle(getString(R.string.tile_archive))
             }
         }
 
@@ -128,34 +159,146 @@ class VotingsListActivity : BaseActivity() {
         )
         recyclerView.layoutManager = GridLayoutManager(this@VotingsListActivity, spanCount)
 
-        recyclerView.adapter = VotingsListAdapter(mVotings, attributes) { position: Int ->
+        mVotingsListAdapter = VotingsListAdapter(mVotings, attributes) { type: Int, position: Int ->
 
-            val votingSelectList = mVotingsAll.filter {
-                it.isVoted == mVotings[position].isVoted && it.votingId == mVotings[position].votingId
-            }
+            when(type) {
+                VotingsListAdapter.EDIT_BUTTON -> {
+                    var counter = 0
+                    val pref = PreferenceManager.getDefaultSharedPreferences(this)
+                    val listDialog = ListDialog(this)
+                    listDialog.generate()
+                    if(mVotings[position].isQuickVoting == "1" && mVotings[position].ownerId == pref.getString(PreferenceNames.USERID, "")) listDialog.addButton("delete", R.string.voting_delete)
+                    else counter++
+                    if(mVotings[position].isQuickVoting == "1" && mVotings[position].ownerId == pref.getString(PreferenceNames.USERID, "")) listDialog.addButton("close", R.string.voting_close)
+                    else counter++
+                    if(mStatus == PAST) listDialog.addButton("hide", R.string.voting_hide)
+                    else counter++
+                    listDialog.callBack { tag: String ->
+                        when (tag) {
+                            "delete" -> {
+                                toggleEditMode()
+                                deleteVoting(mVotings[position].votingId)
+                            }
+                            "close" -> {
+                                closeVoting(mVotings[position].votingId)
+                                toggleEditMode()
+                            }
+                            "hide" -> {
+                                val votingsHidden = pref.getStringSet(PreferenceNames.VOTINGS_HIDDEN_BY_USER, mutableSetOf()) ?: mutableSetOf()
+                                votingsHidden.add(mVotings[position].votingId)
+                                pref.edit().putStringSet(PreferenceNames.VOTINGS_HIDDEN_BY_USER, votingsHidden).apply()
+                                toggleEditMode()
+                            }
+                        }
+                    }
+                    listDialog.addCancelButton() {
+                        toggleEditMode()
+                    }
+                    listDialog.show()
 
-            if(votingSelectList.size > 1) {
-                VotingSelectDialog(this, attributes) {
-                    startActivity(
-                        Intent(this@VotingsListActivity, VotingsActivity::class.java)
-                            .putExtra("voting_id", it.votingId)
-                            .putExtra(STATUS, mStatus)
-                            .putExtra("voting_representation_id", it.inRepresentationOfId)
-                            .putExtra("voting_representation_name", it.inRepresentationOfName))
+                    /*
+                    ListDialog(this)
+                        .generate()
+                        .addButton("delete", R.string.voting_delete)
+                        .addButton("close", R.string.voting_close)
+                        .addButton("hide", R.string.voting_hide)
+                        .addCancelButton()
+                        .callBack { tag: String ->
+                            when (tag) {
+                                "delete" -> {
+                                    toast("callback: $tag")
+                                }
+                                "close" -> {
+                                    toast("callback: $tag")
+                                }
+                                "hide" -> {
+                                    toast("callback: $tag")
+                                }
+                            }
+                        }
+                        .show()
+                     */
                 }
-                    .generate()
-                    .setItems(votingSelectList.toMutableList())
-                    .show()
-            } else {
-                startActivity(Intent(this@VotingsListActivity, VotingsActivity::class.java)
-                    .putExtra("voting_id", mVotings[position].votingId)
-                    .putExtra(STATUS, mStatus)
-                    .putExtra("voting_representation_id", mVotings[position].inRepresentationOfId)
-                    .putExtra("voting_representation_name", mVotings[position].inRepresentationOfName))
+
+                VotingsListAdapter.VOTING_BUTTON -> {
+                    val votingSelectList = mVotingsAll.filter {
+                        it.isVoted == mVotings[position].isVoted && it.votingId == mVotings[position].votingId
+                    }
+
+                    if(votingSelectList.size > 1) {
+                        VotingSelectDialog(this, attributes) {
+                            startActivity(
+                                Intent(this@VotingsListActivity, VotingsActivity::class.java)
+                                    .putExtra("voting_id", it.votingId)
+                                    .putExtra(STATUS, mStatus)
+                                    .putExtra("voting_representation_id", it.inRepresentationOfId)
+                                    .putExtra("voting_representation_name", it.inRepresentationOfName))
+                        }
+                            .generate()
+                            .setItems(votingSelectList.toMutableList())
+                            .show()
+                    } else {
+                        startActivity(Intent(this@VotingsListActivity, VotingsActivity::class.java)
+                            .putExtra("voting_id", mVotings[position].votingId)
+                            .putExtra(STATUS, mStatus)
+                            .putExtra("voting_representation_id", mVotings[position].inRepresentationOfId)
+                            .putExtra("voting_representation_name", mVotings[position].inRepresentationOfName))
+                    }
+                }
             }
         }
-
+        recyclerView.adapter = mVotingsListAdapter
         loadVotingsList()
+    }
+
+    private fun closeVoting(votingId: String) {
+
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        val token = pref.getString(PreferenceNames.USER_TOKEN, "")
+        val workspace = pref.getString(PreferenceNames.WORKSPACE_NAME, "")
+
+        disposable = apiService.closeQuickVoting("Bearer $token", workspace!!, votingId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result ->
+
+                }, { error ->
+                    Log.d("LOGIN", error.message)
+
+                    if(error is retrofit2.HttpException) {
+                        if(error.code() == 401 || error.code() == 403) {
+                            pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
+                            return@subscribe
+                        }
+                    }
+                }
+            )
+    }
+
+    private fun deleteVoting(votingId: String) {
+
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        val token = pref.getString(PreferenceNames.USER_TOKEN, "")
+        val workspace = pref.getString(PreferenceNames.WORKSPACE_NAME, "")
+
+        disposable = apiService.deleteQuickVoting("Bearer $token", workspace!!, votingId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result ->
+
+                }, { error ->
+                    Log.d("LOGIN", error.message)
+
+                    if(error is retrofit2.HttpException) {
+                        if(error.code() == 401 || error.code() == 403) {
+                            pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
+                            return@subscribe
+                        }
+                    }
+                }
+            )
     }
 
     private fun loadVotingsList() {

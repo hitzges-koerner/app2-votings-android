@@ -165,4 +165,9 @@
     <string name="voting_dialog_cancel_title">Discard entered data?</string>
     <string name="voting_dialog_create_button_open">Open existing draft</string>
     <string name="voting_dialog_create_button_discard">Discard and create new voting</string>
+    <string name="done">Done</string>
+    <string name="voting_delete">delete voting</string>
+    <string name="voting_close">close voting</string>
+    <string name="voting_hide">hide voting</string>
+    <string name="in_representation_for">In representation for: </string>
 </resources>

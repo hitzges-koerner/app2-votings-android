@@ -10,7 +10,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import appsquared.votings.app.views.DecisionDialog
 import appsquared.votings.app.views.InfoDialog
-import appsquared.votings.app.views.ListDialog
 import framework.base.constant.Constant
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.activity_main.*

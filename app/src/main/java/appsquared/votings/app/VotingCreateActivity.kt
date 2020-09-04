@@ -92,22 +92,23 @@ class VotingCreateActivity : BaseActivity(),
         if(fragmentClass == VotingCreateInfoFragment::class.java) {
             val votingAvailable = AppData().isSavedObjectFromPreferenceAvailable(this, PreferenceNames.VOTING_CREATE_DATA)
             if(votingAvailable) {
-                ListDialog(this) { tag: String ->
-                    when (tag) {
-                        "open" -> {
-                            mVotingCreateData = AppData().getSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA, VotingCreateData::class.java)
-                                ?: VotingCreateData()
-                            nextFragment()
-                        }
-                        "discard" -> {
-                            AppData().deleteSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA)
-                        }
-                    }
-                }
+                ListDialog(this)
                     .generate()
                     .addButton("open", R.string.voting_dialog_create_button_open)
                     .addButton("discard", R.string.voting_dialog_create_button_discard)
-                    .addCancelButton()
+                    .addCancelButton() {}
+                    .callBack { tag: String ->
+                        when (tag) {
+                            "open" -> {
+                                mVotingCreateData = AppData().getSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA, VotingCreateData::class.java)
+                                    ?: VotingCreateData()
+                                nextFragment()
+                            }
+                            "discard" -> {
+                                AppData().deleteSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA)
+                            }
+                        }
+                    }
                     .show()
             }
         }
@@ -171,23 +172,24 @@ class VotingCreateActivity : BaseActivity(),
                 .show()
              */
 
-            ListDialog(this) { tag: String ->
-                when (tag) {
-                    "discard" -> {
-                        AppData().deleteSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA)
-                        finish()
-                    }
-                    "save" -> {
-                        AppData().saveObjectToSharedPreference(this, PreferenceNames.VOTING_CREATE_DATA, mVotingCreateData)
-                        finish()
-                    }
-                }
-            }
+            ListDialog(this)
                 .generate()
                 .setTitle(R.string.voting_dialog_cancel_title)
                 .addButton("discard", R.string.voting_dialog_cancel_button_discard)
                 .addButton("save", R.string.voting_dialog_cancel_button_save)
-                .addCancelButton()
+                .addCancelButton() {}
+                .callBack { tag: String ->
+                    when (tag) {
+                        "discard" -> {
+                            AppData().deleteSavedObjectFromPreference(this, PreferenceNames.VOTING_CREATE_DATA)
+                            finish()
+                        }
+                        "save" -> {
+                            AppData().saveObjectToSharedPreference(this, PreferenceNames.VOTING_CREATE_DATA, mVotingCreateData)
+                            finish()
+                        }
+                    }
+                }
                 .show()
         }
     }

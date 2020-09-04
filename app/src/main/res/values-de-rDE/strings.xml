@@ -164,5 +164,10 @@
     <string name="voting_dialog_cancel_title">Alle Eingaben verwerfen?</string>
     <string name="voting_dialog_create_button_open">Erstellung fortführen</string>
     <string name="voting_dialog_create_button_discard">Neues Voting erstellen</string>
+    <string name="done">Fertig</string>
+    <string name="voting_delete">Abstimmung löschen</string>
+    <string name="voting_close">Abstimmung beenden</string>
+    <string name="voting_hide">Abstimmung verstecken</string>
+    <string name="in_representation_for">In Vertretung für: </string>
 
 </resources>

@@ -10,6 +10,7 @@ class PreferenceNames {
         const val WORKSPACE = "workspace"
         const val FIRST_START = "first_start"
         const val VOTING_CREATE_DATA = "voting_create_data"
+        const val VOTINGS_HIDDEN_BY_USER = "votings_hidden_by_user"
 
         const val REALM = "realm"
 

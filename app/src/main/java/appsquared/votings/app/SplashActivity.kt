@@ -16,6 +16,7 @@ class SplashActivity : AppCompatActivity() {
         setLightNavigationBar(window, false)
         setLightStatusBar(window, false)
 
+        /*
         when (resources.displayMetrics.densityDpi) {
             DisplayMetrics.DENSITY_LOW -> {
                 toastShort("ldpi")
@@ -36,6 +37,7 @@ class SplashActivity : AppCompatActivity() {
                 toastShort("xxxhdpi")
             }
         }
+        */
 
         val handler = Handler()
         handler.postDelayed({

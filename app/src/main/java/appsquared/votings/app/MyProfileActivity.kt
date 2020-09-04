@@ -166,34 +166,35 @@ class MyProfileActivity : BaseActivity(),
 
         imageViewProfile.setOnClickListener {
 
-            ListDialog(this) { tag: String ->
-                when (tag) {
-                    "camera" -> {
-                        startActivityForResult(
-                            Intent(
-                                this,
-                                CameraActivity::class.java
-                            ).putExtra("type", CameraActivity.CAMERA), 1
-                        )
-                    }
-                    "photo" -> {
-                        startActivityForResult(
-                            Intent(
-                                this,
-                                CameraActivity::class.java
-                            ).putExtra("type", CameraActivity.PICKER), 1
-                        )
-                    }
-                    "delete" -> {
-                        deleteAvatar()
-                    }
-                }
-            }
+            ListDialog(this)
                 .generate()
                 .addButton("camera", R.string.camera)
                 .addButton("photo", R.string.gallery)
                 .addButton("delete", R.string.delete_avatar)
-                .addCancelButton()
+                .addCancelButton() {}
+                .callBack { tag: String ->
+                    when (tag) {
+                        "camera" -> {
+                            startActivityForResult(
+                                Intent(
+                                    this,
+                                    CameraActivity::class.java
+                                ).putExtra("type", CameraActivity.CAMERA), 1
+                            )
+                        }
+                        "photo" -> {
+                            startActivityForResult(
+                                Intent(
+                                    this,
+                                    CameraActivity::class.java
+                                ).putExtra("type", CameraActivity.PICKER), 1
+                            )
+                        }
+                        "delete" -> {
+                            deleteAvatar()
+                        }
+                    }
+                }
                 .show()
 
         }

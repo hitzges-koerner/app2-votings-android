@@ -51,7 +51,7 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
     override fun childOnlyMethod() {
 
         setScreenTitle(getString(R.string.title_users))
-        setMenuButton(R.drawable.ic_baseline_person_add_24, ContextCompat.getColor(this, R.color.colorAccent))
+        setMenuImageButton(R.drawable.ic_baseline_person_add_24, ContextCompat.getColor(this, R.color.colorAccent))
 
         val workspace: Model.WorkspaceResponse = mWorkspace
 
