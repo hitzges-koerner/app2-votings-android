@@ -76,7 +76,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         setLightStatusBar(window, true)
-
         constraintLayoutRoot.systemUiVisibility =
             SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 
@@ -98,11 +97,6 @@ class LoginActivity : AppCompatActivity() {
             biometric()
         }
          */
-
-        // TODO ONLY IN DEBUG MODE
-        //editTextCardViewMail.setText("jakob.koerner@app-squared.com")
-        //editTextCardViewPassword.setText("12345")
-        //editTextCardViewWorkspace.setText("app-squared")
 
         buttonCardViewLogin.materialCardView.setOnClickListener {
 

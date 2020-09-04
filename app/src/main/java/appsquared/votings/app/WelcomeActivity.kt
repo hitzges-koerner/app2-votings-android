@@ -22,7 +22,7 @@ class WelcomeActivity : BaseActivity() {
 
     override fun childOnlyMethod() {
 
-        setScreenTitle("Willkommen")
+        setScreenTitle(R.string.tile_welcome)
 
         val workspace = mWorkspace
 

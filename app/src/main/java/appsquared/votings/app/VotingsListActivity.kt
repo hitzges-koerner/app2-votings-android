@@ -3,11 +3,13 @@ package appsquared.votings.app
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import appsquared.votings.app.views.DecisionDialog
 import appsquared.votings.app.views.ListDialog
 import appsquared.votings.app.views.VotingSelectDialog
 import com.google.android.material.snackbar.Snackbar
@@ -72,6 +74,7 @@ class VotingsListActivity : BaseActivity() {
 
     override fun childOnlyMethod() {
         setMenuButton(R.string.edit, ContextCompat.getColor(this, R.color.colorAccent))
+        setLoadingIndicatorVisibility(View.VISIBLE)
         mStatus = intent.extras?.getInt(STATUS)
         // exit activity when status is not set
         if(mStatus == 0) finish()
@@ -169,19 +172,28 @@ class VotingsListActivity : BaseActivity() {
                     listDialog.generate()
                     if(mVotings[position].isQuickVoting == "1" && mVotings[position].ownerId == pref.getString(PreferenceNames.USERID, "")) listDialog.addButton("delete", R.string.voting_delete)
                     else counter++
-                    if(mVotings[position].isQuickVoting == "1" && mVotings[position].ownerId == pref.getString(PreferenceNames.USERID, "")) listDialog.addButton("close", R.string.voting_close)
+                    if(mVotings[position].isQuickVoting == "1" && mVotings[position].ownerId == pref.getString(PreferenceNames.USERID, "") && mVotings[position].votingTill.isEmpty()) listDialog.addButton("close", R.string.voting_close)
                     else counter++
                     if(mStatus == PAST) listDialog.addButton("hide", R.string.voting_hide)
                     else counter++
                     listDialog.callBack { tag: String ->
                         when (tag) {
                             "delete" -> {
-                                toggleEditMode()
-                                deleteVoting(mVotings[position].votingId)
+                                DecisionDialog(this) {
+                                    if (it == DecisionDialog.LEFT) return@DecisionDialog
+                                    if (it == DecisionDialog.RIGHT) {
+                                        deleteVoting(mVotings[position].votingId, position)
+                                    }
+                                }.generate().setMessage(R.string.dialog_voting_delete_title).setButtonRightName(R.string.yes).setButtonLeftName(R.string.no).show()
                             }
                             "close" -> {
-                                closeVoting(mVotings[position].votingId)
-                                toggleEditMode()
+                                DecisionDialog(this) {
+                                    if (it == DecisionDialog.LEFT) return@DecisionDialog
+                                    if (it == DecisionDialog.RIGHT) {
+                                        closeVoting(mVotings[position].votingId, position)
+                                    }
+                                }.generate().setMessage(R.string.dialog_voting_close_title).setButtonRightName(R.string.yes).setButtonLeftName(R.string.no).show()
+
                             }
                             "hide" -> {
                                 val votingsHidden = pref.getStringSet(PreferenceNames.VOTINGS_HIDDEN_BY_USER, mutableSetOf()) ?: mutableSetOf()
@@ -251,7 +263,7 @@ class VotingsListActivity : BaseActivity() {
         loadVotingsList()
     }
 
-    private fun closeVoting(votingId: String) {
+    private fun closeVoting(votingId: String, position: Int) {
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         val token = pref.getString(PreferenceNames.USER_TOKEN, "")
@@ -262,7 +274,8 @@ class VotingsListActivity : BaseActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-
+                    mVotings.removeAt(position)
+                    recyclerView.adapter?.notifyItemRemoved(position)
                 }, { error ->
                     Log.d("LOGIN", error.message)
 
@@ -276,7 +289,7 @@ class VotingsListActivity : BaseActivity() {
             )
     }
 
-    private fun deleteVoting(votingId: String) {
+    private fun deleteVoting(votingId: String, position: Int) {
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         val token = pref.getString(PreferenceNames.USER_TOKEN, "")
@@ -287,7 +300,8 @@ class VotingsListActivity : BaseActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-
+                    mVotings.removeAt(position)
+                    recyclerView.adapter?.notifyItemRemoved(position)
                 }, { error ->
                     Log.d("LOGIN", error.message)
 
@@ -362,6 +376,7 @@ class VotingsListActivity : BaseActivity() {
                         mVotings.addAll(listGrouped)
                     }
                     recyclerView.adapter?.notifyDataSetChanged()
+                    setLoadingIndicatorVisibility(View.GONE)
                 }, { error ->
                     Log.d("LOGIN", error.message)
 

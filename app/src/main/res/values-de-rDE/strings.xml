@@ -169,5 +169,7 @@
     <string name="voting_close">Abstimmung beenden</string>
     <string name="voting_hide">Abstimmung verstecken</string>
     <string name="in_representation_for">In Vertretung für: </string>
+    <string name="dialog_voting_close_title">Möchten Sie die Abstimmung wirklich beenden?\nDiese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="dialog_voting_delete_title">Möchten Sie die Abstimmung wirklich löschen?\nDiese Aktion kann nicht rückgängig gemacht werden.</string>
 
 </resources>

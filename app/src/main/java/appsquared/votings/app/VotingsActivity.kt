@@ -2,6 +2,7 @@ package appsquared.votings.app
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.View.VISIBLE
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
@@ -58,6 +59,7 @@ class VotingsActivity : BaseActivity() {
     override fun childOnlyMethod() {
 
         removeToolbarShadow()
+        setLoadingIndicatorVisibility(View.VISIBLE)
 
         mVotingId = intent.extras?.getString("voting_id", "")
         mVotingInRepresentationOfId = intent.extras?.getString("voting_representation_id", "")
@@ -345,6 +347,7 @@ class VotingsActivity : BaseActivity() {
                             }
                         }
                     }
+                    setLoadingIndicatorVisibility(View.GONE)
 
 
                 }, { error ->

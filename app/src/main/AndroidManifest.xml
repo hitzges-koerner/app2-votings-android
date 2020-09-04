@@ -54,6 +54,7 @@
         <activity android:name=".VotingCreateActivity" />
         <activity android:name=".FaqListActivity" />
         <activity android:name=".TutorialActivity" />
+        <activity android:name=".BaseActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -52,6 +53,7 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
 
         setScreenTitle(getString(R.string.title_users))
         setMenuImageButton(R.drawable.ic_baseline_person_add_24, ContextCompat.getColor(this, R.color.colorAccent))
+        setLoadingIndicatorVisibility(View.VISIBLE)
 
         val workspace: Model.WorkspaceResponse = mWorkspace
 
@@ -240,6 +242,7 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
                     mUserList.clear()
                     mUserList.addAll(addSection(mUserListDownloaded))
                     recyclerView.adapter?.notifyDataSetChanged()
+                    setLoadingIndicatorVisibility(View.GONE)
 
                     //TODO commented out because of visual bugs
                     //materialCardViewSearch.visibility = VISIBLE

@@ -170,4 +170,6 @@
     <string name="voting_close">close voting</string>
     <string name="voting_hide">hide voting</string>
     <string name="in_representation_for">In representation for: </string>
+    <string name="dialog_voting_close_title">Do you really want to end the voting?\nYou can\'t undo this action.</string>
+    <string name="dialog_voting_delete_title">Do you really want to delete the voting?\nYou can\'t undo this action.</string>
 </resources>
