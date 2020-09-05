@@ -3,10 +3,16 @@ package appsquared.votings.app
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.style.ForegroundColorSpan
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import br.tiagohm.markdownview.css.ExternalStyleSheet
+import io.noties.markwon.AbstractMarkwonPlugin
+import io.noties.markwon.Markwon
+import io.noties.markwon.MarkwonSpansFactory
+import io.noties.markwon.core.CoreProps
+import io.noties.markwon.core.MarkwonTheme
 import kotlinx.android.synthetic.main.activity_pro.*
-import kotlinx.android.synthetic.main.activity_welcome.scrollView
+import org.commonmark.node.Heading
 
 
 class ProVersionActivity : BaseActivity() {
@@ -38,8 +44,33 @@ class ProVersionActivity : BaseActivity() {
 
         //PseudoMarkDown.styleTextView(workspace.proVersionText.replace("##", "#"), textViewContent, contentAccentColor, contentTextColor)
 
-        markdownView.addStyleSheet(ExternalStyleSheet.fromAsset("pro.css", ""))
-        markdownView.loadMarkdown(workspace.proVersionText)
+
+        // obtain an instance of Markwon
+        val markwon = Markwon.builder(this)
+            .usePlugin(object : AbstractMarkwonPlugin() {
+                override fun configureSpansFactory(builder: MarkwonSpansFactory.Builder) {
+                    val origin = builder.requireFactory(Heading::class.java)
+                    // register you own
+                    builder.setFactory(Heading::class.java) { configuration, props -> // here you can also check for heading level for further customizations
+                        val level = CoreProps.HEADING_LEVEL.require(props)
+                        // return an array of spans (origin heading + our color)
+                        arrayOf(
+                            origin.getSpans(configuration, props),
+                            ForegroundColorSpan(ContextCompat.getColor(this@ProVersionActivity, R.color.colorAccent))
+                        )
+                    }
+                }
+            })
+            .usePlugin(object : AbstractMarkwonPlugin() {
+                @Override
+                override fun configureTheme(builder: MarkwonTheme.Builder) {
+                    builder.headingBreakHeight(0);
+                }
+            }).build()
+
+
+        // set markdown
+        markwon.setMarkdown(textViewContent, workspace.proVersionText)
 
         buttonProLearnMore.setOnClickListener {
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.votings.app/de/"))
