@@ -148,8 +148,8 @@ class VotingsActivity : BaseActivity() {
                     val ownVotes = mutableListOf<String>()
                     result.users.forEach {
                         if(result.inRepresentationOfId.isNotEmpty()) {
-                            if(it.userId == result.inRepresentationOfId) ownVotes.add(it.votedChoiceId)
-                        } else if(it.userId == userId) ownVotes.add(it.votedChoiceId)
+                            if(it.userId == result.inRepresentationOfId) ownVotes.addAll(it.votedChoiceIds.replace(" ", "").split(","))
+                        } else if(it.userId == userId) ownVotes.addAll(it.votedChoiceIds.replace(" ", "").split(","))
                     }
                     if(result.votingDescription.isNotEmpty()) {
                         mVotings.add(VotingCustomItem(INFO, INFO, result.votingDescription))
@@ -228,12 +228,12 @@ class VotingsActivity : BaseActivity() {
                     if(result.users.isNotEmpty() && mStatus != FUTURE) {
                         mVotings.add(VotingCustomItem(SECTION, USER, "Teilnehmer"))
                         if(result.users.size == 1) {
-                            mVotings.add(VotingCustomItem(USER, USER, 2, result.users[0].userId, result.users[0].firstName, result.users[0].lastName, result.users[0].votedChoiceId, getChoiceName(result.users[0].votedChoiceId, result.choices)))
+                            mVotings.add(VotingCustomItem(USER, USER, 2, result.users[0].userId, result.users[0].firstName, result.users[0].lastName, result.users[0].votedChoiceIds, getChoiceNames(result.users[0].votedChoiceIds, result.choices)))
                         } else {
                             for((index, user) in result.users.withIndex()) {
-                                if(index == 0) mVotings.add(VotingCustomItem(USER, USER, 0, user.userId, user.firstName, user.lastName, user.votedChoiceId, getChoiceName(user.votedChoiceId, result.choices)))
-                                else if(index == result.users.size-1) mVotings.add(VotingCustomItem(USER, USER, 1, user.userId, user.firstName, user.lastName, user.votedChoiceId, getChoiceName(user.votedChoiceId, result.choices)))
-                                else mVotings.add(VotingCustomItem(USER, USER, -1, user.userId, user.firstName, user.lastName, user.votedChoiceId, getChoiceName(user.votedChoiceId, result.choices)))
+                                if(index == 0) mVotings.add(VotingCustomItem(USER, USER, 0, user.userId, user.firstName, user.lastName, user.votedChoiceIds, getChoiceNames(user.votedChoiceIds, result.choices)))
+                                else if(index == result.users.size-1) mVotings.add(VotingCustomItem(USER, USER, 1, user.userId, user.firstName, user.lastName, user.votedChoiceIds, getChoiceNames(user.votedChoiceIds, result.choices)))
+                                else mVotings.add(VotingCustomItem(USER, USER, -1, user.userId, user.firstName, user.lastName, user.votedChoiceIds, getChoiceNames(user.votedChoiceIds, result.choices)))
                             }
                         }
                     }
@@ -280,7 +280,7 @@ class VotingsActivity : BaseActivity() {
                                         recyclerView.adapter!!.notifyItemChanged(position, "lol")
                                     } else {
                                         val votes = mVotings.filter { it.selected }
-                                        if(votes.size >= result.choicesMax.toInt()) {
+                                        if(votes.size >= result.choicesMax.toInt() && result.choicesMax != "0") {
                                             //show error message when votes count is bigger than MAX choices
                                             showErrorDialog(ERROR_MAX_CHOICES, result.choicesMax.toInt())
                                         } else {
@@ -306,12 +306,12 @@ class VotingsActivity : BaseActivity() {
                                     val items = mVotings.filter { it.selected }
                                     val count = items.size
                                     if(count >= result.choicesMin.toInt()) {
-                                        if(count <= result.choicesMax.toInt()) {
-                                            var choices = ""
+                                        if(count <= result.choicesMax.toInt() || result.choicesMax == "0") {
+                                            var choices = HashSet<String>()
                                             for (item in items) {
-                                                choices = choices + "," + item.id
+                                                choices.add(item.id)
                                             }
-                                            showDialogConfirmationSendVoting(choices)
+                                            showDialogConfirmationSendVoting(choices.joinToString())
                                         } else {
                                             // show error when count votes > MAX choices
                                             showErrorDialog(
@@ -383,6 +383,22 @@ class VotingsActivity : BaseActivity() {
         val choice = choices.find { it.choiceId == votedChoiceId }
         if(choice != null) return choice.choiceTitle
         return ""
+    }
+
+    private fun getChoiceNames(
+        votedChoiceIds: String,
+        choices: MutableList<Model.Choice>
+    ): String {
+        if(votedChoiceIds.isEmpty()) return ""
+        var choiceNames = ""
+        for (votedChoiceId in votedChoiceIds.split(",")) {
+            val choice = choices.find { it.choiceId == votedChoiceId.replace(" ", "") }
+            choice?.let {
+                if(choiceNames == "") choiceNames = it.choiceTitle
+                else choiceNames = choiceNames + "\n" + it.choiceTitle
+            }
+        }
+        return choiceNames
     }
 
     private fun showDialogConfirmationSendVoting(choiceIds: String) {

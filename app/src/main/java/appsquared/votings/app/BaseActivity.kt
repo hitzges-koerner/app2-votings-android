@@ -66,9 +66,10 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         setLightStatusBar(window, true)
-        //constraintLayoutRoot.systemUiVisibility =
-        //    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        constraintLayoutRoot.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 
+        /*
         val w: Window = window
         w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
             WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
@@ -76,32 +77,16 @@ abstract class BaseActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         w.statusBarColor = ContextCompat.getColor(this, R.color.white)
 
-        setImageViewHeader()
-        setBackgroundImage()
-
-        /*
-        val rectangle = Rect()
-        val window = window
-        window.decorView.getWindowVisibleDisplayFrame(rectangle)
-        val statusBarHeight: Int = rectangle.top
-
-
-        val params = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.WRAP_CONTENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        )
-        params.setMargins(0, getStatusBarHeight(), 0, 0)
-        mToolBar.layoutParams = params
-         */
-        //mToolBar.setPadding(0, getStatusBarHeight(), 0, 0)
-
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             getStatusBarHeight()
         )
         statusBarPlaceHolder.layoutParams = params
+        */
 
-
+        setImageViewHeader()
+        setBackgroundImage()
+        
         layoutInflater.inflate(layoutResID, activityContainer, true)
 
         super.setContentView(constraintLayout)

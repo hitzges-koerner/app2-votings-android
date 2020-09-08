@@ -24,7 +24,7 @@
     <string name="open">öffentlich</string>
     <string name="secret">geheim</string>
     <string name="show_information">Informationen hierzu</string>
-    <string name="vote_now">Jetzt teilnehmen</string>
+    <string name="vote_now">Stimme abgeben</string>
     <string name="show_result">Ergebnis anzeigen</string>
     <string name="start">Start:</string>
     <string name="end">Ende:</string>

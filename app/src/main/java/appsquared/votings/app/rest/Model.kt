@@ -188,7 +188,7 @@ object Model {
         @field:Json(name = "lastname") val lastName:String = "",
         @field:Json(name = "votesCnt") val votesCnt: String = "",
         @field:Json(name = "votedAt") val votedAt: String = "",
-        @field:Json(name = "votedChoiceId") val votedChoiceId: String = "",
+        @field:Json(name = "votedChoiceIds") val votedChoiceIds: String = "",
         @field:Json(name = "representedByUserId") val representedByUserId: String = "",
         @field:Json(name = "representedByUserFirstname") val representedByUserFirstname: String = "",
         @field:Json(name = "representedByUserLastname") val representedByUserLastname: String = "",
