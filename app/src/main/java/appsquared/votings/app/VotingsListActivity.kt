@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import appsquared.votings.app.views.DecisionDialog
 import appsquared.votings.app.views.ListDialog
 import appsquared.votings.app.views.VotingSelectDialog
-import com.google.android.material.snackbar.Snackbar
 import framework.base.constant.Constant
 import framework.base.rest.ApiService
 import framework.base.rest.Model
@@ -73,7 +71,6 @@ class VotingsListActivity : BaseActivity() {
     }
 
     override fun childOnlyMethod() {
-        setMenuButton(R.string.edit, ContextCompat.getColor(this, R.color.colorAccent))
         setLoadingIndicatorVisibility(View.VISIBLE)
         mStatus = intent.extras?.getInt(STATUS)
         // exit activity when status is not set
@@ -317,6 +314,7 @@ class VotingsListActivity : BaseActivity() {
 
     private fun loadVotingsList() {
 
+        setLoadingIndicatorVisibility(View.VISIBLE)
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         val token = pref.getString(PreferenceNames.USER_TOKEN, "")
         val workspace = pref.getString(PreferenceNames.WORKSPACE_NAME, "")
@@ -328,7 +326,17 @@ class VotingsListActivity : BaseActivity() {
                 { result ->
                     mVotings.clear()
                     mVotingsAll.clear()
-                    mVotingsAll.addAll(getVotingsByStatus(result))
+                    when(mStatus) {
+                        FUTURE -> {
+                            mVotingsAll.addAll(getVotingsByStatus(result).sortedBy { it.votingTill })
+                        }
+                        CURRENT -> {
+                            mVotingsAll.addAll(getVotingsByStatus(result).sortedBy { it.votingTill })
+                        }
+                        PAST -> {
+                            mVotingsAll.addAll(getVotingsByStatus(result).sortedByDescending { it.votingTill })
+                        }
+                    }
 
                     if(mStatus == CURRENT) {
                         val listVoted = mVotingsAll.filter {
@@ -376,10 +384,15 @@ class VotingsListActivity : BaseActivity() {
                         mVotings.addAll(listGrouped)
                     }
                     recyclerView.adapter?.notifyDataSetChanged()
+                    isEditModeButtonVisible()
+
+                    if(mVotings.isEmpty()) setErrorView(getString(R.string.error_no_voting_available))
                     setLoadingIndicatorVisibility(View.GONE)
                 }, { error ->
                     Log.d("LOGIN", error.message)
-
+                    setErrorView(error.message) {
+                        loadVotingsList()
+                    }
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 401 || error.code() == 403) {
                             pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
@@ -388,6 +401,18 @@ class VotingsListActivity : BaseActivity() {
                     }
                 }
             )
+    }
+
+    private fun isEditModeButtonVisible() {
+        if(mVotings.isEmpty()) removeMenuButton()
+        else if(mStatus == PAST || isQuickVotingFromOwserInList()) setMenuButton(R.string.edit, ContextCompat.getColor(this, R.color.colorAccent))
+    }
+
+    fun isQuickVotingFromOwserInList() : Boolean {
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        val userId = pref.getString(PreferenceNames.USERID, "") ?: ""
+        //return mVotings.find { it.isQuickVoting == "1" && it.ownerId == userId}
+        return mVotings.any { it.isQuickVoting == "1" && it.ownerId == userId }
     }
 
     fun getVotingsByStatus(votings: MutableList<Model.VotingShort>) : MutableList<Model.VotingShort> {

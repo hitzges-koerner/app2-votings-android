@@ -171,5 +171,8 @@
     <string name="in_representation_for">In Vertretung für: </string>
     <string name="dialog_voting_close_title">Möchten Sie die Abstimmung wirklich beenden?\nDiese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="dialog_voting_delete_title">Möchten Sie die Abstimmung wirklich löschen?\nDiese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="retry">Nochmal Versuchen</string>
+    <string name="error_no_voting_available">Keine Abstimmungen vorhanden</string>
+    <string name="error_no_welcome_message">Keine Willkommensnachricht vorhanden</string>
 
 </resources>

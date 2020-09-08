@@ -177,7 +177,7 @@ class VotingCreateActivity : BaseActivity(),
                 .setTitle(R.string.voting_dialog_cancel_title)
                 .addButton("discard", R.string.voting_dialog_cancel_button_discard)
                 .addButton("save", R.string.voting_dialog_cancel_button_save)
-                .addCancelButton() {}
+                .addCancelButton {}
                 .callBack { tag: String ->
                     when (tag) {
                         "discard" -> {

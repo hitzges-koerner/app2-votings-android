@@ -144,10 +144,10 @@ abstract class BaseActivity : AppCompatActivity() {
                     Picasso.get()
                         .load(mWorkspace.settings.logoImageUrl)
                         .into(mImageViewHeader)
-                } else mImageViewHeader.visibility = View.GONE
+                } else mImageViewHeader.visibility = GONE
 
                 mImageViewHeaderHeight = mImageViewHeader.height //height is ready
-                if (mImageViewHeader.visibility == View.GONE) mImageViewHeaderHeight = 0
+                if (mImageViewHeader.visibility == GONE) mImageViewHeaderHeight = 0
 
                 childOnlyMethod()
             }
@@ -219,6 +219,39 @@ abstract class BaseActivity : AppCompatActivity() {
         buttonMenu.setText(getString(stringId))
         buttonMenu.setOnClickListener {
             clickToolbarMenuButton()
+        }
+    }
+
+    fun removeMenuButton() {
+        buttonMenu.visibility = GONE
+    }
+
+    fun removeMenuImageButton() {
+        imageButtonMenu.visibility = GONE
+    }
+
+    fun hideErrorView() {
+        linearLayoutBaseErrorView.visibility = GONE
+    }
+
+    fun setErrorView(message: String?, listener: () -> Unit) {
+        linearLayoutBaseErrorView.visibility = VISIBLE
+        buttonBaseRetry.visibility = VISIBLE
+        message?.let {
+            textViewBaseErrorMessage.text = message
+        }
+
+        buttonBaseRetry.setOnClickListener {
+            listener()
+            linearLayoutBaseErrorView.visibility = GONE
+        }
+    }
+
+    fun setErrorView(message: String?) {
+        linearLayoutBaseErrorView.visibility = VISIBLE
+        buttonBaseRetry.visibility = GONE
+        message?.let {
+            textViewBaseErrorMessage.text = message
         }
     }
 }

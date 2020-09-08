@@ -82,6 +82,6 @@ class WelcomeActivity : BaseActivity() {
         materialCardView.radius = dpToPx(contentCornerRadius).toFloat()
 
         if(workspace.welcome.text.isNotEmpty()) PseudoMarkDown.styleTextView(workspace.welcome.text, textViewContent, contentAccentColor, contentTextColor)
-        else materialCardView.visibility = View.GONE
+        else setErrorView(getString(R.string.error_no_welcome_message))
     }
 }

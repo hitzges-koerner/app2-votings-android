@@ -172,4 +172,7 @@
     <string name="in_representation_for">In representation for: </string>
     <string name="dialog_voting_close_title">Do you really want to end the voting?\nYou can\'t undo this action.</string>
     <string name="dialog_voting_delete_title">Do you really want to delete the voting?\nYou can\'t undo this action.</string>
+    <string name="retry">retry</string>
+    <string name="error_no_voting_available">no votings available</string>
+    <string name="error_no_welcome_message">no welcome message available</string>
 </resources>
