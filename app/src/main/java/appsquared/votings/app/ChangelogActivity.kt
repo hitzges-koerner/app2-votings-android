@@ -3,13 +3,9 @@ package appsquared.votings.app
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
-import appsquared.votings.app.views.CustomOnClickListener
 import framework.base.constant.Constant
 import framework.base.rest.ApiService
 import framework.base.rest.Model
@@ -17,9 +13,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_changelog.*
-import kotlinx.android.synthetic.main.activity_changelog.recyclerView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_user_list.*
 import kotlin.math.roundToInt
 
 

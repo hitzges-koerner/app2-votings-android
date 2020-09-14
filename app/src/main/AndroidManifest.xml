@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="appsquared.votings.app">
-
+    package="appsquared.votings.app" >
     <!-- permission for internet and connectivity check -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-    <uses-permission android:name="android.permission.CAMERA"/>
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -19,29 +14,32 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"
-            android:theme="@style/LoginTheme"/>
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/LoginTheme" />
         <activity android:name=".MainActivity" />
         <activity android:name=".WelcomeActivity" />
-        <activity android:name=".MyProfileActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".MyProfileActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".UserListActivity" />
         <activity android:name=".NewsListActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".SplashActivity"
-            android:theme="@style/SplashTheme">
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".CameraActivity" />
-
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".NewsActivity" />
         <activity android:name=".VotingsListActivity" />
         <activity android:name=".LegalDocsActivity" />
@@ -60,7 +58,7 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="@string/authority"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
@@ -69,12 +67,11 @@
         <service
             android:name=".MyFirebaseMessagingService"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>

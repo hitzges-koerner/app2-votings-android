@@ -31,6 +31,7 @@ import java.util.concurrent.Executor
 
 class LoginActivity : AppCompatActivity() {
 
+    private var mLoginType: Int = 0
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
@@ -64,6 +65,10 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        if(intent.hasExtra("login_type")) {
+            mLoginType = intent.extras?.get("login_type") as Int
+        }
 
         val isDebuggable = 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
         if(!isDebuggable) {
@@ -236,7 +241,6 @@ class LoginActivity : AppCompatActivity() {
                             return@subscribe
                         }
                     }
-
                     showErrorToast(getString(R.string.error_general))
                 }
             )
@@ -359,5 +363,10 @@ class LoginActivity : AppCompatActivity() {
             .build()
 
         biometricPrompt.authenticate(promptInfo)
+    }
+
+    companion object {
+        val LOGIN_NEW = 0
+        val LOGIN_SWITCH = 1
     }
 }

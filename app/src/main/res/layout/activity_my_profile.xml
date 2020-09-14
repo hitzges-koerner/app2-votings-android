@@ -45,11 +45,11 @@
 
                 <ImageView
                     android:id="@+id/imageViewEdit"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_margin="8dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="5dp"
                     android:background="@drawable/background_round_with_border"
-                    android:padding="6dp"
+                    android:padding="10dp"
                     android:src="@drawable/ic_baseline_edit_24"
                     app:layout_constraintBottom_toBottomOf="@+id/imageViewProfile"
                     app:layout_constraintDimensionRatio="H,1:1"

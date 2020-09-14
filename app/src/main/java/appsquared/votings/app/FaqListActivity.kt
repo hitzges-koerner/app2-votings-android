@@ -50,12 +50,14 @@ class FaqListActivity : BaseActivity() {
                 recyclerViewFaq.adapter as HeaderItemDecoration.StickyHeaderInterface
             )
         )
+        /*
         recyclerViewFaq.addItemDecoration(
             DividerItemDecoration(
                 this,
                 DividerItemDecoration.VERTICAL
             )
         )
+         */
 
         loadFaq()
     }

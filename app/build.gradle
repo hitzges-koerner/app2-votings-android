@@ -80,6 +80,14 @@ dependencies {
 
     //https://github.com/noties/Markwon
     implementation"io.noties.markwon:core:4.5.1"
+
+    implementation "androidx.browser:browser:1.2.0"
+
+    implementation 'androidx.navigation:navigation-fragment:2.3.0'
+    implementation 'androidx.navigation:navigation-ui:2.3.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

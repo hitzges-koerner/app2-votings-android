@@ -5,18 +5,21 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import appsquared.votings.app.views.DecisionDialog
 import appsquared.votings.app.views.InfoDialog
+import com.google.android.material.navigation.NavigationView
 import framework.base.constant.Constant
 import framework.base.rest.Model
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     var statusBarSize = 0
 
@@ -48,6 +51,12 @@ class MainActivity : BaseActivity() {
         removeBackButton()
         showToolbarLogo()
         setMenuImageButton(R.drawable.ic_baseline_add_circle_24, ContextCompat.getColor(this, R.color.colorAccent))
+
+        /*
+        setNavigationDrawerData(mLoginData.workspace, mLoginData.email, mLoginData.avatarUrl)
+        setNavigationDrawerButton()
+        navigationView.setNavigationItemSelectedListener(this)
+         */
 
         /*
         ViewCompat.setOnApplyWindowInsetsListener(toolbarCustom) { view, insets ->
@@ -335,5 +344,17 @@ class MainActivity : BaseActivity() {
         if (intent.resolveActivity(this.packageManager) != null) {
             startActivity(intent)
         }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        when (id) {
+            R.id.navBarAddWorkspace -> {
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
+        }
+        return true
     }
 }

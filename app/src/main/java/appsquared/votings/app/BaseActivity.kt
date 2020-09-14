@@ -2,28 +2,36 @@ package appsquared.votings.app
 
 import android.R.attr.*
 import android.app.ActionBar
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.*
+import android.view.Gravity.LEFT
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.webkit.URLUtil
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
 import framework.base.rest.Model
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_base.constraintLayoutRoot
 import kotlinx.android.synthetic.main.activity_base.view.*
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_my_profile.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
 
 abstract class BaseActivity : AppCompatActivity() {
 
+    private lateinit var mDrawerLayout: DrawerLayout
     lateinit var mToolBar: Toolbar
     private var mImageViewHeaderHeight: Int = 0
     lateinit var mTextViewScreenTitle: TextView
@@ -49,8 +57,8 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun setContentView(layoutResID: Int) {
-        val constraintLayout: ConstraintLayout = layoutInflater.inflate(R.layout.activity_base,
-            null) as ConstraintLayout
+        val constraintLayout: DrawerLayout = layoutInflater.inflate(R.layout.activity_base,
+            null) as DrawerLayout
         val activityContainer: FrameLayout = constraintLayout.findViewById(R.id.layout_container)
         mTextViewScreenTitle = constraintLayout.findViewById(R.id.text_screen_title) as TextView
         mTextViewButtonLeft = constraintLayout.findViewById(R.id.textViewButtonLeft) as TextView
@@ -60,6 +68,8 @@ abstract class BaseActivity : AppCompatActivity() {
         mToolBar = constraintLayout.findViewById(R.id.toolBar)
         val constraintLayoutRoot = constraintLayout.findViewById(R.id.constraintLayoutRoot) as ConstraintLayout
         val statusBarPlaceHolder = constraintLayout.findViewById(R.id.statusBarPlaceHolder) as View
+        mDrawerLayout = constraintLayout.findViewById(R.id.drawer_layout) as DrawerLayout
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
         mImageButtonBack.setOnClickListener {
             finish()
@@ -155,7 +165,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun childOnlyMethod() {
-
     }
 
     open fun clickToolbarCancelButton() {}
@@ -253,5 +262,30 @@ abstract class BaseActivity : AppCompatActivity() {
         message?.let {
             textViewBaseErrorMessage.text = message
         }
+    }
+
+    fun openNavigationDrawer() {
+        mDrawerLayout.openDrawer(LEFT)
+    }
+
+    fun setNavigationDrawerData(workspace: String, email: String, avatarUrl: String) {
+        textViewNavDrawerWorkspace.text = workspace
+        textViewNavDrawerMail.text = email
+
+        if(avatarUrl.isNotEmpty() && URLUtil.isValidUrl(avatarUrl)) {
+            Picasso.get()
+                .load(avatarUrl)
+                .transform(CircleTransform())
+                .into(imageViewNavDrawerProfile)
+        }
+    }
+
+    fun setNavigationDrawerButton() {
+        imageButtonNavDrawer.visibility = VISIBLE
+        imageButtonBack.visibility = GONE
+        imageButtonNavDrawer.setOnClickListener {
+            openNavigationDrawer()
+        }
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 }

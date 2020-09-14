@@ -1,9 +1,11 @@
 package appsquared.votings.app
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.VISIBLE
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
@@ -59,7 +61,6 @@ class VotingsActivity : BaseActivity() {
     override fun childOnlyMethod() {
 
         removeToolbarShadow()
-        setLoadingIndicatorVisibility(View.VISIBLE)
 
         mVotingId = intent.extras?.getString("voting_id", "")
         mVotingInRepresentationOfId = intent.extras?.getString("voting_representation_id", "")
@@ -126,6 +127,7 @@ class VotingsActivity : BaseActivity() {
     }
 
     private fun loadVoting() {
+        setLoadingIndicatorVisibility(View.VISIBLE)
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         val token = pref.getString(PreferenceNames.USER_TOKEN, "")
@@ -345,14 +347,33 @@ class VotingsActivity : BaseActivity() {
                                 }
                                 recyclerView.adapter?.notifyDataSetChanged()
                             }
+
+                            DOCUMENT -> {
+                                // static let GetDocuments: ApiEndpoint = ApiEndpoint(Method: .Get, Url: "https://api.votings.app/v1.0/{WORKSPACE}/documents/{url}")
+
+                                /*
+                                private func openWebView(urlString: String, authKey: String, authHeader: String) {
+                                    let viewController = WebViewController(nibName: "WebViewController", bundle: nil)
+                                    viewController.setUrl(urlString: urlString, authKey: authKey, authHeader: authHeader)
+                                    self.navigationController?.pushViewController(viewController, animated: true)
+                                }
+                                 */
+                            }
+
+                            STREAM -> {
+                                val url = mVotings[position].title
+                                val builder = CustomTabsIntent.Builder();
+                                val customTabsIntent = builder.build();
+                                customTabsIntent.launchUrl(this, Uri.parse(url));
+                            }
                         }
                     }
                     setLoadingIndicatorVisibility(View.GONE)
-
-
                 }, { error ->
                     Log.d("LOGIN", error.message)
-                    toast("ERROR")
+                    setErrorView(error.message) {
+                        loadVoting()
+                    }
 
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 401 || error.code() == 403) {

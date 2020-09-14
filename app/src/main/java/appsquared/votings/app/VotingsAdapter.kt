@@ -220,8 +220,11 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
     class ViewHolderStream(itemView: View, private val attributes: Attributes, val listener : (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(item: VotingCustomItem) {
             with(itemView) {
+                textViewStream.setTextColor(attributes.contentTextColor)
+                imageViewCaretStream.setColorFilter(attributes.contentTextColor, PorterDuff.Mode.SRC_ATOP)
+                imageViewIconStream.setColorFilter(attributes.contentTextColor, PorterDuff.Mode.SRC_ATOP)
                 materialCardViewStream.setOnClickListener {
-
+                    listener(layoutPosition)
                 }
             }
         }
@@ -235,7 +238,7 @@ class VotingsAdapter(private val items: MutableList<VotingCustomItem>, val attri
                 imageViewCaretDocument.setColorFilter(attributes.contentTextColor, PorterDuff.Mode.SRC_ATOP)
                 imageViewIconDocument.setColorFilter(attributes.contentTextColor, PorterDuff.Mode.SRC_ATOP)
                 materialCardViewDocument.setOnClickListener {
-
+                    listener(layoutPosition)
                 }
             }
         }
