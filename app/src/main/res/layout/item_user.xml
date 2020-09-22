@@ -4,95 +4,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp">
+    android:padding="16dp">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/colorAccent"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <appsquared.votings.app.views.CircleImageView
+        android:id="@+id/circleImageView"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/tile_icons_profil"
+        app:civ_circle_background_color="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="H,1:1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:padding="16dp">
+    <appsquared.votings.app.views.CircleImageView
+        android:id="@+id/circleImageViewProfile"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:scaleType="centerCrop"
+        android:background="@color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <appsquared.votings.app.views.CircleImageView
-                android:id="@+id/circleImageView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="H,1:1"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ico_profil"
-                app:civ_circle_background_color="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <appsquared.votings.app.views.CircleImageView
+        android:layout_marginEnd="1dp"
+        android:layout_marginTop="1dp"
+        android:id="@+id/circleImageViewBackground"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:civ_border_color="@color/colorAccent"
+        app:civ_circle_background_color="@color/white_transparent_fill"
+        app:layout_constraintEnd_toEndOf="@+id/circleImageView"
+        app:layout_constraintTop_toTopOf="@+id/circleImageView" />
 
-            <appsquared.votings.app.views.CircleImageView
-                android:id="@+id/circleImageViewBackground"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                app:civ_border_color="@color/transparent"
-                app:civ_circle_background_color="@color/white_transparent_fill"
-                app:layout_constraintEnd_toEndOf="@+id/circleImageView"
-                app:layout_constraintTop_toTopOf="@+id/circleImageView" />
+    <appsquared.votings.app.views.CircleImageView
+        android:id="@+id/circleImageViewStatus"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:civ_border_color="@color/transparent"
+        app:civ_circle_background_color="@android:color/holo_green_light"
+        app:layout_constraintBottom_toBottomOf="@+id/circleImageViewBackground"
+        app:layout_constraintEnd_toEndOf="@+id/circleImageViewBackground"
+        app:layout_constraintStart_toStartOf="@+id/circleImageViewBackground"
+        app:layout_constraintTop_toTopOf="@+id/circleImageViewBackground" />
 
-            <appsquared.votings.app.views.CircleImageView
-                android:id="@+id/circleImageViewStatus"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                app:civ_border_color="@color/transparent"
-                app:civ_circle_background_color="@android:color/holo_green_light"
-                app:layout_constraintBottom_toBottomOf="@+id/circleImageViewBackground"
-                app:layout_constraintStart_toStartOf="@+id/circleImageViewBackground"
-                app:layout_constraintEnd_toEndOf="@+id/circleImageViewBackground"
-                app:layout_constraintTop_toTopOf="@+id/circleImageViewBackground" />
+    <TextView
+        android:id="@+id/textViewLabelFirst"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="THIS IS A TEST"
+        android:textSize="@dimen/tiles_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewConfirmedStatus"
+        app:layout_constraintStart_toEndOf="@+id/circleImageView"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_marginLeft="16dp"
-                android:id="@+id/textViewLabelFirst"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="THIS IS A TEST"
-                android:textSize="@dimen/tiles_text_size"
-                app:layout_constraintStart_toEndOf="@+id/circleImageView"
-                app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/textViewLabelSecond"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="THIS IS A TEST"
+        android:textSize="@dimen/medium_size"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewConfirmedStatus"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabelFirst"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelFirst" />
 
-            <TextView
-                android:id="@+id/textViewLabelSecond"
-                style="@style/TextAppearance.AppCompat.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:text="THIS IS A TEST"
-                android:textSize="@dimen/tiles_text_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textViewLabelFirst"
-                app:layout_constraintTop_toBottomOf="@+id/textViewLabelFirst" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTags"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageViewConfirmedStatus"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabelFirst" />
 
-            <ImageView
-                android:tint="@color/white"
-                android:layout_marginRight="16dp"
-                android:id="@+id/imageViewConfirmedStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/imageViewConfirmedStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

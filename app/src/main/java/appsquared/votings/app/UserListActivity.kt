@@ -238,7 +238,7 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
                 { result ->
                     mUserListDownloaded.clear()
                     mUserListDownloaded.addAll(result)
-                    mUserListDownloaded.sortBy { it.lastName }
+                    mUserListDownloaded.sortWith(compareBy({it.lastName}, {it.firstName}))
                     mUserList.clear()
                     mUserList.addAll(addSection(mUserListDownloaded))
                     recyclerView.adapter?.notifyDataSetChanged()

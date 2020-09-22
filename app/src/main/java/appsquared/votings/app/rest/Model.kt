@@ -121,9 +121,11 @@ object Model {
         @field:Json(name = "userId") val userId:String = "",
         @field:Json(name = "firstname") val firstName:String = "",
         @field:Json(name = "lastname") val lastName:String = "",
+        @field:Json(name = "email") val email:String = "",
         @field:Json(name = "avatarUrl") val avatarUrl: String = "",
         @field:Json(name = "isOnline") val isOnline: String = "",
         @field:Json(name = "isConfirmed") val isConfirmed: String = "",
+        @field:Json(name = "tags") val tags: MutableList<String> = mutableListOf(),
         var isSelected: Boolean = false
     )
 
