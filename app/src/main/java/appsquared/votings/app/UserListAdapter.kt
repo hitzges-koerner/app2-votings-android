@@ -5,15 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.content.ContextCompat.getColor
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import appsquared.votings.app.tag.adapter.TagListAdapter
 import com.squareup.picasso.Picasso
 import framework.base.rest.Model
-import kotlinx.android.synthetic.main.activity_my_profile.*
 import kotlinx.android.synthetic.main.item_section.view.*
 import kotlinx.android.synthetic.main.item_user.view.*
-import kotlinx.android.synthetic.main.item_user.view.materialCardView
 
 class UserListAdapter(private val items: MutableList<Model.User>, val attributes: Attributes, private val listener: (Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -68,21 +67,16 @@ class UserListAdapter(private val items: MutableList<Model.User>, val attributes
         fun bindItems(item: Model.User) {
             with(itemView) {
 
-                textViewLabelFirst.text = item.lastName
-                textViewLabelFirst.setTextColor(attributes.contentTextColor)
+                textViewLabelFirst.text = item.lastName + ", " + item.firstName
+                textViewLabelFirst.setTextColor(getColor(context, R.color.black))
 
-                textViewLabelSecond.text = item.firstName
-                textViewLabelSecond.setTextColor(attributes.contentTextColor)
-
-                materialCardView.setCardBackgroundColor(attributes.contentBackgroundColor)
-                materialCardView.strokeColor = attributes.contentBorderColor
-                materialCardView.strokeWidth = dpToPx(attributes.contentBorderWidth)
-                materialCardView.radius = dpToPx(attributes.contentCornerRadius).toFloat()
+                textViewLabelSecond.text = item.email
+                textViewLabelSecond.setTextColor(getColor(context, R.color.grey_60))
 
                 if(item.isOnline == "1") {
                     circleImageViewStatus.visibility = View.VISIBLE
                     circleImageViewBackground.visibility = View.VISIBLE
-                    circleImageViewBackground.circleBackgroundColor = attributes.contentBackgroundColor
+                    circleImageViewBackground.circleBackgroundColor = getColor(context, R.color.white)
                 } else {
                     circleImageViewStatus.visibility = View.GONE
                     circleImageViewBackground.visibility = View.GONE
@@ -90,20 +84,33 @@ class UserListAdapter(private val items: MutableList<Model.User>, val attributes
 
                 if(item.isConfirmed == "1") {
                     imageViewConfirmedStatus.setImageResource(R.drawable.ic_baseline_how_to_reg_24)
-                    imageViewConfirmedStatus.imageTintList = ColorStateList.valueOf(attributes.contentTextColor)
+                    imageViewConfirmedStatus.imageTintList = ColorStateList.valueOf(getColor(context, R.color.colorAccent))
                 } else {
                     imageViewConfirmedStatus.setImageResource(R.drawable.ic_baseline_error_24)
-                    imageViewConfirmedStatus.imageTintList = ColorStateList.valueOf(attributes.contentTextColor)
+                    imageViewConfirmedStatus.imageTintList = ColorStateList.valueOf(getColor(context, R.color.colorAccent))
                 }
+
+
 
                 if(item.avatarUrl.isNotEmpty() && URLUtil.isValidUrl(item.avatarUrl)) {
                     Picasso.get()
                         .load(item.avatarUrl)
-                        .into(circleImageView)
+                        .placeholder(R.color.grey_144)
+                        .into(circleImageViewProfile)
+                    circleImageViewProfile.visibility = View.VISIBLE
                 } else {
-                    circleImageView.setImageResource(R.drawable.ico_profil)
-                    circleImageView.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent))
-                    circleImageView.circleBackgroundColor = ContextCompat.getColor(context, R.color.white)
+                    circleImageViewProfile.visibility = View.GONE
+                    circleImageView.setImageResource(R.drawable.tile_icons_profil)
+                    circleImageView.setColorFilter(getColor(context, R.color.white))
+                    circleImageView.circleBackgroundColor = getColor(context, R.color.colorAccent)
+                }
+
+                val tagList : MutableList<String> = mutableListOf()
+                tagList.add("Admin")
+                tagList.add("Benutzer")
+                tagList.add("Marketing Chef")
+                recyclerViewTags.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                recyclerViewTags.adapter = TagListAdapter(tagList) {
                 }
 
                 /*
@@ -159,7 +166,7 @@ class UserListAdapter(private val items: MutableList<Model.User>, val attributes
         fun bindItems(item: Model.User) {
             with(itemView) {
                 textViewSection.text = item.userId
-                textViewSection.setTextColor(attributes.contentBackgroundColor)
+                textViewSection.setTextColor(getColor(context, R.color.black))
 
                 constraintLayoutRoot.setBackgroundColor(attributes.headlinesBackgroundColor)
             }

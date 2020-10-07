@@ -15,4 +15,5 @@
     <color name="grey_144">#909090</color>
     <color name="grey_190">#BEBEBE</color>
     <color name="green">#35C75A</color>
+    <color name="tagBackground">#009688</color>
 </resources>
