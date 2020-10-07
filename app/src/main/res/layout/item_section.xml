@@ -11,6 +11,7 @@
     android:foreground="?attr/selectableItemBackground">
 
     <TextView
+        android:textColor="@color/black"
         android:textSize="@dimen/tiles_text_size"
         android:textStyle="bold"
         android:layout_marginTop="8dp"

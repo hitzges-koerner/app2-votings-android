@@ -126,33 +126,33 @@ class VotingsListAdapter(private val items: MutableList<Model.VotingShort>, val 
                     }
                 }
 
-                textViewButtonVote.setTextColor(attributes.contentBackgroundColor)
-                materialCardViewButtonVote.setCardBackgroundColor(attributes.contentTextColor)
-                materialCardViewButtonVote.strokeColor = attributes.contentTextColor
-                materialCardViewButtonVote.strokeWidth = dpToPx(attributes.contentBorderWidth)
-                materialCardViewButtonVote.radius = dpToPx(attributes.contentCornerRadius).toFloat()
+                //textViewButtonVote.setTextColor(attributes.contentBackgroundColor)
+                //materialCardViewButtonVote.setCardBackgroundColor(attributes.contentTextColor)
+                //materialCardViewButtonVote.strokeColor = attributes.contentTextColor
+                //materialCardViewButtonVote.strokeWidth = dpToPx(attributes.contentBorderWidth)
+                //materialCardViewButtonVote.radius = dpToPx(attributes.contentCornerRadius).toFloat()
 
                 textViewVotingTitle.text = item.votingTitle
-                textViewVotingTitle.setTextColor(attributes.contentTextColor)
+                //textViewVotingTitle.setTextColor(attributes.contentTextColor)
 
                 val votingStart = getLocalDateStyle(item.votingFrom, context)
                 textViewVotingStartTime.text = votingStart
-                textViewVotingStartTime.setTextColor(attributes.contentTextColor)
+                //textViewVotingStartTime.setTextColor(attributes.contentTextColor)
 
                 val votingEnd = getLocalDateStyle(item.votingTill, context)
-                textViewVotingEndTime.text = votingEnd
-                textViewVotingEndTime.setTextColor(attributes.contentTextColor)
+                textViewVotingEndTime.text = " - $votingEnd"
+                //textViewVotingEndTime.setTextColor(attributes.contentTextColor)
 
                 textViewVotingStart.text = context.getString(R.string.start)
-                textViewVotingStart.setTextColor(attributes.contentTextColor)
+                //textViewVotingStart.setTextColor(attributes.contentTextColor)
 
                 textViewVotingEnd.text = context.getString(R.string.end)
-                textViewVotingEnd.setTextColor(attributes.contentTextColor)
+                //textViewVotingEnd.setTextColor(attributes.contentTextColor)
 
-                materialCardView.setCardBackgroundColor(attributes.contentBackgroundColor)
-                materialCardView.strokeColor = attributes.contentBorderColor
-                materialCardView.strokeWidth = dpToPx(attributes.contentBorderWidth)
-                materialCardView.radius = dpToPx(attributes.contentCornerRadius).toFloat()
+                //materialCardView.setCardBackgroundColor(attributes.contentBackgroundColor)
+                //materialCardView.strokeColor = attributes.contentBorderColor
+                //materialCardView.strokeWidth = dpToPx(attributes.contentBorderWidth)
+                //materialCardView.radius = dpToPx(attributes.contentCornerRadius).toFloat()
 
                 materialCardViewButtonVote.setOnClickListener {
                     listener(VOTING_BUTTON, layoutPosition)
@@ -170,8 +170,6 @@ class VotingsListAdapter(private val items: MutableList<Model.VotingShort>, val 
             with(itemView) {
                 textViewSection.text = item.votingTitle
                 textViewSection.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-                constraintLayoutRoot.setBackgroundColor(attributes.headlinesBackgroundColor)
             }
         }
     }

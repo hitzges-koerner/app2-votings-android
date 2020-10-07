@@ -112,7 +112,6 @@
     <string name="tutorial_description_2">Tippe in der Hauptansicht auf das Plus-Zeichen oben rechts, um eine neue Abstimmung zu erstellen. Wähle die verschiedenen Optionen aus &amp; füge die Teilnehmer hinzu, die abstimmen sollen.</string>
     <string name="tutorial_description_3">Über das Menü kannst du alle aktiven Abstimmungen verfolgen, Zwischenergebnisse einsehen oder Ergebnisse alter Abstimmungen abrufen.</string>
 
-
     <!-- create voting -->
     <string name="voting_create_info_title">Neue Abstimmung erstellen</string>
     <string name="voting_create_info_text">Erstelle nun eine neue Abstimmung: Stelle deine Frage, gib alle möglichen Antworten vor und lege die teilnehmenden Benutzer fest.\n\nDie Abstimmung startet sofort. Du erhältst eine Push-Nachricht, wenn alle Teilnehmer abgestimmt haben.\n\nBitte beachte, daß mindestens 2 Teilnehmer aus den bestätigten App-Benutzern für eine Abstimmung ausgewählt werden müssen. Um Benutzer einzuladen, gehe zurück zur Hauptansicht und wähle die Kachel „Benutzer“ aus.</string>

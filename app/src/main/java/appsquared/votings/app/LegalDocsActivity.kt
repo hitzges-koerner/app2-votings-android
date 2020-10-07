@@ -27,84 +27,23 @@ class LegalDocsActivity : BaseActivity() {
 
         val workspace = mWorkspace
 
-        var borderColor = getColorTemp(R.color.transparent)
-        var borderWidth = 0
-        var contentTextColor = getColorTemp(R.color.black)
-        var contentAccentColor = getColorTemp(R.color.colorAccent)
-        var contentBackgroundColor = getColorTemp(R.color.white)
-        var contentCornerRadius = 20
-
-        if(workspace.settings.style.isNotEmpty()) {
-            when(workspace.settings.style.toLowerCase()) {
-                "rich" -> {
-                    borderColor = getColorTemp(R.color.transparent)
-                    borderWidth = 0
-                    contentTextColor = getColorTemp(R.color.black)
-                    contentAccentColor = getColorTemp(R.color.colorAccent)
-                    contentBackgroundColor = getColorTemp(R.color.white_transparent)
-                    contentCornerRadius = 20
-                }
-
-                "minimal" -> {
-                    borderColor = getColorTemp(R.color.transparent)
-                    borderWidth = 0
-                    contentTextColor = getColorTemp(R.color.black)
-                    contentAccentColor = getColorTemp(R.color.colorAccent)
-                    contentBackgroundColor = getColorTemp(R.color.white)
-                    contentCornerRadius = 20
-                }
-
-                "clean" -> {
-                    borderColor = getColorTemp(R.color.transparent)
-                    borderWidth = 0
-                    contentTextColor = getColorTemp(R.color.white)
-                    contentAccentColor = getColorTemp(R.color.white)
-                    contentBackgroundColor = getColorTemp(R.color.colorAccent)
-                    contentCornerRadius = 20
-                }
-            }
-        }
-
-        if(workspace.settings.contentBorderColor.isNotEmpty()) borderColor = convertStringToColor(workspace.settings.contentBorderColor)
-        if(workspace.settings.contentBorderWidth.isNotEmpty()) borderWidth = workspace.settings.contentBorderWidth.toDouble().roundToInt()
-
-        if(workspace.settings.contentTextColor.isNotEmpty()) contentTextColor = convertStringToColor(workspace.settings.contentTextColor)
-        if(workspace.settings.contentAccentColor.isNotEmpty()) contentAccentColor = convertStringToColor(workspace.settings.contentAccentColor)
-
-        if(workspace.settings.contentBackgroundColor.isNotEmpty()) contentBackgroundColor = convertStringToColor(workspace.settings.contentBackgroundColor)
-        if(workspace.settings.contentCornerRadius.isNotEmpty()) contentCornerRadius = workspace.settings.contentCornerRadius.toDouble().roundToInt()
-
-        materialCardView.setCardBackgroundColor(contentBackgroundColor)
-        materialCardView.strokeColor = borderColor
-        materialCardView.strokeWidth = borderWidth
-        materialCardView.radius = dpToPx(contentCornerRadius).toFloat()
-
         val type = intent.extras?.getInt(LEGAL_DOC_TYPE) ?: 0
-        val startedFromAccountRegister = intent.extras?.getBoolean(ACCOUNT_REGISTER_TERMS) ?: false
 
-        if(startedFromAccountRegister) {
-            materialCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
-            materialCardView.strokeColor = ContextCompat.getColor(this, R.color.transparent)
-            materialCardView.strokeWidth = ContextCompat.getColor(this, R.color.transparent)
-            materialCardView.radius = 0f
-
-            contentAccentColor = ContextCompat.getColor(this, R.color.black)
-            contentTextColor = ContextCompat.getColor(this, R.color.black)
-        }
+        val colorBlack = ContextCompat.getColor(this, R.color.black)
 
         when(type) {
             0 -> finish()
             IMPRINT -> {
                 setScreenTitle(getString(R.string.title_imprint))
-                setText(workspace.legalImprint, contentAccentColor, contentTextColor)
+                setText(workspace.legalImprint, colorBlack, colorBlack)
             }
             PRIVACY -> {
                 setScreenTitle(getString(R.string.title_privacy))
-                setText(workspace.legalPrivacy, contentAccentColor, contentTextColor)
+                setText(workspace.legalPrivacy, colorBlack, colorBlack)
             }
             TERMS -> {
                 setScreenTitle(getString(R.string.title_terms_of_use))
-                setText(workspace.legalTerms, contentAccentColor, contentTextColor)
+                setText(workspace.legalTerms, colorBlack, colorBlack)
             }
         }
     }
