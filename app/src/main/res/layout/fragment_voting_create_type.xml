@@ -148,7 +148,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="16dp"
-            android:text="Single Choice:\nParticipants can only choose one answer.\n\nMultiple Choice:\nParticipants can select multiple answers." />
+            android:text="@string/voting_create_multiple_info" />
 
     </com.google.android.material.card.MaterialCardView>
 

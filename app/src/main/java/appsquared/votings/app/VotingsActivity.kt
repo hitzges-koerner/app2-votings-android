@@ -9,6 +9,9 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import app.votings.android.R
+import app.votings.android.databinding.ActivityVotingsBinding
+import app.votings.android.databinding.DialogDecisionBinding
 import appsquared.votings.app.VotingCustomItem.Companion.BUTTON
 import appsquared.votings.app.VotingCustomItem.Companion.CHOICE
 import appsquared.votings.app.VotingCustomItem.Companion.DOCUMENT
@@ -20,14 +23,14 @@ import appsquared.votings.app.VotingCustomItem.Companion.USER
 import appsquared.votings.app.VotingsListActivity.Companion.CURRENT
 import appsquared.votings.app.VotingsListActivity.Companion.FUTURE
 import appsquared.votings.app.VotingsListActivity.Companion.PAST
+import appsquared.votings.app.adapter.VotingsAdapter
 import appsquared.votings.app.views.DecisionDialog
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
+import appsquared.votings.app.tag.enums.Style
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_votings.*
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
@@ -53,9 +56,11 @@ class VotingsActivity : BaseActivity() {
         ApiService.create(Constant.BASE_API)
     }
 
+    private lateinit var binding: ActivityVotingsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_votings)
+        binding = ActivityVotingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     override fun childOnlyMethod() {
@@ -66,42 +71,42 @@ class VotingsActivity : BaseActivity() {
         mVotingInRepresentationOfId = intent.extras?.getString("voting_representation_id", "")
         mVotingInRepresentationOfName = intent.extras?.getString("voting_representation_name", "")
         // exit activity when votingId is not set
-        if(mVotingId!!.isEmpty()) finish()
+        if (mVotingId!!.isEmpty()) finish()
 
         mStatus = intent.extras?.getInt(VotingsListActivity.STATUS)
 
         val workspace: Model.WorkspaceResponse = mWorkspace
 
-        if (workspace.settings.style.isNotEmpty()) {
-            when (workspace.settings.style.toLowerCase()) {
-                "rich" -> {
-                    mAttributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
-                    mAttributes.contentBorderColor = getColorTemp(R.color.white_transparent)
-                    mAttributes.contentBorderWidth = 0
-                    mAttributes.contentCornerRadius = 10
 
-                    mAttributes.contentTextColor = getColorTemp(R.color.black)
-                    mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    mAttributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
-                }
+        when (workspace.settings.style) {
+            Style.RICH -> {
+                mAttributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
+                mAttributes.contentBorderColor = getColorTemp(R.color.white_transparent)
+                mAttributes.contentBorderWidth = 0
+                mAttributes.contentCornerRadius = 10
 
-                "minimal" -> {
-                    mAttributes.contentBackgroundColor = getColorTemp(R.color.transparent)
-                    mAttributes.contentBorderColor = getColorTemp(R.color.transparent)
-                    mAttributes.contentBorderWidth = 0
-                    mAttributes.contentCornerRadius = 10
+                mAttributes.contentTextColor = getColorTemp(R.color.black)
+                mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                mAttributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
+            }
 
-                    mAttributes.contentTextColor = getColorTemp(R.color.black)
-                    mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    mAttributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
-                }
+            Style.MINIMAL -> {
+                mAttributes.contentBackgroundColor = getColorTemp(R.color.transparent)
+                mAttributes.contentBorderColor = getColorTemp(R.color.transparent)
+                mAttributes.contentBorderWidth = 0
+                mAttributes.contentCornerRadius = 10
 
-                "clean" -> {
-                    mAttributes = setAttributesDefault()
-                }
-                else -> {
-                    mAttributes = setAttributesDefault()
-                }
+                mAttributes.contentTextColor = getColorTemp(R.color.black)
+                mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                mAttributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
+            }
+
+            Style.CLEAN -> {
+                mAttributes = setAttributesDefault()
+            }
+
+            else -> {
+                mAttributes = setAttributesDefault()
             }
         }
 
@@ -123,7 +128,12 @@ class VotingsActivity : BaseActivity() {
         loadVoting()
 
         val spacing = dpToPx(16)
-        linearLayoutVotingsTitle.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
+        binding.linearLayoutVotingsTitle.setPadding(
+            spacing,
+            spacing + getImageHeaderHeight(),
+            spacing,
+            spacing
+        )
     }
 
     private fun loadVoting() {
@@ -134,92 +144,161 @@ class VotingsActivity : BaseActivity() {
         val userId = pref.getString(PreferenceNames.USERID, "")
         val workspace = pref.getString(PreferenceNames.WORKSPACE_NAME, "")
 
-        disposable = apiService.getVoting("Bearer $token", workspace!!, mVotingId!!, mVotingInRepresentationOfId!!)
+        disposable = apiService.getVoting(
+            "Bearer $token",
+            workspace!!,
+            mVotingId!!,
+            mVotingInRepresentationOfId!!
+        )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
 
-                    textViewVotingsTitle.text = result.votingTitle
-                    if(result.inRepresentationOfId.isNotEmpty()) {
-                        textViewVotingsInRepresentationOf.visibility = VISIBLE
-                        textViewVotingsInRepresentationOf.text = "In Vertretung für: ${mVotingInRepresentationOfName}"
-                        textViewVotingsInRepresentationOf.setTextColor(mAttributes.contentBackgroundColor)
+                    binding.textViewVotingsTitle.text = result.votingTitle
+                    if (result.inRepresentationOfId.isNotEmpty()) {
+                        binding.textViewVotingsInRepresentationOf.visibility = VISIBLE
+                        binding.textViewVotingsInRepresentationOf.text =
+                            "In Vertretung für: ${mVotingInRepresentationOfName}"
+                        binding.textViewVotingsInRepresentationOf.setTextColor(mAttributes.contentBackgroundColor)
                     }
 
                     val ownVotes = mutableListOf<String>()
                     result.users.forEach {
-                        if(result.inRepresentationOfId.isNotEmpty()) {
-                            if(it.userId == result.inRepresentationOfId) ownVotes.addAll(it.votedChoiceIds.replace(" ", "").split(","))
-                        } else if(it.userId == userId) ownVotes.addAll(it.votedChoiceIds.replace(" ", "").split(","))
+                        if (result.inRepresentationOfId.isNotEmpty()) {
+                            if (it.userId == result.inRepresentationOfId) ownVotes.addAll(
+                                it.votedChoiceIds.replace(
+                                    " ",
+                                    ""
+                                ).split(",")
+                            )
+                        } else if (it.userId == userId) ownVotes.addAll(
+                            it.votedChoiceIds.replace(
+                                " ",
+                                ""
+                            ).split(",")
+                        )
                     }
-                    if(result.votingDescription.isNotEmpty()) {
+                    if (result.votingDescription.isNotEmpty()) {
                         mVotings.add(VotingCustomItem(INFO, INFO, result.votingDescription))
                     }
 
-                    if(result.liveStreamUrl.isNotEmpty()) {
+                    if (result.liveStreamUrl.isNotEmpty()) {
                         mVotings.add(VotingCustomItem(SECTION, STREAM, "Livestream"))
                         mVotings.add(VotingCustomItem(STREAM, STREAM, result.liveStreamUrl))
                     }
-                    if(result.documents.isNotEmpty()) {
+                    if (result.documents.isNotEmpty()) {
                         mVotings.add(VotingCustomItem(SECTION, DOCUMENT, "Zugehörige Unterlagen"))
-                        for(document in result.documents) {
-                            mVotings.add(VotingCustomItem(DOCUMENT, DOCUMENT, document.title, document.fileExtension, document.url))
+                        for (document in result.documents) {
+                            mVotings.add(
+                                VotingCustomItem(
+                                    DOCUMENT,
+                                    DOCUMENT,
+                                    document.title,
+                                    document.fileExtension,
+                                    document.url
+                                )
+                            )
                         }
                     }
-                    if(result.choices.isNotEmpty()) {
-                        for(choice in result.choices) {
+                    if (result.choices.isNotEmpty()) {
+                        for (choice in result.choices) {
                             val selected = ownVotes.contains(choice.choiceId)
-                            if(selected) mVoted = true
+                            if (selected) mVoted = true
                         }
-                        if(!mVoted) {
-                            when(mStatus) {
+                        if (!mVoted) {
+                            when (mStatus) {
                                 FUTURE -> {
                                     mVotings.add(VotingCustomItem(SECTION, CHOICE, "Optionen"))
                                 }
+
                                 CURRENT -> {
-                                    mVotings.add(VotingCustomItem(SECTION, CHOICE, "Ich stimme mit"))
+                                    mVotings.add(
+                                        VotingCustomItem(
+                                            SECTION,
+                                            CHOICE,
+                                            "Ich stimme mit"
+                                        )
+                                    )
                                 }
                             }
-                            if(mStatus != PAST) {
+                            if (mStatus != PAST) {
                                 var total = 0
                                 result.choices.forEach {
                                     total += it.votesCnt.toInt()
                                 }
-                                for(choice in result.choices) {
+                                for (choice in result.choices) {
                                     val selected = ownVotes.contains(choice.choiceId)
-                                    if(selected) mVoted = true
-                                    mVotings.add(VotingCustomItem(CHOICE, CHOICE, choice.choiceId, choice.choiceTitle, choice.votesCnt.toInt(), total, selected))
+                                    if (selected) mVoted = true
+                                    mVotings.add(
+                                        VotingCustomItem(
+                                            CHOICE,
+                                            CHOICE,
+                                            choice.choiceId,
+                                            choice.choiceTitle,
+                                            choice.votesCnt.toInt(),
+                                            total,
+                                            selected
+                                        )
+                                    )
                                 }
                             }
-                            if(mStatus == CURRENT && !mVoted) {
+                            if (mStatus == CURRENT && !mVoted) {
                                 mVotings.add(VotingCustomItem(BUTTON, BUTTON, ""))
                             }
                         }
                     }
-                    when(result.votingResultsAvailableFrom.toLowerCase()) {
+                    when (result.votingResultsAvailableFrom.toLowerCase()) {
                         // before voting
                         "BEFORE".toLowerCase() -> {
-                            if(result.votingTill.isEmpty()) {
-                                mVotings.add(VotingCustomItem(SECTION, RESULT, "Vorläufiges Ergebnis"))
-                            } else if(getTimeDifference(result.votingTill) < 0) mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
-                            else mVotings.add(VotingCustomItem(SECTION, RESULT, "Vorläufiges Ergebnis"))
+                            if (result.votingTill.isEmpty()) {
+                                mVotings.add(
+                                    VotingCustomItem(
+                                        SECTION,
+                                        RESULT,
+                                        "Vorläufiges Ergebnis"
+                                    )
+                                )
+                            } else if (getTimeDifference(result.votingTill) < 0) mVotings.add(
+                                VotingCustomItem(SECTION, RESULT, "Ergebnis")
+                            )
+                            else mVotings.add(
+                                VotingCustomItem(
+                                    SECTION,
+                                    RESULT,
+                                    "Vorläufiges Ergebnis"
+                                )
+                            )
                             mVotings.addAll(buildResultList(result.choices.sortedByDescending { it.votesCnt } as MutableList<Model.Choice>))
                         }
                         // after voting
                         "AFTER".toLowerCase() -> {
-                            if(mVoted) {
-                                if(result.votingTill.isEmpty()) {
-                                    mVotings.add(VotingCustomItem(SECTION, RESULT, "Vorläufiges Ergebnis"))
-                                } else if(getTimeDifference(result.votingTill) < 0) mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
-                                else mVotings.add(VotingCustomItem(SECTION, RESULT, "Vorläufiges Ergebnis"))
+                            if (mVoted) {
+                                if (result.votingTill.isEmpty()) {
+                                    mVotings.add(
+                                        VotingCustomItem(
+                                            SECTION,
+                                            RESULT,
+                                            "Vorläufiges Ergebnis"
+                                        )
+                                    )
+                                } else if (getTimeDifference(result.votingTill) < 0) mVotings.add(
+                                    VotingCustomItem(SECTION, RESULT, "Ergebnis")
+                                )
+                                else mVotings.add(
+                                    VotingCustomItem(
+                                        SECTION,
+                                        RESULT,
+                                        "Vorläufiges Ergebnis"
+                                    )
+                                )
                                 mVotings.addAll(buildResultList(result.choices.sortedByDescending { it.votesCnt } as MutableList<Model.Choice>))
                             }
                         }
                         // after voting ended
                         "AT-END" -> {
-                            if(result.votingTill.isNotEmpty()) {
-                                if(getTimeDifference(result.votingTill) < 0) {
+                            if (result.votingTill.isNotEmpty()) {
+                                if (getTimeDifference(result.votingTill) < 0) {
                                     mVotings.add(VotingCustomItem(SECTION, RESULT, "Ergebnis"))
                                     mVotings.addAll(buildResultList(result.choices.sortedByDescending { it.votesCnt } as MutableList<Model.Choice>))
                                 }
@@ -227,15 +306,63 @@ class VotingsActivity : BaseActivity() {
                         }
                     }
                     result.votingType
-                    if(result.users.isNotEmpty() && mStatus != FUTURE && result.votingType.equals("OPEN", true)) {
+                    if (result.users.isNotEmpty() && mStatus != FUTURE && result.votingType.equals(
+                            "OPEN",
+                            true
+                        )
+                    ) {
                         mVotings.add(VotingCustomItem(SECTION, USER, "Teilnehmer"))
-                        if(result.users.size == 1) {
-                            mVotings.add(VotingCustomItem(USER, USER, 2, result.users[0].userId, result.users[0].firstName, result.users[0].lastName, result.users[0].votedChoiceIds, getChoiceNames(result.users[0].votedChoiceIds, result.choices)))
+                        if (result.users.size == 1) {
+                            mVotings.add(
+                                VotingCustomItem(
+                                    USER,
+                                    USER,
+                                    2,
+                                    result.users[0].userId,
+                                    result.users[0].firstName,
+                                    result.users[0].lastName,
+                                    result.users[0].votedChoiceIds,
+                                    getChoiceNames(result.users[0].votedChoiceIds, result.choices)
+                                )
+                            )
                         } else {
-                            for((index, user) in result.users.withIndex()) {
-                                if(index == 0) mVotings.add(VotingCustomItem(USER, USER, 0, user.userId, user.firstName, user.lastName, user.votedChoiceIds, getChoiceNames(user.votedChoiceIds, result.choices)))
-                                else if(index == result.users.size-1) mVotings.add(VotingCustomItem(USER, USER, 1, user.userId, user.firstName, user.lastName, user.votedChoiceIds, getChoiceNames(user.votedChoiceIds, result.choices)))
-                                else mVotings.add(VotingCustomItem(USER, USER, -1, user.userId, user.firstName, user.lastName, user.votedChoiceIds, getChoiceNames(user.votedChoiceIds, result.choices)))
+                            for ((index, user) in result.users.withIndex()) {
+                                if (index == 0) mVotings.add(
+                                    VotingCustomItem(
+                                        USER,
+                                        USER,
+                                        0,
+                                        user.userId,
+                                        user.firstName,
+                                        user.lastName,
+                                        user.votedChoiceIds,
+                                        getChoiceNames(user.votedChoiceIds, result.choices)
+                                    )
+                                )
+                                else if (index == result.users.size - 1) mVotings.add(
+                                    VotingCustomItem(
+                                        USER,
+                                        USER,
+                                        1,
+                                        user.userId,
+                                        user.firstName,
+                                        user.lastName,
+                                        user.votedChoiceIds,
+                                        getChoiceNames(user.votedChoiceIds, result.choices)
+                                    )
+                                )
+                                else mVotings.add(
+                                    VotingCustomItem(
+                                        USER,
+                                        USER,
+                                        -1,
+                                        user.userId,
+                                        user.firstName,
+                                        user.lastName,
+                                        user.votedChoiceIds,
+                                        getChoiceNames(user.votedChoiceIds, result.choices)
+                                    )
+                                )
                             }
                         }
                     }
@@ -250,133 +377,153 @@ class VotingsActivity : BaseActivity() {
                     val spacing = dpToPx(16)
 
                     //recyclerView.setPadding(0, getImageHeaderHeight(), 0, spacing)
-                    recyclerView.addItemDecoration(
+                    binding.recyclerView.addItemDecoration(
                         GridSpacingItemDecoration(
                             spanCount,
                             0,
                             includeEdge
                         )
                     )
-                    recyclerView.layoutManager = GridLayoutManager(this@VotingsActivity, spanCount)
+                    binding.recyclerView.layoutManager =
+                        GridLayoutManager(this@VotingsActivity, spanCount)
 
-                    recyclerView.adapter = VotingsAdapter(mVotings, mAttributes, mStatus!!, mVoted) { position: Int ->
-                        val votingCustomItem = mVotings[position]
-                        when(votingCustomItem.type) {
-                            CHOICE -> {
-                                if(result.choicesMax == "1") {
-                                    if(mVotings[position].selected) {
-                                        mVotings[position].selected = false
-                                        recyclerView.adapter!!.notifyItemChanged(position, "lol")
-                                    } else {
-                                        val itemPosition = mVotings.indexOfFirst { it.selected }
-                                        if(itemPosition != -1) {
-                                            mVotings[itemPosition].selected = false
-                                            recyclerView.adapter!!.notifyItemChanged(itemPosition, "lol")
-                                        }
-                                        mVotings[position].selected = true
-                                        recyclerView.adapter!!.notifyItemChanged(position, "lol")
-                                    }
-                                } else {
-                                    if(mVotings[position].selected) {
-                                        mVotings[position].selected = false
-                                        recyclerView.adapter!!.notifyItemChanged(position, "lol")
-                                    } else {
-                                        val votes = mVotings.filter { it.selected }
-                                        if(votes.size >= result.choicesMax.toInt() && result.choicesMax != "0") {
-                                            //show error message when votes count is bigger than MAX choices
-                                            showErrorDialog(ERROR_MAX_CHOICES, result.choicesMax.toInt())
+                    binding.recyclerView.adapter =
+                        VotingsAdapter(mVotings, mAttributes, mStatus!!, mVoted) { position: Int ->
+                            val votingCustomItem = mVotings[position]
+                            when (votingCustomItem.type) {
+                                CHOICE -> {
+                                    if (result.choicesMax == "1") {
+                                        if (mVotings[position].selected) {
+                                            mVotings[position].selected = false
+                                            binding.recyclerView.adapter!!.notifyItemChanged(
+                                                position,
+                                                "lol"
+                                            )
                                         } else {
-                                            mVotings[position].selected = true
-                                            recyclerView.adapter!!.notifyItemChanged(position, "lol")
-                                        }
-                                    }
-                                }
-                            }
-
-                            BUTTON -> {
-                                if(result.choicesMax == "1") {
-                                    val votingItem = mVotings.find { it.selected }
-                                    if(votingItem != null) {
-                                        showDialogConfirmationSendVoting(votingItem.id)
-                                    } else {
-                                        // show error message to select
-                                        showErrorDialog(
-                                            ERROR_MIN_CHOICES, 0
-                                        )
-                                    }
-                                } else {
-                                    val items = mVotings.filter { it.selected }
-                                    val count = items.size
-                                    if(count >= result.choicesMin.toInt()) {
-                                        if(count <= result.choicesMax.toInt() || result.choicesMax == "0") {
-                                            var choices = HashSet<String>()
-                                            for (item in items) {
-                                                choices.add(item.id)
+                                            val itemPosition = mVotings.indexOfFirst { it.selected }
+                                            if (itemPosition != -1) {
+                                                mVotings[itemPosition].selected = false
+                                                binding.recyclerView.adapter!!.notifyItemChanged(
+                                                    itemPosition,
+                                                    "lol"
+                                                )
                                             }
-                                            showDialogConfirmationSendVoting(choices.joinToString())
-                                        } else {
-                                            // show error when count votes > MAX choices
-                                            showErrorDialog(
-                                                ERROR_MAX_CHOICES,
-                                                result.choicesMax.toInt()
+                                            mVotings[position].selected = true
+                                            binding.recyclerView.adapter!!.notifyItemChanged(
+                                                position,
+                                                "lol"
                                             )
                                         }
                                     } else {
-                                        // show error when count votes < MIN choices
-                                        showErrorDialog(
-                                            ERROR_MIN_CHOICES,
-                                            result.choicesMin.toInt()
-                                        )
+                                        if (mVotings[position].selected) {
+                                            mVotings[position].selected = false
+                                            binding.recyclerView.adapter!!.notifyItemChanged(
+                                                position,
+                                                "lol"
+                                            )
+                                        } else {
+                                            val votes = mVotings.filter { it.selected }
+                                            if (votes.size >= result.choicesMax.toInt() && result.choicesMax != "0") {
+                                                //show error message when votes count is bigger than MAX choices
+                                                showErrorDialog(
+                                                    ERROR_MAX_CHOICES,
+                                                    result.choicesMax.toInt()
+                                                )
+                                            } else {
+                                                mVotings[position].selected = true
+                                                binding.recyclerView.adapter!!.notifyItemChanged(
+                                                    position,
+                                                    "lol"
+                                                )
+                                            }
+                                        }
                                     }
                                 }
-                            }
 
-                            SECTION -> {
-                                val visibility = mVotings[position].visible
-                                Log.d("visibility: ", visibility.toString())
-                                val type = mVotings[position].type
-                                Log.d("type: ", type.toString())
-                                val subType = mVotings[position].subType
-                                Log.d("subType: ", subType.toString())
-
-                                mVotings[position].visible = !visibility
-                                mVotings.forEachIndexed { index, it ->
-                                    if(it.type == subType && it.subType == subType) {
-                                        mVotings[index].visible = !visibility
+                                BUTTON -> {
+                                    if (result.choicesMax == "1") {
+                                        val votingItem = mVotings.find { it.selected }
+                                        if (votingItem != null) {
+                                            showDialogConfirmationSendVoting(votingItem.id)
+                                        } else {
+                                            // show error message to select
+                                            showErrorDialog(
+                                                ERROR_MIN_CHOICES, 0
+                                            )
+                                        }
+                                    } else {
+                                        val items = mVotings.filter { it.selected }
+                                        val count = items.size
+                                        if (count >= result.choicesMin.toInt()) {
+                                            if (count <= result.choicesMax.toInt() || result.choicesMax == "0") {
+                                                var choices = HashSet<String>()
+                                                for (item in items) {
+                                                    choices.add(item.id)
+                                                }
+                                                showDialogConfirmationSendVoting(choices.joinToString())
+                                            } else {
+                                                // show error when count votes > MAX choices
+                                                showErrorDialog(
+                                                    ERROR_MAX_CHOICES,
+                                                    result.choicesMax.toInt()
+                                                )
+                                            }
+                                        } else {
+                                            // show error when count votes < MIN choices
+                                            showErrorDialog(
+                                                ERROR_MIN_CHOICES,
+                                                result.choicesMin.toInt()
+                                            )
+                                        }
                                     }
                                 }
-                                recyclerView.adapter?.notifyDataSetChanged()
-                            }
 
-                            DOCUMENT -> {
-                                // static let GetDocuments: ApiEndpoint = ApiEndpoint(Method: .Get, Url: "https://api.votings.app/v1.0/{WORKSPACE}/documents/{url}")
+                                SECTION -> {
+                                    val visibility = mVotings[position].visible
+                                    Log.d("visibility: ", visibility.toString())
+                                    val type = mVotings[position].type
+                                    Log.d("type: ", type.toString())
+                                    val subType = mVotings[position].subType
+                                    Log.d("subType: ", subType.toString())
 
-                                /*
-                                private func openWebView(urlString: String, authKey: String, authHeader: String) {
-                                    let viewController = WebViewController(nibName: "WebViewController", bundle: nil)
-                                    viewController.setUrl(urlString: urlString, authKey: authKey, authHeader: authHeader)
-                                    self.navigationController?.pushViewController(viewController, animated: true)
+                                    mVotings[position].visible = !visibility
+                                    mVotings.forEachIndexed { index, it ->
+                                        if (it.type == subType && it.subType == subType) {
+                                            mVotings[index].visible = !visibility
+                                        }
+                                    }
+                                    binding.recyclerView.adapter?.notifyDataSetChanged()
                                 }
-                                 */
-                            }
 
-                            STREAM -> {
-                                val url = mVotings[position].title
-                                val builder = CustomTabsIntent.Builder();
-                                val customTabsIntent = builder.build();
-                                customTabsIntent.launchUrl(this, Uri.parse(url));
+                                DOCUMENT -> {
+                                    // static let GetDocuments: ApiEndpoint = ApiEndpoint(Method: .Get, Url: "https://api.votings.app/v1.0/{WORKSPACE}/documents/{url}")
+
+                                    /*
+                                    private func openWebView(urlString: String, authKey: String, authHeader: String) {
+                                        let viewController = WebViewController(nibName: "WebViewController", bundle: nil)
+                                        viewController.setUrl(urlString: urlString, authKey: authKey, authHeader: authHeader)
+                                        self.navigationController?.pushViewController(viewController, animated: true)
+                                    }
+                                     */
+                                }
+
+                                STREAM -> {
+                                    val url = mVotings[position].title
+                                    val builder = CustomTabsIntent.Builder();
+                                    val customTabsIntent = builder.build();
+                                    customTabsIntent.launchUrl(this, Uri.parse(url));
+                                }
                             }
                         }
-                    }
                     setLoadingIndicatorVisibility(View.GONE)
                 }, { error ->
-                    Log.d("LOGIN", error.message)
-                    setErrorView(error.message) {
+                    Log.d("LOGIN", error.message ?: "")
+                    setErrorView(error.message ?: "") {
                         loadVoting()
                     }
 
-                    if(error is retrofit2.HttpException) {
-                        if(error.code() == 401 || error.code() == 403) {
+                    if (error is retrofit2.HttpException) {
+                        if (error.code() == 401 || error.code() == 403) {
                             pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
                             return@subscribe
                         }
@@ -391,8 +538,29 @@ class VotingsActivity : BaseActivity() {
             total += it.votesCnt.toInt()
         }
         val resultList = mutableListOf<VotingCustomItem>()
-        for(choice in choices) {
-            resultList.add(VotingCustomItem(RESULT, RESULT, choice.choiceId, choice.choiceTitle, choice.votesCnt.toInt(), total))
+        for ((index, choice) in choices.withIndex()) {
+            if (index == 0) resultList.add(
+                VotingCustomItem(
+                    RESULT,
+                    RESULT,
+                    choice.choiceId,
+                    choice.choiceTitle,
+                    choice.votesCnt.toInt(),
+                    true,
+                    total
+                )
+            )
+            else resultList.add(
+                VotingCustomItem(
+                    RESULT,
+                    RESULT,
+                    choice.choiceId,
+                    choice.choiceTitle,
+                    choice.votesCnt.toInt(),
+                    false,
+                    total
+                )
+            )
         }
         return resultList
     }
@@ -402,7 +570,7 @@ class VotingsActivity : BaseActivity() {
         choices: MutableList<Model.Choice>
     ): String {
         val choice = choices.find { it.choiceId == votedChoiceId }
-        if(choice != null) return choice.choiceTitle
+        if (choice != null) return choice.choiceTitle
         return ""
     }
 
@@ -410,12 +578,12 @@ class VotingsActivity : BaseActivity() {
         votedChoiceIds: String,
         choices: MutableList<Model.Choice>
     ): String {
-        if(votedChoiceIds.isEmpty()) return ""
+        if (votedChoiceIds.isEmpty()) return ""
         var choiceNames = ""
         for (votedChoiceId in votedChoiceIds.split(",")) {
             val choice = choices.find { it.choiceId == votedChoiceId.replace(" ", "") }
             choice?.let {
-                if(choiceNames == "") choiceNames = it.choiceTitle
+                if (choiceNames == "") choiceNames = it.choiceTitle
                 else choiceNames = choiceNames + "\n" + it.choiceTitle
             }
         }
@@ -428,7 +596,7 @@ class VotingsActivity : BaseActivity() {
             if (it == DecisionDialog.RIGHT) {
                 sendVoting(choiceIds)
             }
-        }.generate()
+        }.generate(DialogDecisionBinding.inflate(layoutInflater))
             .setButtonRightName(getString(R.string.yes))
             .setButtonLeftName(getString(R.string.no))
             .setMessage(getString(R.string.check_send_choices))
@@ -437,20 +605,22 @@ class VotingsActivity : BaseActivity() {
 
     private fun showErrorDialog(errorType: Int, count: Int) {
         var errorMessage = ""
-        when(errorType) {
+        when (errorType) {
             ERROR_MAX_CHOICES -> {
                 errorMessage = "Sie dürfen nur maximal ${count} Möglichkeit(en) wählen."
             }
+
             ERROR_MIN_CHOICES -> {
                 errorMessage = "Sie müssen mindestens ${count} Möglichkeit(en) wählen."
             }
+
             ERROR_SELECT -> {
                 errorMessage = "Sie müssen eine Auswahl treffen."
             }
         }
         DecisionDialog(this) {
             if (it == DecisionDialog.RIGHT) return@DecisionDialog
-        }.generate()
+        }.generate(DialogDecisionBinding.inflate(layoutInflater))
             .setTitle("Achtung")
             .setButtonRightName(getString(R.string.ok))
             .setMessage(errorMessage)
@@ -467,34 +637,35 @@ class VotingsActivity : BaseActivity() {
         jsonData.put("choiceIds", choiceIds)
         jsonData.put("InRepresentationOfId", mVotingInRepresentationOfId)
 
-        disposable = apiService.sendVoting("Bearer $token", workspace!!, mVotingId!!, jsonData.toString())
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { result ->
-                    mVotings.clear()
-                    recyclerView.adapter!!.notifyDataSetChanged()
+        disposable =
+            apiService.sendVoting("Bearer $token", workspace!!, mVotingId!!, jsonData.toString())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        mVotings.clear()
+                        binding.recyclerView.adapter!!.notifyDataSetChanged()
 
-                    loadVoting()
+                        loadVoting()
 
-                }, { error ->
-                    Log.d("LOGIN", error.message)
+                    }, { error ->
+                        Log.d("LOGIN", error.message ?: "")
 
-                    if(error is retrofit2.HttpException) {
-                        if(error.code() == 401 || error.code() == 403) {
-                            pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
-                            return@subscribe
+                        if (error is retrofit2.HttpException) {
+                            if (error.code() == 401 || error.code() == 403) {
+                                pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
+                                return@subscribe
+                            }
                         }
                     }
-                }
-            )
+                )
     }
 
-    fun getColorTemp(color: Int) : Int {
+    fun getColorTemp(color: Int): Int {
         return ResourcesCompat.getColor(resources, color, null)
     }
 
-    fun setAttributesDefault() : Attributes {
+    fun setAttributesDefault(): Attributes {
         val attributes = Attributes()
         attributes.contentBackgroundColor = getColorTemp(R.color.colorAccent)
         attributes.contentBorderColor = getColorTemp(R.color.transparent)

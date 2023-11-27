@@ -17,7 +17,7 @@ import android.widget.ImageView;
 
 import java.util.Arrays;
 
-import appsquared.votings.app.R;
+import app.votings.android.R;
 
 public class ShapedImageView extends ImageView {
 

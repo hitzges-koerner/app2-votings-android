@@ -1,4 +1,4 @@
-package framework.base.constant
+package appsquared.votings.app
 
 class Constant {
 

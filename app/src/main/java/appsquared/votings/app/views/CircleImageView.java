@@ -46,7 +46,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import appsquared.votings.app.R;
+import app.votings.android.R;
 
 @SuppressWarnings("UnusedDeclaration")
 public class CircleImageView extends ImageView {

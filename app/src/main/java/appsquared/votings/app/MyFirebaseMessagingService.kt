@@ -1,16 +1,12 @@
 package appsquared.votings.app
 
-import android.app.Service
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.preference.PreferenceManager
-import appsquared.votings.app.PreferenceNames.Companion.NOTIFICATION_SHOW
+import appsquared.votings.app.rest.ApiService
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers

@@ -2,30 +2,29 @@ package appsquared.votings.app.views
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
-import android.os.Build
-import android.view.View
-import android.widget.Button
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.GridLayoutManager
-import appsquared.votings.app.*
-import framework.base.rest.Model
-import kotlinx.android.synthetic.main.activity_votings.*
-import kotlinx.android.synthetic.main.dialog_list.*
-import kotlinx.android.synthetic.main.dialog_voting_select.*
-import kotlinx.android.synthetic.main.fragment_notificationlist.*
-import kotlinx.android.synthetic.main.layout_toolbar_dialog_voting_select.*
-import org.w3c.dom.Attr
+import app.votings.android.databinding.DialogVotingSelectBinding
+import app.votings.android.databinding.LayoutToolbarDialogVotingSelectBinding
+import appsquared.votings.app.Attributes
+import appsquared.votings.app.GridSpacingItemDecoration
+import appsquared.votings.app.adapter.VotingSelectListAdapter
+import appsquared.votings.app.dpToPx
+import appsquared.votings.app.rest.Model
 
 class VotingSelectDialog(val context: Context, val attributes: Attributes, val listener: (Model.VotingShort) -> Unit) {
 
     val dialog = Dialog(context)
+    private lateinit var binding: DialogVotingSelectBinding
+    private lateinit var bindingToolbar: LayoutToolbarDialogVotingSelectBinding
 
-    fun generate() : VotingSelectDialog {
+    fun generate(binding: DialogVotingSelectBinding) : VotingSelectDialog {
+        this@VotingSelectDialog.binding = binding
+        bindingToolbar = binding.layoutToolbarDialogVotingSelect
         dialog.setCancelable(true)
-        dialog.setContentView(R.layout.dialog_voting_select)
+        dialog.setContentView(binding.root)
 
-        dialog.imageDialogClose.setOnClickListener {
+        bindingToolbar.imageDialogClose.setOnClickListener {
             dialog.dismiss()
         }
 
@@ -40,16 +39,16 @@ class VotingSelectDialog(val context: Context, val attributes: Attributes, val l
         val includeEdge = false
         val spacing = dpToPx(16)
 
-        dialog.recyclerViewDialogVotingSelect.setPadding(spacing, spacing, spacing, spacing)
-        dialog.recyclerViewDialogVotingSelect.addItemDecoration(
+        binding.recyclerViewDialogVotingSelect.setPadding(spacing, spacing, spacing, spacing)
+        binding.recyclerViewDialogVotingSelect.addItemDecoration(
             GridSpacingItemDecoration(
                 spanCount,
                 spacing,
                 includeEdge
             )
         )
-        dialog.recyclerViewDialogVotingSelect.layoutManager = GridLayoutManager(context, spanCount)
-        dialog.recyclerViewDialogVotingSelect.adapter = VotingSelectListAdapter(list, attributes) { position: Int ->
+        binding.recyclerViewDialogVotingSelect.layoutManager = GridLayoutManager(context, spanCount)
+        binding.recyclerViewDialogVotingSelect.adapter = VotingSelectListAdapter(list, attributes) { position: Int ->
             listener(list[position])
             dialog.dismiss()
         }

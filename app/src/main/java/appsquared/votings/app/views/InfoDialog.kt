@@ -4,22 +4,24 @@ import android.app.Dialog
 import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
-import appsquared.votings.app.R
-import kotlinx.android.synthetic.main.dialog_info.*
+import app.votings.android.databinding.DialogInfoBinding
 
 class InfoDialog(val context: Context, val listener: () -> Unit) {
 
     val dialog = Dialog(context)
+    private lateinit var binding: DialogInfoBinding
 
-    fun generate() : InfoDialog {
+    fun generate(binding: DialogInfoBinding) : InfoDialog {
+        this@InfoDialog.binding = binding
+
         dialog.setCancelable(true)
-        dialog.setContentView(R.layout.dialog_info)
+        dialog.setContentView(binding.root)
 
         val width = (context.resources.displayMetrics.widthPixels * 0.90).toInt()
         val height = (context.resources.displayMetrics.heightPixels * 0.50).toInt()
         dialog.window!!.setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT)
 
-        dialog.button.setOnClickListener{
+        binding.button.setOnClickListener{
             listener()
             dialog.dismiss()
         }
@@ -27,8 +29,8 @@ class InfoDialog(val context: Context, val listener: () -> Unit) {
     }
 
     fun setButtonName(text: String) : InfoDialog {
-        dialog.button.visibility = View.VISIBLE
-        dialog.button.text = text
+        binding.button.visibility = View.VISIBLE
+        binding.button.text = text
         return this
     }
 
@@ -37,8 +39,8 @@ class InfoDialog(val context: Context, val listener: () -> Unit) {
      * @param text
      */
     fun setButtonName(text: Int) : InfoDialog {
-        dialog.button.visibility = View.VISIBLE
-        dialog.button.text = context.getString(text)
+        binding.button.visibility = View.VISIBLE
+        binding.button.text = context.getString(text)
         return this
     }
 
@@ -47,8 +49,8 @@ class InfoDialog(val context: Context, val listener: () -> Unit) {
      * @param text
      */
     fun setMessage(text: String) : InfoDialog {
-        dialog.textViewMessage.visibility = View.VISIBLE
-        dialog.textViewMessage.text = text
+        binding.textViewMessage.visibility = View.VISIBLE
+        binding.textViewMessage.text = text
         return this
     }
 
@@ -57,8 +59,8 @@ class InfoDialog(val context: Context, val listener: () -> Unit) {
      * @param text
      */
     fun setTitle(text: String) : InfoDialog {
-        dialog.textViewTitle.visibility = View.VISIBLE
-        dialog.textViewTitle.text = text
+        binding.textViewTitle.visibility = View.VISIBLE
+        binding.textViewTitle.text = text
         return this
     }
 
@@ -67,8 +69,8 @@ class InfoDialog(val context: Context, val listener: () -> Unit) {
      * @param text
      */
     fun setMessage(text: Int) : InfoDialog {
-        dialog.textViewMessage.visibility = View.VISIBLE
-        dialog.textViewMessage.text = context.getString(text)
+        binding.textViewMessage.visibility = View.VISIBLE
+        binding.textViewMessage.text = context.getString(text)
         return this
     }
 
@@ -77,8 +79,8 @@ class InfoDialog(val context: Context, val listener: () -> Unit) {
      * @param text
      */
     fun setTitle(text: Int) : InfoDialog {
-        dialog.textViewTitle.visibility = View.VISIBLE
-        dialog.textViewTitle.text = context.getString(text)
+        binding.textViewTitle.visibility = View.VISIBLE
+        binding.textViewTitle.text = context.getString(text)
         return this
     }
 

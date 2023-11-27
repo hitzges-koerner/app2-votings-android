@@ -3,19 +3,20 @@ package appsquared.votings.app.views
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.marginBottom
-import appsquared.votings.app.R
+import app.votings.android.R
+import app.votings.android.databinding.ButtonCardViewBinding
 import appsquared.votings.app.dpToPx
 import com.google.android.material.card.MaterialCardView
-import kotlinx.android.synthetic.main.button_card_view.view.*
 
 class ButtonCardView(context: Context, attrs: AttributeSet): LinearLayout(context, attrs) {
 
+    var bindingButtonCardView: ButtonCardViewBinding
     init {
-        inflate(context, R.layout.button_card_view, this)
+        bindingButtonCardView = ButtonCardViewBinding.inflate(LayoutInflater.from(context), this, true)
 
         val textView : TextView = findViewById(R.id.textView)
         val materialCardView : MaterialCardView = findViewById(R.id.materialCardView)
@@ -45,10 +46,10 @@ class ButtonCardView(context: Context, attrs: AttributeSet): LinearLayout(contex
     }
 
     fun setText(text: String) {
-        textView.text = text
+        bindingButtonCardView.textView.text = text
     }
 
     fun setCardBackgroundColor(color: Int) {
-        materialCardView.setCardBackgroundColor(color)
+        bindingButtonCardView.materialCardView.setCardBackgroundColor(color)
     }
 }

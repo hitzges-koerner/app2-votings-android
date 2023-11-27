@@ -6,20 +6,22 @@ import android.os.Bundle
 import android.text.style.ForegroundColorSpan
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import app.votings.android.R
+import app.votings.android.databinding.ActivityProBinding
 import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
 import io.noties.markwon.MarkwonSpansFactory
 import io.noties.markwon.core.CoreProps
 import io.noties.markwon.core.MarkwonTheme
-import kotlinx.android.synthetic.main.activity_pro.*
 import org.commonmark.node.Heading
 
 
 class ProVersionActivity : BaseActivity() {
 
+    private lateinit var binding: ActivityProBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pro)
+        binding = ActivityProBinding.inflate(layoutInflater)
     }
 
     fun getColorTemp(color: Int) : Int {
@@ -33,7 +35,7 @@ class ProVersionActivity : BaseActivity() {
         val workspace = mWorkspace
 
         val spacing = dpToPx(16)
-        scrollView.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
+        binding.scrollView.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
 
         var borderColor = getColorTemp(R.color.transparent)
         var borderWidth = 0
@@ -70,9 +72,9 @@ class ProVersionActivity : BaseActivity() {
 
 
         // set markdown
-        markwon.setMarkdown(textViewContent, workspace.proVersionText)
+        markwon.setMarkdown(binding.textViewContent, workspace.proVersionText)
 
-        buttonProLearnMore.setOnClickListener {
+        binding.buttonProLearnMore.setOnClickListener {
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.votings.app/de/"))
             startActivity(browserIntent)
         }

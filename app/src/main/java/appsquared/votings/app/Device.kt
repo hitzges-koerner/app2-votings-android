@@ -5,11 +5,9 @@ import android.content.pm.ApplicationInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.util.DisplayMetrics
-import android.view.KeyCharacterMap
-import android.view.KeyEvent
-import android.view.ViewConfiguration
 import android.view.WindowManager
-import java.util.*
+import app.votings.android.BuildConfig
+import java.util.UUID
 
 fun shouldAddNavigationBarPadding(context: Context): Boolean {
     return isInPortrait(context) && hasSystemNavigationBar(context)
@@ -29,39 +27,25 @@ fun getSystemNavigationBarHeight(context: Context): Int {
 }
 
 fun hasSystemNavigationBar(context: Context): Boolean {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        val d = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
+    val d = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
 
-        val realDisplayMetrics = DisplayMetrics()
-        d.getRealMetrics(realDisplayMetrics)
+    val realDisplayMetrics = DisplayMetrics()
+    d.getRealMetrics(realDisplayMetrics)
 
-        val realHeight = realDisplayMetrics.heightPixels
-        val realWidth = realDisplayMetrics.widthPixels
+    val realHeight = realDisplayMetrics.heightPixels
+    val realWidth = realDisplayMetrics.widthPixels
 
-        val displayMetrics = DisplayMetrics()
-        d.getMetrics(displayMetrics)
+    val displayMetrics = DisplayMetrics()
+    d.getMetrics(displayMetrics)
 
-        val displayHeight = displayMetrics.heightPixels
-        val displayWidth = displayMetrics.widthPixels
+    val displayHeight = displayMetrics.heightPixels
+    val displayWidth = displayMetrics.widthPixels
 
-        return realWidth - displayWidth > 0 || realHeight - displayHeight > 0
-    } else {
-        val hasMenuKey = ViewConfiguration.get(context).hasPermanentMenuKey()
-        val hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
-        return !hasMenuKey && !hasBackKey
-    }
+    return realWidth - displayWidth > 0 || realHeight - displayHeight > 0
 }
 
 private fun isInPortrait(context: Context): Boolean {
     return context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-}
-
-fun atLeastMarshmallow(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-}
-
-fun atLeastLollipop(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
 }
 
 fun getSystemVersion(): String {

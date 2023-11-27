@@ -7,14 +7,14 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
+import app.votings.android.R
+import app.votings.android.databinding.ActivityInviteUserBinding
+import app.votings.android.databinding.DialogDecisionBinding
+import appsquared.votings.app.rest.ApiService
 import appsquared.votings.app.views.DecisionDialog
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_invite_user.*
-import kotlinx.android.synthetic.main.button_card_view.view.*
 import org.json.JSONObject
 
 
@@ -26,9 +26,11 @@ class InviteUserActivity : BaseActivity() {
         ApiService.create(Constant.BASE_ADM)
     }
 
+    private lateinit var binding: ActivityInviteUserBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_invite_user)
+        binding = ActivityInviteUserBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     fun getColorTemp(color: Int) : Int {
@@ -38,14 +40,14 @@ class InviteUserActivity : BaseActivity() {
     override fun clickToolbarCancelButton() {
         super.clickToolbarCancelButton()
 
-        if(editTextInviteUserNameFirst.text.isEmpty() && editTextInviteUserNameLast.text.isEmpty() && editTextInviteUserMail.text.isEmpty()) finish()
+        if(binding.editTextInviteUserNameFirst.text.isEmpty() && binding.editTextInviteUserNameLast.text.isEmpty() && binding.editTextInviteUserMail.text.isEmpty()) finish()
         else {
             DecisionDialog(this) {
                 if (it == DecisionDialog.LEFT) return@DecisionDialog
                 if (it == DecisionDialog.RIGHT) {
                     finish()
                 }
-            }.generate()
+            }.generate(DialogDecisionBinding.inflate(layoutInflater))
                 .setButtonRightName(getString(R.string.yes))
                 .setButtonLeftName(getString(R.string.no))
                 .setMessage(getString(R.string.cancel_invite_user))
@@ -59,41 +61,41 @@ class InviteUserActivity : BaseActivity() {
         setCancelButtonActive(true)
         removeImageHeader()
 
-        editTextInviteUserNameFirst.addTextChangedListener(object : TextWatcher {
+        binding.editTextInviteUserNameFirst.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                textViewInviteUserNameFirstError.visibility = View.INVISIBLE
+                binding.textViewInviteUserNameFirstError.visibility = View.INVISIBLE
             }
         })
 
-        editTextInviteUserNameLast.addTextChangedListener(object : TextWatcher {
+        binding.editTextInviteUserNameLast.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                textViewInviteUserNameLastError.visibility = View.INVISIBLE
+                binding.textViewInviteUserNameLastError.visibility = View.INVISIBLE
             }
         })
 
-        editTextInviteUserMail.addTextChangedListener(object : TextWatcher {
+        binding.editTextInviteUserMail.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                textViewInviteUserMailError.visibility = View.INVISIBLE
+                binding.textViewInviteUserMailError.visibility = View.INVISIBLE
             }
         })
 
-        buttonCardViewInviteUserSend.materialCardView.setOnClickListener {
-            if(editTextInviteUserNameFirst.text.isEmpty()) {
-                textViewInviteUserNameFirstError.visibility = View.VISIBLE
+        binding.buttonCardViewInviteUserSend.setOnClickListener {
+            if(binding.editTextInviteUserNameFirst.text.isEmpty()) {
+                binding.textViewInviteUserNameFirstError.visibility = View.VISIBLE
                 return@setOnClickListener
             }
-            if(editTextInviteUserNameLast.text.isEmpty()) {
-                textViewInviteUserNameLastError.visibility = View.VISIBLE
+            if(binding.editTextInviteUserNameLast.text.isEmpty()) {
+                binding.textViewInviteUserNameLastError.visibility = View.VISIBLE
                 return@setOnClickListener
             }
-            if(editTextInviteUserMail.text.isEmpty() || !isEmailValid(editTextInviteUserMail.text)) {
-                textViewInviteUserMailError.visibility = View.VISIBLE
+            if(binding.editTextInviteUserMail.text.isEmpty() || !isEmailValid(binding.editTextInviteUserMail.text)) {
+                binding.textViewInviteUserMailError.visibility = View.VISIBLE
                 return@setOnClickListener
             }
             sendInvite()
@@ -108,9 +110,9 @@ class InviteUserActivity : BaseActivity() {
         val workspace = pref.getString(PreferenceNames.WORKSPACE_NAME, "")
 
         val jsonData = JSONObject()
-        jsonData.put("firstname", editTextInviteUserNameFirst.text.toString())
-        jsonData.put("lastname",  editTextInviteUserNameLast.text.toString())
-        jsonData.put("email",  editTextInviteUserMail.text.toString())
+        jsonData.put("firstname", binding.editTextInviteUserNameFirst.text.toString())
+        jsonData.put("lastname",  binding.editTextInviteUserNameLast.text.toString())
+        jsonData.put("email",  binding.editTextInviteUserMail.text.toString())
         jsonData.put("workspace", workspace!!)
 
         disposable = apiService.inviteUser("Bearer $token", workspace, jsonData.toString())
@@ -120,7 +122,7 @@ class InviteUserActivity : BaseActivity() {
                 { result ->
                     finish()
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 409 ) {

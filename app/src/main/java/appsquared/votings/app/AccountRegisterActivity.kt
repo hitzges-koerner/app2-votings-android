@@ -3,9 +3,16 @@ package appsquared.votings.app
 import android.os.Bundle
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import appsquared.votings.app.fragments.*
+import app.votings.android.R
+import app.votings.android.databinding.ActivityAccountRegistrationBinding
+import app.votings.android.databinding.DialogDecisionBinding
+import appsquared.votings.app.fragments.AccountRegisterConfirmationFragment
+import appsquared.votings.app.fragments.AccountRegisterInfoFragment
+import appsquared.votings.app.fragments.AccountRegisterMailFragment
+import appsquared.votings.app.fragments.AccountRegisterNameFragment
+import appsquared.votings.app.fragments.AccountRegisterWorkspaceFragment
+import appsquared.votings.app.fragments.FragmentNotFoundFragment
 import appsquared.votings.app.views.DecisionDialog
-import framework.base.constant.Constant
 
 
 class AccountRegisterActivity : BaseActivity(),
@@ -22,13 +29,14 @@ class AccountRegisterActivity : BaseActivity(),
     private var mFragmentId: Int = 0
 
     override fun fragmentInteraction(action: Int, javaClass: Class<*>) {
-        when(action) {
+        when (action) {
             Constant.BACK -> {
                 previousFragment()
             }
+
             Constant.NEXT -> {
-                if(mFragmentId == 3) setCancelButtonActive(false)
-                if(mFragmentId == 4) finish()
+                if (mFragmentId == 3) setCancelButtonActive(false)
+                if (mFragmentId == 4) finish()
                 else {
                     setCancelButtonActive(true)
                     nextFragment()
@@ -49,11 +57,13 @@ class AccountRegisterActivity : BaseActivity(),
 
     fun loadFragment() {
 
-        val fragmentArray = arrayOf("AccountRegisterInfoFragment",
+        val fragmentArray = arrayOf(
+            "AccountRegisterInfoFragment",
             "AccountRegisterNameFragment",
             "AccountRegisterWorkspaceFragment",
             "AccountRegisterMailFragment",
-            "AccountRegisterConfirmationFragment")
+            "AccountRegisterConfirmationFragment"
+        )
 
         val fragmentName = fragmentArray[mFragmentId]
 
@@ -62,21 +72,22 @@ class AccountRegisterActivity : BaseActivity(),
     }
 
     private fun replaceFragment(fragmentClass: Class<*>) {
-
-        val fragment = fragmentClass.newInstance() as Fragment
-
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.frameLayout, fragment)
+            .replace(binding.frameLayout.id, fragmentClass.newInstance() as Fragment)
             .commit()
     }
 
+    private lateinit var binding: ActivityAccountRegistrationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_account_registration)
+        binding = ActivityAccountRegistrationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        loadFragment()
     }
 
-    fun getColorTemp(color: Int) : Int {
+    fun getColorTemp(color: Int): Int {
         return ResourcesCompat.getColor(resources, color, null)
     }
 
@@ -92,8 +103,6 @@ class AccountRegisterActivity : BaseActivity(),
         removeImageHeader()
 
         val workspace = mWorkspace
-
-        loadFragment()
         /*
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.frameLayout, AccountRegisterInfoFragment.newInstance())
@@ -102,8 +111,8 @@ class AccountRegisterActivity : BaseActivity(),
          */
     }
 
-    private fun getFragmentClassName(fragmentName: String) : Class<*> {
-        when(fragmentName) {
+    private fun getFragmentClassName(fragmentName: String): Class<*> {
+        when (fragmentName) {
             "AccountRegisterInfoFragment" -> return AccountRegisterInfoFragment::class.java
             "AccountRegisterNameFragment" -> return AccountRegisterNameFragment::class.java
             "AccountRegisterMailFragment" -> return AccountRegisterMailFragment::class.java
@@ -116,14 +125,14 @@ class AccountRegisterActivity : BaseActivity(),
     override fun clickToolbarCancelButton() {
         super.clickToolbarCancelButton()
 
-        if(mFragmentId == 0 || mFragmentId == 4) finish()
+        if (mFragmentId == 0 || mFragmentId == 4) finish()
         else {
             DecisionDialog(this) {
                 if (it == DecisionDialog.LEFT) return@DecisionDialog
                 if (it == DecisionDialog.RIGHT) {
                     finish()
                 }
-            }.generate()
+            }.generate(DialogDecisionBinding.inflate(layoutInflater))
                 .setButtonRightName(getString(R.string.yes))
                 .setButtonLeftName(getString(R.string.no))
                 .setMessage(getString(R.string.cancel_account_registration))
@@ -147,27 +156,28 @@ class AccountRegisterActivity : BaseActivity(),
         WorkspaceData.lastName = lastName
     }
 
-    fun getEmail() : String {
+    fun getEmail(): String {
         return WorkspaceData.email
     }
 
-    fun getWorkspace() : String {
+    fun getWorkspace(): String {
         return WorkspaceData.workspace
     }
 
-    fun getFirstName() : String {
+    fun getFirstName(): String {
         return WorkspaceData.firstName
     }
 
-    fun getLastName() : String {
+    fun getLastName(): String {
         return WorkspaceData.lastName
     }
 
-    fun getSource() : String {
+    fun getSource(): String {
         return WorkspaceData.source
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         clickToolbarCancelButton()
     }
 }

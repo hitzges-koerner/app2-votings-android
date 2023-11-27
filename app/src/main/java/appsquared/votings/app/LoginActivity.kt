@@ -8,24 +8,31 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
-import android.view.View.*
+import android.view.View.GONE
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.preference.PreferenceManager
+import app.votings.android.BuildConfig
+import app.votings.android.R
+import app.votings.android.databinding.ActivityLoginBinding
+import app.votings.android.databinding.DialogInfoBinding
+import appsquared.votings.app.rest.ApiService
 import appsquared.votings.app.views.InfoDialog
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.button_card_view.view.*
 import org.json.JSONObject
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 import java.util.concurrent.Executor
 
 
@@ -52,19 +59,21 @@ class LoginActivity : AppCompatActivity() {
 
         if(workspaceName.isEmpty() && email.isEmpty() && password.isEmpty()) {
             InfoDialog(this) {
-            }.generate().setButtonName(R.string.how_it_works_button)
+            }.generate(DialogInfoBinding.inflate(layoutInflater)).setButtonName(R.string.how_it_works_button)
                 .setTitle(R.string.how_it_works_title)
                 .setMessage(R.string.how_it_works_message)
                 .show()
         }
-        if(workspaceName.isNotEmpty()) editTextCardViewWorkspace.setText(workspaceName)
-        if(email.isNotEmpty()) editTextCardViewMail.setText(email)
-        if(password.isNotEmpty()) editTextCardViewPassword.setText(password)
+        if(workspaceName.isNotEmpty()) binding.editTextCardViewWorkspace.setText(workspaceName)
+        if(email.isNotEmpty()) binding.editTextCardViewMail.setText(email)
+        if(password.isNotEmpty()) binding.editTextCardViewPassword.setText(password)
     }
 
+    private lateinit var binding: ActivityLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if(intent.hasExtra("login_type")) {
             mLoginType = intent.extras?.get("login_type") as Int
@@ -81,84 +90,82 @@ class LoginActivity : AppCompatActivity() {
         }
 
         setLightStatusBar(window, true)
-        constraintLayoutRoot.systemUiVisibility =
+        binding.constraintLayoutRoot.systemUiVisibility =
             SYSTEM_UI_FLAG_LAYOUT_STABLE or SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 
-        ViewCompat.setOnApplyWindowInsetsListener(buttonCardViewQR) { view, insets ->
-            buttonCardViewQR.updatePadding(bottom = insets.systemWindowInsetBottom)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.buttonCardViewQR) { view, insets ->
+            binding.buttonCardViewQR.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }
 
-        buttonCardViewQR.materialCardView.setOnClickListener {
+        binding.buttonCardViewQR.bindingButtonCardView.materialCardView.setOnClickListener {
             startActivity(Intent(this, AccountRegisterActivity::class.java))
         }
 
         // TODO DISABLED, TESTING ONLY
-        /*
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
         if(pref.getString(PreferenceNames.WORKSPACE_NAME, "")!!.isNotEmpty() &&
             pref.getString(PreferenceNames.EMAIL, "")!!.isNotEmpty() &&
             pref.getString(PreferenceNames.PASSWORD, "")!!.isNotEmpty() &&
-                BiometricManager.from(this).canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS) {
+                BiometricManager.from(this).canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK) == BiometricManager.BIOMETRIC_SUCCESS) {
             biometric()
         }
-         */
-
-        buttonCardViewLogin.materialCardView.setOnClickListener {
+        binding.buttonCardViewLogin.bindingButtonCardView.materialCardView.setOnClickListener {
 
             // check if inputs are not empty
-            if(editTextCardViewMail.isEmpty() || editTextCardViewPassword.isEmpty() || editTextCardViewWorkspace.isEmpty()) {
+            if(binding.editTextCardViewMail.isEmpty() || binding.editTextCardViewPassword.isEmpty() || binding.editTextCardViewWorkspace.isEmpty()) {
                 showErrorToast(getString(R.string.error_missing_input))
                 return@setOnClickListener
             } else prepLogin()
         }
 
-        textCardViewError.setOnClickListener {
-            textCardViewError.visibility = GONE
+        binding.textCardViewError.setOnClickListener {
+            binding.textCardViewError.visibility = GONE
         }
     }
 
     fun showErrorToast(error: String) {
 
-        linearLayoutStartIndicator.visibility = GONE
+        binding.linearLayoutStartIndicator.visibility = GONE
 
-        buttonCardViewLogin.isEnabled = false
-        viewFadeIn(editTextCardViewWorkspace)
-        viewFadeIn(editTextCardViewMail)
-        viewFadeIn(editTextCardViewPassword)
-        viewFadeIn(buttonCardViewLogin)
-        viewFadeIn(buttonCardViewQR)
+        binding.buttonCardViewLogin.isEnabled = false
+        viewFadeIn(binding.editTextCardViewWorkspace)
+        viewFadeIn(binding.editTextCardViewMail)
+        viewFadeIn(binding.editTextCardViewPassword)
+        viewFadeIn(binding.buttonCardViewLogin)
+        viewFadeIn(binding.buttonCardViewQR)
 
         //Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
 
-        textCardViewError.visibility = View.VISIBLE
-        textCardViewError.setText(error)
+        binding.textCardViewError.visibility = View.VISIBLE
+        binding.textCardViewError.setText(error)
     }
 
     private fun prepLogin() {
         // hide error view
-        textCardViewError.visibility = GONE
+        binding.textCardViewError.visibility = GONE
         // show spinning progress indicator
-        linearLayoutStartIndicator.visibility = VISIBLE
+        binding.linearLayoutStartIndicator.visibility = VISIBLE
 
         // disable login button
-        buttonCardViewLogin.isEnabled = false
+        binding.buttonCardViewLogin.isEnabled = false
         // fade out all views
-        viewFadeOut(editTextCardViewWorkspace)
-        viewFadeOut(editTextCardViewMail)
-        viewFadeOut(editTextCardViewPassword)
-        viewFadeOut(buttonCardViewLogin)
-        viewFadeOut(buttonCardViewQR)
+        viewFadeOut(binding.editTextCardViewWorkspace)
+        viewFadeOut(binding.editTextCardViewMail)
+        viewFadeOut(binding.editTextCardViewPassword)
+        viewFadeOut(binding.buttonCardViewLogin)
+        viewFadeOut(binding.buttonCardViewQR)
 
         apiLogin(
-            editTextCardViewMail.getText(),
-            editTextCardViewPassword.getText(),
-            editTextCardViewWorkspace.getText()
+            binding.editTextCardViewMail.getText(),
+            binding.editTextCardViewPassword.getText(),
+            binding.editTextCardViewWorkspace.getText()
         )
     }
 
     private fun apiLogin(email: String, password: String, workspace: String) {
 
-        textViewProgress.text = getString(R.string.loading_login)
+        binding.textViewProgress.text = getString(R.string.loading_login)
 
         val jsonData = JSONObject()
         jsonData.put("Email", email)
@@ -184,7 +191,7 @@ class LoginActivity : AppCompatActivity() {
 
                 }, { error ->
 
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
                     if (error is retrofit2.HttpException) {
                         if (error.code() == 401 || error.code() == 403) {
@@ -195,16 +202,16 @@ class LoginActivity : AppCompatActivity() {
 
                     showErrorToast(getString(R.string.error_general))
 
-                    editTextCardViewWorkspace.isEnabled(true)
-                    editTextCardViewMail.isEnabled(true)
-                    editTextCardViewPassword.isEnabled(true)
+                    binding.editTextCardViewWorkspace.isEnabled(true)
+                    binding.editTextCardViewMail.isEnabled(true)
+                    binding.editTextCardViewPassword.isEnabled(true)
                 }
             )
     }
 
     private fun loadWorkspace() {
 
-        textViewProgress.text = getString(R.string.loading_workspace)
+        binding.textViewProgress.text = getString(R.string.loading_workspace)
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         val token = pref.getString(PreferenceNames.USER_TOKEN, "")
@@ -232,7 +239,7 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
                     if (error is retrofit2.HttpException) {
                         if (error.code() == 401 || error.code() == 403) {
@@ -276,7 +283,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun getDeviceId(context: Context): String {
-        return UUID.randomUUID().toString().toUpperCase()
+        return UUID.randomUUID().toString().uppercase()
     }
 
     private fun sendTelemetry() {

@@ -2,19 +2,20 @@ package appsquared.votings.app
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import app.votings.android.R
+import app.votings.android.databinding.FragmentNotificationlistBinding
+import appsquared.votings.app.adapter.NotificationListAdapter
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_notificationlist.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -50,23 +51,23 @@ class NotificationListFragment : Fragment() {
 
         val spacing = dpToPx(16)
 
-        recyclerViewNotification.setPadding(0, (activity as NewsListActivity).getImageHeaderHeight() + param1, 0, spacing)
-        recyclerViewNotification.addItemDecoration(
+        binding.recyclerViewNotification.setPadding(0, (activity as NewsListActivity).getImageHeaderHeight() + param1, 0, spacing)
+        binding.recyclerViewNotification.addItemDecoration(
             GridSpacingItemDecoration(
                 spanCount,
                 spacing,
                 includeEdge
             )
         )
-        recyclerViewNotification.layoutManager = GridLayoutManager(context, spanCount)
-        recyclerViewNotification.adapter = NotificationListAdapter(list, attributes)
+        binding.recyclerViewNotification.layoutManager = GridLayoutManager(context, spanCount)
+        binding.recyclerViewNotification.adapter = NotificationListAdapter(list, attributes)
 
         loadNotificationList()
     }
 
     private fun loadNotificationList() {
 
-        val pref = PreferenceManager.getDefaultSharedPreferences(context)
+        val pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val token = pref.getString(PreferenceNames.USER_TOKEN, "")
         val workspace = pref.getString(PreferenceNames.WORKSPACE_NAME, "")
 
@@ -76,9 +77,9 @@ class NotificationListFragment : Fragment() {
             .subscribe(
                 { result ->
                     list.addAll(result)
-                    recyclerViewNotification.adapter!!.notifyDataSetChanged()
+                    binding.recyclerViewNotification.adapter!!.notifyDataSetChanged()
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 401 || error.code() == 403) {
@@ -90,12 +91,14 @@ class NotificationListFragment : Fragment() {
             )
     }
 
+    private lateinit var binding: FragmentNotificationlistBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notificationlist, container, false)
+        binding = FragmentNotificationlistBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     companion object {

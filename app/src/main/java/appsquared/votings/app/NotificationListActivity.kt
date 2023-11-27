@@ -5,13 +5,14 @@ import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import app.votings.android.R
+import app.votings.android.databinding.ActivityNotificationListBinding
+import appsquared.votings.app.adapter.NotificationListAdapterFree
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_notificationlist.*
 
 
 class NotificationListActivity : BaseActivity() {
@@ -24,9 +25,11 @@ class NotificationListActivity : BaseActivity() {
         ApiService.create(Constant.BASE_API)
     }
 
+    private lateinit var binding: ActivityNotificationListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_notification_list)
+        binding = ActivityNotificationListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     fun getColorTemp(color: Int) : Int {
@@ -48,16 +51,16 @@ class NotificationListActivity : BaseActivity() {
 
         val spacing = dpToPx(16)
 
-        recyclerViewNotification.setPadding(0, getImageHeaderHeight(), 0, spacing)
-        recyclerViewNotification.addItemDecoration(
+        binding.recyclerViewNotification.setPadding(0, getImageHeaderHeight(), 0, spacing)
+        binding.recyclerViewNotification.addItemDecoration(
             GridSpacingItemDecoration(
                 spanCount,
                 spacing,
                 includeEdge
             )
         )
-        recyclerViewNotification.layoutManager = GridLayoutManager(this, spanCount)
-        recyclerViewNotification.adapter = NotificationListAdapterFree(list)
+        binding.recyclerViewNotification.layoutManager = GridLayoutManager(this, spanCount)
+        binding.recyclerViewNotification.adapter = NotificationListAdapterFree(list)
 
         loadNotificationList()
     }
@@ -74,9 +77,9 @@ class NotificationListActivity : BaseActivity() {
             .subscribe(
                 { result ->
                     list.addAll(result)
-                    recyclerViewNotification.adapter!!.notifyDataSetChanged()
+                    binding.recyclerViewNotification.adapter!!.notifyDataSetChanged()
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 401 || error.code() == 403) {

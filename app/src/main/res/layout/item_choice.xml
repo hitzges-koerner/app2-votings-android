@@ -11,8 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="10dp"
-        app:strokeWidth="2dp"
-        app:cardBackgroundColor="@color/colorAccent"
+        app:strokeWidth="4dp"
+        app:strokeColor="@color/colorPrimary"
+        app:cardBackgroundColor="@color/white"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:id="@+id/materialCardViewChoice"
@@ -33,6 +34,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:textColor="@color/colorPrimary"
                 android:id="@+id/textViewChoiceTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -45,7 +47,7 @@
 
             <TextView
                 android:visibility="gone"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
                 android:id="@+id/textViewChoicePercent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -79,7 +81,8 @@
                 android:src="@drawable/ic_round_unchecked"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/colorPrimary" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -3,8 +3,8 @@ package appsquared.votings.app
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
+import app.votings.android.R
 
 
 class SplashActivity : AppCompatActivity() {

@@ -6,13 +6,15 @@ import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import app.votings.android.R
+import app.votings.android.databinding.ActivityChangelogBinding
+import appsquared.votings.app.adapter.ChangelogListAdapter
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
+import appsquared.votings.app.tag.enums.Style
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_changelog.*
 import kotlin.math.roundToInt
 
 
@@ -24,9 +26,11 @@ class ChangelogActivity : BaseActivity() {
         ApiService.create(Constant.BASE_API)
     }
 
+    private lateinit var binding: ActivityChangelogBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_changelog)
+        binding = ActivityChangelogBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
     }
 
@@ -40,36 +44,34 @@ class ChangelogActivity : BaseActivity() {
 
         var attributes = Attributes()
 
-        if (workspace.settings.style.isNotEmpty()) {
-            when (workspace.settings.style.toLowerCase()) {
-                "rich" -> {
-                    attributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
-                    attributes.contentBorderColor = getColorTemp(R.color.white_transparent)
-                    attributes.contentBorderWidth = 0
-                    attributes.contentCornerRadius = 10
+        when (workspace.settings.style) {
+            Style.RICH -> {
+                attributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
+                attributes.contentBorderColor = getColorTemp(R.color.white_transparent)
+                attributes.contentBorderWidth = 0
+                attributes.contentCornerRadius = 10
 
-                    attributes.contentTextColor = getColorTemp(R.color.black)
-                    attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    attributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
-                }
+                attributes.contentTextColor = getColorTemp(R.color.black)
+                attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                attributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
+            }
 
-                "minimal" -> {
-                    attributes.contentBackgroundColor = getColorTemp(R.color.transparent)
-                    attributes.contentBorderColor = getColorTemp(R.color.transparent)
-                    attributes.contentBorderWidth = 0
-                    attributes.contentCornerRadius = 10
+            Style.MINIMAL -> {
+                attributes.contentBackgroundColor = getColorTemp(R.color.transparent)
+                attributes.contentBorderColor = getColorTemp(R.color.transparent)
+                attributes.contentBorderWidth = 0
+                attributes.contentCornerRadius = 10
 
-                    attributes.contentTextColor = getColorTemp(R.color.black)
-                    attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    attributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
-                }
+                attributes.contentTextColor = getColorTemp(R.color.black)
+                attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                attributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
+            }
 
-                "clean" -> {
-                    attributes = setAttributesDefault()
-                }
-                else -> {
-                    attributes = setAttributesDefault()
-                }
+            Style.CLEAN -> {
+                attributes = setAttributesDefault()
+            }
+            else -> {
+                attributes = setAttributesDefault()
             }
         }
 
@@ -96,17 +98,17 @@ class ChangelogActivity : BaseActivity() {
         val includeEdge = false
 
         val spacing = dpToPx(16)
-        recyclerView.setPadding(0, getImageHeaderHeight() + spacing, 0, 0)
-        recyclerView.addItemDecoration(
+        binding.recyclerView.setPadding(0, getImageHeaderHeight() + spacing, 0, 0)
+        binding.recyclerView.addItemDecoration(
             GridSpacingItemDecoration(
                 spanCount,
                 spacing,
                 includeEdge
             )
         )
-        recyclerView.layoutManager = GridLayoutManager(this@ChangelogActivity, spanCount)
+        binding.recyclerView.layoutManager = GridLayoutManager(this@ChangelogActivity, spanCount)
 
-        recyclerView.adapter = ChangelogListAdapter(mChangelogList, attributes) { position: Int ->
+        binding.recyclerView.adapter = ChangelogListAdapter(mChangelogList, attributes) { position: Int ->
             startActivity(Intent(this@ChangelogActivity, NewsActivity::class.java).putExtra("news_item", workspace.news[position]))
         }
 
@@ -125,9 +127,9 @@ class ChangelogActivity : BaseActivity() {
             .subscribe(
                 { result ->
                     mChangelogList.addAll(result)
-                    recyclerView.adapter?.notifyDataSetChanged()
+                    binding.recyclerView.adapter?.notifyDataSetChanged()
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 401 || error.code() == 403) {

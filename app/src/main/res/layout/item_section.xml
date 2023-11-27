@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/constraintLayoutRoot"
-    android:layout_marginTop="16dp"
+    android:paddingTop="24dp"
     android:focusable="true"
     android:clickable="true"
+    android:background="@color/grey_245"
     android:foreground="?attr/selectableItemBackground">
 
     <TextView
@@ -25,6 +26,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:visibility="invisible"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"

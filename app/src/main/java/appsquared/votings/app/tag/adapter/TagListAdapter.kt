@@ -4,19 +4,17 @@ package appsquared.votings.app.tag.adapter
  * Created by jakobkoerner on 08.02.18.
  */
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import appsquared.votings.app.R
-import kotlinx.android.synthetic.main.simple_list_item_default.view.*
+import androidx.recyclerview.widget.RecyclerView
+import app.votings.android.databinding.SimpleListItemDefaultBinding
 
 
 class TagListAdapter(private val items: MutableList<String>, val listener: (String) -> Unit) : RecyclerView.Adapter<TagListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.simple_list_item_default, parent, false)
-        return ViewHolder(view, listener)
+        val binding = SimpleListItemDefaultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding, listener)
     }
 
     override fun getItemCount() = items.size
@@ -25,10 +23,10 @@ class TagListAdapter(private val items: MutableList<String>, val listener: (Stri
         holder.bindItems(items[position])
     }
 
-    class ViewHolder(itemView: View, val listener:  (String) -> Unit) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(private val binding: SimpleListItemDefaultBinding, val listener:  (String) -> Unit) : RecyclerView.ViewHolder(binding.root) {
         fun bindItems(item: String) {
             with(itemView) {
-                text.text = item
+                binding.text.text = item
 
                 setOnClickListener {
                     listener(item)

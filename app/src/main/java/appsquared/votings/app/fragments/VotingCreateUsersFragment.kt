@@ -3,22 +3,28 @@ package appsquared.votings.app.fragments
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
-import appsquared.votings.app.*
+import app.votings.android.R
+import app.votings.android.databinding.DialogDecisionBinding
+import app.votings.android.databinding.FragmentVotingCreateUsersBinding
+import appsquared.votings.app.FragmentInteractionListener
+import appsquared.votings.app.GridSpacingItemDecoration
+import appsquared.votings.app.PreferenceNames
+import appsquared.votings.app.VotingCreateActivity
+import appsquared.votings.app.adapter.VotingCreateUsersListAdapter
+import appsquared.votings.app.dpToPx
 import appsquared.votings.app.views.DecisionDialog
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import appsquared.votings.app.Constant
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.button_card_view.view.*
-import kotlinx.android.synthetic.main.fragment_voting_create_users.*
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -38,12 +44,14 @@ class VotingCreateUsersFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    private lateinit var binding: FragmentVotingCreateUsersBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_voting_create_users, container, false)
+        binding = FragmentVotingCreateUsersBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,29 +61,29 @@ class VotingCreateUsersFragment : Fragment() {
         if((activity as VotingCreateActivity).getUserType() == VotingCreateActivity.UserType.SELECTED) setCheckedUserTypeSelected()
         mUsers = (activity as VotingCreateActivity).getUsers()
 
-        materialCardViewUserAll.setOnClickListener {
+        binding.materialCardViewUserAll.setOnClickListener {
             setCheckedUserTypeAll()
         }
 
-        materialCardViewUserSelected.setOnClickListener {
+        binding.materialCardViewUserSelected.setOnClickListener {
             setCheckedUserTypeSelected()
         }
 
-        buttonCardViewVotingCreateUsersPrevious.materialCardView.setOnClickListener {
+        binding.buttonCardViewVotingCreateUsersPrevious.bindingButtonCardView.materialCardView.setOnClickListener {
             onButtonPressed(Constant.BACK)
         }
 
-        buttonCardViewVotingCreateUsersNext.materialCardView.setOnClickListener {
+        binding.buttonCardViewVotingCreateUsersNext.bindingButtonCardView.materialCardView.setOnClickListener {
             if((activity as VotingCreateActivity).getUserType() == VotingCreateActivity.UserType.NONE) {
-                textViewVotingCreateUsersError.text = getString(R.string.voting_create_error_at_least_two_participants)
-                textViewVotingCreateUsersError.visibility = View.VISIBLE
+                binding.textViewVotingCreateUsersError.text = getString(R.string.voting_create_error_at_least_two_participants)
+                binding.textViewVotingCreateUsersError.visibility = View.VISIBLE
                 return@setOnClickListener
             }
             val selectedUsers = mUsers.filter { it.isSelected == true }
             if(selectedUsers.size >= 2 || isAllUsers()) {
                 DecisionDialog(requireContext()) {
                     if(it == DecisionDialog.RIGHT) createVoting()
-                }.generate()
+                }.generate(DialogDecisionBinding.inflate(layoutInflater))
                     .setCancelable(true)
                     .setTitle(getString(R.string.voting_create) + "?")
                     .setMessage(getString(R.string.voting_create_send_dialog_text))
@@ -83,8 +91,8 @@ class VotingCreateUsersFragment : Fragment() {
                     .setButtonRightName(getString(R.string.yes))
                     .show()
             } else {
-                textViewVotingCreateUsersError.text = getString(R.string.voting_create_error_at_least_two_participants)
-                textViewVotingCreateUsersError.visibility = View.VISIBLE
+                binding.textViewVotingCreateUsersError.text = getString(R.string.voting_create_error_at_least_two_participants)
+                binding.textViewVotingCreateUsersError.visibility = View.VISIBLE
                 return@setOnClickListener
             }
         }
@@ -97,37 +105,37 @@ class VotingCreateUsersFragment : Fragment() {
         val includeEdge = false
 
         val spacing = dpToPx(16)
-        recyclerViewVotingCreateUsers.setPadding(0, spacing, 0, 0)
-        recyclerViewVotingCreateUsers.addItemDecoration(
+        binding.recyclerViewVotingCreateUsers.setPadding(0, spacing, 0, 0)
+        binding.recyclerViewVotingCreateUsers.addItemDecoration(
             GridSpacingItemDecoration(
                 spanCount,
                 dpToPx(4),
                 includeEdge
             )
         )
-        recyclerViewVotingCreateUsers.layoutManager = GridLayoutManager(context, spanCount)
+        binding.recyclerViewVotingCreateUsers.layoutManager = GridLayoutManager(context, spanCount)
 
-        recyclerViewVotingCreateUsers.adapter = VotingCreateUsersListAdapter(mUsers) { position: Int ->
-            textViewVotingCreateUsersError.visibility = View.GONE
+        binding.recyclerViewVotingCreateUsers.adapter = VotingCreateUsersListAdapter(mUsers) { position: Int ->
+            binding.textViewVotingCreateUsersError.visibility = View.GONE
             mUsers[position].isSelected = !mUsers[position].isSelected
-            recyclerViewVotingCreateUsers.adapter?.notifyItemChanged(position)
+            binding.recyclerViewVotingCreateUsers.adapter?.notifyItemChanged(position)
         }
     }
 
     fun setCheckedUserTypeAll() {
-        recyclerViewVotingCreateUsers.visibility = View.GONE
-        textViewVotingCreateUsersError.visibility = View.GONE
+        binding.recyclerViewVotingCreateUsers.visibility = View.GONE
+        binding.textViewVotingCreateUsersError.visibility = View.GONE
         (activity as VotingCreateActivity).setUserType(VotingCreateActivity.UserType.ALL)
-        imageViewUserAllChecked.setImageResource(R.drawable.ic_round_checked)
-        imageViewUserSelectedChecked.setImageResource(R.drawable.ic_round_unchecked)
+        binding.imageViewUserAllChecked.setImageResource(R.drawable.ic_round_checked)
+        binding.imageViewUserSelectedChecked.setImageResource(R.drawable.ic_round_unchecked)
     }
 
     fun setCheckedUserTypeSelected() {
-        recyclerViewVotingCreateUsers.visibility = View.VISIBLE
-        textViewVotingCreateUsersError.visibility = View.GONE
+        binding.recyclerViewVotingCreateUsers.visibility = View.VISIBLE
+        binding.textViewVotingCreateUsersError.visibility = View.GONE
         (activity as VotingCreateActivity).setUserType(VotingCreateActivity.UserType.SELECTED)
-        imageViewUserAllChecked.setImageResource(R.drawable.ic_round_unchecked)
-        imageViewUserSelectedChecked.setImageResource(R.drawable.ic_round_checked)
+        binding.imageViewUserAllChecked.setImageResource(R.drawable.ic_round_unchecked)
+        binding.imageViewUserSelectedChecked.setImageResource(R.drawable.ic_round_checked)
     }
 
     fun isSingleChoice() : String {
@@ -159,9 +167,9 @@ class VotingCreateUsersFragment : Fragment() {
 
     private fun createVoting() {
 
-        textViewVotingCreateUsersError.visibility = View.GONE
+        binding.textViewVotingCreateUsersError.visibility = View.GONE
 
-        val pref = PreferenceManager.getDefaultSharedPreferences(context)
+        val pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val token = pref.getString(PreferenceNames.USER_TOKEN, "") ?: ""
         val workspace = pref.getString(PreferenceNames.WORKSPACE_NAME, "") ?: ""
 
@@ -181,12 +189,12 @@ class VotingCreateUsersFragment : Fragment() {
                 { result ->
                     onButtonPressed(Constant.NEXT)
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 424 ) {
-                            textViewVotingCreateUsersError.text = getString(R.string.voting_create_error_too_much_user_selected)
-                            textViewVotingCreateUsersError.visibility = View.VISIBLE
+                            binding.textViewVotingCreateUsersError.text = getString(R.string.voting_create_error_too_much_user_selected)
+                            binding.textViewVotingCreateUsersError.visibility = View.VISIBLE
                             return@subscribe
                         }
                         if(error.code() == 409 ) {

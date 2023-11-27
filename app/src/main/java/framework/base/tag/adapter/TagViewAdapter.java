@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import appsquared.votings.app.R;
+import app.votings.android.R;
 import appsquared.votings.app.tag.interfaces.TagClickListener;
 /*
  *  ****************************************************************************

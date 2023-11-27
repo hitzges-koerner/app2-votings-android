@@ -1,6 +1,7 @@
 package appsquared.votings.app
 
 import android.graphics.drawable.Drawable
+import app.votings.android.R
 
 class Attributes {
 

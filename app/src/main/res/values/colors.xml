@@ -10,10 +10,11 @@
     <color name="white_transparent">#99FFFFFF</color>
     <color name="white_transparent_fill">#F2FFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="grey_245">#F5F5F5</color>
     <color name="grey_230">#E6E6E6</color>
-    <color name="grey_60">#3C3C3C</color>
-    <color name="grey_144">#909090</color>
     <color name="grey_190">#BEBEBE</color>
+    <color name="grey_144">#909090</color>
+    <color name="grey_60">#3C3C3C</color>
     <color name="green">#35C75A</color>
     <color name="tagBackground">#009688</color>
 </resources>

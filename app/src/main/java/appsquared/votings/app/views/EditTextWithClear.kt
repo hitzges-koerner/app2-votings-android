@@ -6,10 +6,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
+import android.view.View.OnTouchListener
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.ResourcesCompat
-import appsquared.votings.app.R
+import app.votings.android.R
 
 class EditTextWithClear : AppCompatEditText {
 

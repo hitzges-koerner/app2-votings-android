@@ -2,49 +2,46 @@ package appsquared.votings.app
 
 import android.os.Bundle
 import android.view.View
-import android.view.View.VISIBLE
 import android.view.ViewTreeObserver
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import app.votings.android.R
+import app.votings.android.databinding.ActivityNewsBinding
 import com.squareup.picasso.Picasso
-import framework.base.rest.Model
-import kotlinx.android.synthetic.main.activity_news.*
-import kotlin.math.roundToInt
+import appsquared.votings.app.rest.Model
 
 
-class NewsActivity : AppCompatActivity() {
+class NewsActivity : BaseActivity() {
 
     private lateinit var mNews: Model.News
     private var mImageViewHeaderHeight: Int = 0
-    var mWorkspace: Model.WorkspaceResponse = Model.WorkspaceResponse()
+
+    private lateinit var binding: ActivityNewsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_news)
+        binding = ActivityNewsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        mWorkspace = AppData().getSavedObjectFromPreference(this, PreferenceNames.WORKSPACE, Model.WorkspaceResponse::class.java)
-            ?: Model.WorkspaceResponse()
+        setScreenTitle(R.string.tile_news)
 
         intent.extras?.let {
 
             mNews = it["news_item"] as Model.News
 
-            imageViewHeader.viewTreeObserver.addOnGlobalLayoutListener(object :
+            binding.imageViewHeader.viewTreeObserver.addOnGlobalLayoutListener(object :
                 ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    imageViewHeader.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    binding.imageViewHeader.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
                     if (mNews.headerImageUrl.isNotEmpty()) {
-                        imageViewHeader.visibility = View.VISIBLE
+                        binding.imageViewHeader.visibility = View.VISIBLE
                         Picasso.get()
                             .load(mNews.headerImageUrl)
-                            .into(imageViewHeader)
-                    } else imageViewHeader.visibility = View.GONE
+                            .into(binding.imageViewHeader)
+                    } else binding.imageViewHeader.visibility = View.GONE
 
-                    mImageViewHeaderHeight = imageViewHeader.height //height is ready
-                    if (imageViewHeader.visibility == View.GONE) mImageViewHeaderHeight = 0
-
-                    childOnlyMethod()
+                    mImageViewHeaderHeight = binding.imageViewHeader.height //height is ready
+                    if (binding.imageViewHeader.visibility == View.GONE) mImageViewHeaderHeight = 0
                 }
             })
         }
@@ -52,77 +49,25 @@ class NewsActivity : AppCompatActivity() {
 
     }
 
-    fun getColorTemp(color: Int) : Int {
+    fun getColorTemp(color: Int): Int {
         return ResourcesCompat.getColor(resources, color, null)
     }
 
-    fun childOnlyMethod() {
-
+    override fun childOnlyMethod() {
         val workspace = mWorkspace
 
         val spacing = dpToPx(16)
-        scrollView.setPadding(spacing, spacing + mImageViewHeaderHeight, spacing, spacing)
-
-        var borderColor = getColorTemp(R.color.transparent)
-        var borderWidth = 0
-        var contentTextColor = getColorTemp(R.color.black)
-        var contentAccentColor = getColorTemp(R.color.colorAccent)
-        var contentBackgroundColor = getColorTemp(R.color.white)
-        var contentCornerRadius = 20
-
-        if(workspace.settings.style.isNotEmpty()) {
-            when(workspace.settings.style.toLowerCase()) {
-                "rich" -> {
-                    borderColor = getColorTemp(R.color.transparent)
-                    borderWidth = 0
-                    contentTextColor = getColorTemp(R.color.black)
-                    contentAccentColor = getColorTemp(R.color.colorAccent)
-                    contentBackgroundColor = getColorTemp(R.color.white_transparent)
-                    contentCornerRadius = 20
-                }
-
-                "minimal" -> {
-                    borderColor = getColorTemp(R.color.transparent)
-                    borderWidth = 0
-                    contentTextColor = getColorTemp(R.color.black)
-                    contentAccentColor = getColorTemp(R.color.colorAccent)
-                    contentBackgroundColor = getColorTemp(R.color.white)
-                    contentCornerRadius = 20
-                }
-
-                "clean" -> {
-                    borderColor = getColorTemp(R.color.transparent)
-                    borderWidth = 0
-                    contentTextColor = getColorTemp(R.color.white)
-                    contentAccentColor = getColorTemp(R.color.white)
-                    contentBackgroundColor = getColorTemp(R.color.colorAccent)
-                    contentCornerRadius = 20
-                }
-            }
-        }
-
-        if(workspace.settings.contentBorderColor.isNotEmpty()) borderColor = convertStringToColor(workspace.settings.contentBorderColor)
-        if(workspace.settings.contentBorderWidth.isNotEmpty()) borderWidth = workspace.settings.contentBorderWidth.toDouble().roundToInt()
-
-        if(workspace.settings.contentTextColor.isNotEmpty()) contentTextColor = convertStringToColor(workspace.settings.contentTextColor)
-        if(workspace.settings.contentAccentColor.isNotEmpty()) contentAccentColor = convertStringToColor(workspace.settings.contentAccentColor)
-
-        if(workspace.settings.contentBackgroundColor.isNotEmpty()) contentBackgroundColor = convertStringToColor(workspace.settings.contentBackgroundColor)
-        if(workspace.settings.contentCornerRadius.isNotEmpty()) contentCornerRadius = workspace.settings.contentCornerRadius.toDouble().roundToInt()
-
-        materialCardView.setCardBackgroundColor(contentBackgroundColor)
-        materialCardView.strokeColor = borderColor
-        materialCardView.strokeWidth = borderWidth
-        materialCardView.radius = dpToPx(contentCornerRadius).toFloat()
+        binding.scrollView.setPadding(spacing, spacing + mImageViewHeaderHeight, spacing, spacing)
 
 
-        textViewNewsTitle.setTextColor(contentAccentColor)
-        textViewNewsTitle.text = mNews.title
+        //textViewNewsTitle.setTextColor(contentAccentColor)
+        binding.textViewNewsTitle.text = mNews.title
 
-        textViewNewsSubTitle.setTextColor(contentAccentColor)
-        textViewNewsSubTitle.text = mNews.subTitle
+        //textViewNewsSubTitle.setTextColor(contentAccentColor)
+        binding.textViewNewsSubTitle.text = mNews.subTitle
 
-        textViewNewsContent.setTextColor(contentTextColor)
-        textViewNewsContent.text = mNews.content
+        //textViewNewsContent.setTextColor(contentTextColor)
+        binding.textViewNewsContent.text = mNews.content
+
     }
 }

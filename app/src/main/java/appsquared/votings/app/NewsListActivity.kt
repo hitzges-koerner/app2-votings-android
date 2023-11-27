@@ -1,15 +1,15 @@
 package appsquared.votings.app
 
 import android.os.Bundle
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import app.votings.android.R
+import app.votings.android.databinding.ActivityNewsListBinding
 import appsquared.votings.app.views.CustomOnClickListener
 import appsquared.votings.app.views.TabCustomView
-import framework.base.rest.Model
-import kotlinx.android.synthetic.main.activity_news_list.*
-import kotlinx.android.synthetic.main.tab_custom.*
+import appsquared.votings.app.rest.Model
+import appsquared.votings.app.tag.enums.Style
 import kotlin.math.roundToInt
 
 
@@ -17,9 +17,11 @@ class NewsListActivity : BaseActivity() {
 
     var mAttributes = Attributes()
 
+    private lateinit var binding: ActivityNewsListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_news_list)
+        binding = ActivityNewsListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
     }
 
@@ -29,112 +31,117 @@ class NewsListActivity : BaseActivity() {
 
         val workspace: Model.WorkspaceResponse = mWorkspace
 
-        if (workspace.settings.style.isNotEmpty()) {
-            when (workspace.settings.style.toLowerCase()) {
-                "rich" -> {
-                    mAttributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
-                    mAttributes.contentBorderColor = getColorTemp(R.color.white_transparent)
-                    mAttributes.contentBorderWidth = 0
-                    mAttributes.contentCornerRadius = 10
 
-                    mAttributes.contentTextColor = getColorTemp(R.color.black)
-                    mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    mAttributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
+        when (workspace.settings.style) {
+            Style.RICH -> {
+                mAttributes.contentBackgroundColor =
+                    getColorTemp(R.color.white_transparent_fill)
+                mAttributes.contentBorderColor = getColorTemp(R.color.white_transparent)
+                mAttributes.contentBorderWidth = 0
+                mAttributes.contentCornerRadius = 10
 
-                    //tab bar
-                    materialCardViewTab.setCardBackgroundColor(getColorTemp(R.color.grey_230))
-                    materialCardViewTab.strokeColor = getColorTemp(R.color.colorAccent)
-                    materialCardViewTab.strokeWidth = dpToPx(1)
-                    materialCardViewTab.radius = dpToPx(5).toFloat()
+                mAttributes.contentTextColor = getColorTemp(R.color.black)
+                mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                mAttributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
 
-                    tabCustom.setTabBackgroundColorSelected(
-                        getColorTemp(R.color.colorAccent)
-                    )
-                    tabCustom.setTabTextColorSelected(
-                        getColorTemp(R.color.white)
-                    )
-                    tabCustom.setTabBackgroundColorUnSelected(
-                        getColorTemp(R.color.white)
-                    )
-                    tabCustom.setTabTextColorUnSelected(
-                        getColorTemp(R.color.colorAccent)
-                    )
-                }
+                //tab bar
+                binding.tabCustom.binding.materialCardViewTab.setCardBackgroundColor(getColorTemp(R.color.grey_230))
+                binding.tabCustom.binding.materialCardViewTab.strokeColor =
+                    getColorTemp(R.color.colorAccent)
+                binding.tabCustom.binding.materialCardViewTab.strokeWidth = dpToPx(1)
+                binding.tabCustom.binding.materialCardViewTab.radius = dpToPx(5).toFloat()
 
-                "minimal" -> {
-                    mAttributes.contentBackgroundColor = getColorTemp(R.color.transparent)
-                    mAttributes.contentBorderColor = getColorTemp(R.color.transparent)
-                    mAttributes.contentBorderWidth = 0
-                    mAttributes.contentCornerRadius = 10
+                binding.tabCustom.setTabBackgroundColorSelected(
+                    getColorTemp(R.color.colorAccent)
+                )
+                binding.tabCustom.setTabTextColorSelected(
+                    getColorTemp(R.color.white)
+                )
+                binding.tabCustom.setTabBackgroundColorUnSelected(
+                    getColorTemp(R.color.white)
+                )
+                binding.tabCustom.setTabTextColorUnSelected(
+                    getColorTemp(R.color.colorAccent)
+                )
+            }
 
-                    mAttributes.contentTextColor = getColorTemp(R.color.black)
-                    mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    mAttributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
+            Style.MINIMAL -> {
+                mAttributes.contentBackgroundColor = getColorTemp(R.color.transparent)
+                mAttributes.contentBorderColor = getColorTemp(R.color.transparent)
+                mAttributes.contentBorderWidth = 0
+                mAttributes.contentCornerRadius = 10
 
-                    //tab bar
-                    materialCardViewTab.setCardBackgroundColor(getColorTemp(R.color.grey_230))
-                    materialCardViewTab.strokeColor = getColorTemp(R.color.white)
-                    materialCardViewTab.strokeWidth = dpToPx(1)
-                    materialCardViewTab.radius = dpToPx(5).toFloat()
+                mAttributes.contentTextColor = getColorTemp(R.color.black)
+                mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                mAttributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
 
-                    tabCustom.setTabBackgroundColorSelected(
-                        getColorTemp(R.color.colorAccent)
-                    )
-                    tabCustom.setTabTextColorSelected(
-                        getColorTemp(R.color.white)
-                    )
-                    tabCustom.setTabBackgroundColorUnSelected(
-                        getColorTemp(R.color.white)
-                    )
-                    tabCustom.setTabTextColorUnSelected(
-                        getColorTemp(R.color.colorAccent)
-                    )
-                }
+                //tab bar
+                binding.tabCustom.binding.materialCardViewTab.setCardBackgroundColor(getColorTemp(R.color.grey_230))
+                binding.tabCustom.binding.materialCardViewTab.strokeColor =
+                    getColorTemp(R.color.white)
+                binding.tabCustom.binding.materialCardViewTab.strokeWidth = dpToPx(1)
+                binding.tabCustom.binding.materialCardViewTab.radius = dpToPx(5).toFloat()
 
-                "clean" -> {
-                    mAttributes = setAttributesDefault()
+                binding.tabCustom.setTabBackgroundColorSelected(
+                    getColorTemp(R.color.colorAccent)
+                )
+                binding.tabCustom.setTabTextColorSelected(
+                    getColorTemp(R.color.white)
+                )
+                binding.tabCustom.setTabBackgroundColorUnSelected(
+                    getColorTemp(R.color.white)
+                )
+                binding.tabCustom.setTabTextColorUnSelected(
+                    getColorTemp(R.color.colorAccent)
+                )
+            }
 
-                    //tab bar
-                    materialCardViewTab.setCardBackgroundColor(getColorTemp(R.color.grey_230))
-                    materialCardViewTab.strokeColor = getColorTemp(R.color.colorAccent)
-                    materialCardViewTab.strokeWidth = dpToPx(1)
-                    materialCardViewTab.radius = dpToPx(5).toFloat()
+            Style.CLEAN -> {
+                mAttributes = setAttributesDefault()
 
-                    tabCustom.setTabBackgroundColorSelected(
-                        getColorTemp(R.color.colorAccent)
-                    )
-                    tabCustom.setTabTextColorSelected(
-                        getColorTemp(R.color.white)
-                    )
-                    tabCustom.setTabBackgroundColorUnSelected(
-                        getColorTemp(R.color.white)
-                    )
-                    tabCustom.setTabTextColorUnSelected(
-                        getColorTemp(R.color.colorAccent)
-                    )
-                }
-                else -> {
-                    mAttributes = setAttributesDefault()
+                //tab bar
+                binding.tabCustom.binding.materialCardViewTab.setCardBackgroundColor(getColorTemp(R.color.grey_230))
+                binding.tabCustom.binding.materialCardViewTab.strokeColor =
+                    getColorTemp(R.color.colorAccent)
+                binding.tabCustom.binding.materialCardViewTab.strokeWidth = dpToPx(1)
+                binding.tabCustom.binding.materialCardViewTab.radius = dpToPx(5).toFloat()
 
-                    //tab bar
-                    materialCardViewTab.setCardBackgroundColor(getColorTemp(R.color.grey_230))
-                    materialCardViewTab.strokeColor = getColorTemp(R.color.colorAccent)
-                    materialCardViewTab.strokeWidth = dpToPx(1)
-                    materialCardViewTab.radius = dpToPx(5).toFloat()
+                binding.tabCustom.setTabBackgroundColorSelected(
+                    getColorTemp(R.color.colorAccent)
+                )
+                binding.tabCustom.setTabTextColorSelected(
+                    getColorTemp(R.color.white)
+                )
+                binding.tabCustom.setTabBackgroundColorUnSelected(
+                    getColorTemp(R.color.white)
+                )
+                binding.tabCustom.setTabTextColorUnSelected(
+                    getColorTemp(R.color.colorAccent)
+                )
+            }
 
-                    tabCustom.setTabBackgroundColorSelected(
-                        getColorTemp(R.color.colorAccent)
-                    )
-                    tabCustom.setTabTextColorSelected(
-                        getColorTemp(R.color.white)
-                    )
-                    tabCustom.setTabBackgroundColorUnSelected(
-                        getColorTemp(R.color.white)
-                    )
-                    tabCustom.setTabTextColorUnSelected(
-                        getColorTemp(R.color.colorAccent)
-                    )
-                }
+            else -> {
+                mAttributes = setAttributesDefault()
+
+                //tab bar
+                binding.tabCustom.binding.materialCardViewTab.setCardBackgroundColor(getColorTemp(R.color.grey_230))
+                binding.tabCustom.binding.materialCardViewTab.strokeColor =
+                    getColorTemp(R.color.colorAccent)
+                binding.tabCustom.binding.materialCardViewTab.strokeWidth = dpToPx(1)
+                binding.tabCustom.binding.materialCardViewTab.radius = dpToPx(5).toFloat()
+
+                binding.tabCustom.setTabBackgroundColorSelected(
+                    getColorTemp(R.color.colorAccent)
+                )
+                binding.tabCustom.setTabTextColorSelected(
+                    getColorTemp(R.color.white)
+                )
+                binding.tabCustom.setTabBackgroundColorUnSelected(
+                    getColorTemp(R.color.white)
+                )
+                binding.tabCustom.setTabTextColorUnSelected(
+                    getColorTemp(R.color.colorAccent)
+                )
             }
         }
 
@@ -154,11 +161,19 @@ class NewsListActivity : BaseActivity() {
             convertStringToColor(workspaceSettings.contentAccentColor)
 
 
-        if (workspaceSettings.tabActiveBackgroundColor.isNotEmpty()) tabCustom.setTabBackgroundColorSelected(convertStringToColor(workspaceSettings.tabActiveBackgroundColor))
-        if (workspaceSettings.tabActiveForegroundColor.isNotEmpty()) tabCustom.setTabTextColorSelected(convertStringToColor(workspaceSettings.tabActiveForegroundColor))
+        if (workspaceSettings.tabActiveBackgroundColor.isNotEmpty()) binding.tabCustom.setTabBackgroundColorSelected(
+            convertStringToColor(workspaceSettings.tabActiveBackgroundColor)
+        )
+        if (workspaceSettings.tabActiveForegroundColor.isNotEmpty()) binding.tabCustom.setTabTextColorSelected(
+            convertStringToColor(workspaceSettings.tabActiveForegroundColor)
+        )
 
-        if (workspaceSettings.tabInactiveBackgroundColor.isNotEmpty()) tabCustom.setTabBackgroundColorUnSelected(convertStringToColor(workspaceSettings.tabInactiveBackgroundColor))
-        if (workspaceSettings.tabInactiveForegroundColor.isNotEmpty()) tabCustom.setTabTextColorUnSelected(convertStringToColor(workspaceSettings.tabInactiveForegroundColor))
+        if (workspaceSettings.tabInactiveBackgroundColor.isNotEmpty()) binding.tabCustom.setTabBackgroundColorUnSelected(
+            convertStringToColor(workspaceSettings.tabInactiveBackgroundColor)
+        )
+        if (workspaceSettings.tabInactiveForegroundColor.isNotEmpty()) binding.tabCustom.setTabTextColorUnSelected(
+            convertStringToColor(workspaceSettings.tabInactiveForegroundColor)
+        )
 
 
         /*
@@ -172,18 +187,19 @@ class NewsListActivity : BaseActivity() {
         })
          */
 
-        tabCustom.run {
-            val tabCustomHeight = tabCustom.height //height is ready
-            tabCustom.setPadding(0, getImageHeaderHeight(), 0, 0)
+        binding.tabCustom.run {
+            val tabCustomHeight = height //height is ready
+            setPadding(0, getImageHeaderHeight(), 0, 0)
 
 
-            tabCustom.setCustomOnClickListener(object : CustomOnClickListener {
+            setCustomOnClickListener(object : CustomOnClickListener {
                 override fun customOnClick(button: Int) {
-                    when(button) {
+                    when (button) {
                         TabCustomView.LEFT -> {
                             removeAllFragments(supportFragmentManager)
                             selectFragment(NewsListFragment.newInstance(tabCustomHeight))
                         }
+
                         TabCustomView.RIGHT -> {
                             removeAllFragments(supportFragmentManager)
                             selectFragment(NotificationListFragment.newInstance(tabCustomHeight))
@@ -194,7 +210,7 @@ class NewsListActivity : BaseActivity() {
 
             val showNotifications = intent.extras?.getBoolean("show_notifications")
             showNotifications?.let {
-                if(it) selectFragment(NotificationListFragment.newInstance(tabCustomHeight))
+                if (it) selectFragment(NotificationListFragment.newInstance(tabCustomHeight))
                 else selectFragment(NewsListFragment.newInstance(tabCustomHeight))
             } ?: run {
                 selectFragment(NewsListFragment.newInstance(tabCustomHeight))
@@ -215,11 +231,11 @@ class NewsListActivity : BaseActivity() {
         }
     }
 
-    fun getColorTemp(color: Int) : Int {
+    fun getColorTemp(color: Int): Int {
         return ResourcesCompat.getColor(resources, color, null)
     }
 
-    fun setAttributesDefault() : Attributes {
+    fun setAttributesDefault(): Attributes {
         val attributes = Attributes()
         attributes.contentBackgroundColor = getColorTemp(R.color.colorAccent)
         attributes.contentBorderColor = getColorTemp(R.color.transparent)

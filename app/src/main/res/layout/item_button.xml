@@ -28,6 +28,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:textColor="@color/white"
             android:gravity="center"
             android:id="@+id/textViewButton"
             android:layout_width="0dp"

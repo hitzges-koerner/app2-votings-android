@@ -3,17 +3,19 @@ package appsquared.votings.app
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import kotlinx.android.synthetic.main.activity_welcome.*
-import kotlin.math.roundToInt
+import app.votings.android.R
+import app.votings.android.databinding.ActivityWelcomeBinding
 
 
 class LegalDocsActivity : BaseActivity() {
 
     var statusBarSize = 0
 
+    private lateinit var binding: ActivityWelcomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome)
+        binding = ActivityWelcomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     fun getColorTemp(color: Int) : Int {
@@ -23,7 +25,7 @@ class LegalDocsActivity : BaseActivity() {
     override fun childOnlyMethod() {
 
         val spacing = dpToPx(16)
-        scrollView.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
+        binding.scrollView.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
 
         val workspace = mWorkspace
 
@@ -49,7 +51,7 @@ class LegalDocsActivity : BaseActivity() {
     }
 
     fun setText(text: String, contentAccentColor: Int, contentTextColor: Int) {
-        PseudoMarkDown.styleTextView(text, textViewContent, contentAccentColor, contentTextColor)
+        PseudoMarkDown.styleTextView(text, binding.textViewContent, contentAccentColor, contentTextColor)
     }
 
     fun setText(file: Int, contentAccentColor: Int, contentTextColor: Int) {
@@ -58,9 +60,9 @@ class LegalDocsActivity : BaseActivity() {
 
         val b = ByteArray(in_s.available())
         in_s.read(b)
-        textViewContent.text = String(b)
+        binding.textViewContent.text = String(b)
 
-        PseudoMarkDown.styleTextView(String(b), textViewContent, contentAccentColor, contentTextColor)
+        PseudoMarkDown.styleTextView(String(b), binding.textViewContent, contentAccentColor, contentTextColor)
     }
 
     companion object {

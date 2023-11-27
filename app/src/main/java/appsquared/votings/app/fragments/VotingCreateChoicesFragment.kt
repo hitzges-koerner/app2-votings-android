@@ -1,32 +1,26 @@
 package appsquared.votings.app.fragments
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import appsquared.votings.app.*
-import appsquared.votings.app.views.DecisionDialog
+import app.votings.android.R
+import app.votings.android.databinding.DialogInputBinding
+import app.votings.android.databinding.FragmentVotingCreateChoicesBinding
+import appsquared.votings.app.FragmentInteractionListener
+import appsquared.votings.app.GridSpacingItemDecoration
+import appsquared.votings.app.VotingCreateActivity
+import appsquared.votings.app.adapter.ChoicesListAdapter
+import appsquared.votings.app.dpToPx
 import appsquared.votings.app.views.InputDialog
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import io.reactivex.android.schedulers.AndroidSchedulers
+import appsquared.votings.app.Constant
+import appsquared.votings.app.rest.ApiService
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_changelog.*
-import kotlinx.android.synthetic.main.button_card_view.view.*
-import kotlinx.android.synthetic.main.fragment_voting_create_choices.*
-import kotlinx.android.synthetic.main.text_card_view.view.*
-import kotlinx.android.synthetic.main.text_card_view.view.materialCardView
 
 class VotingCreateChoicesFragment : Fragment() {
 
@@ -40,12 +34,14 @@ class VotingCreateChoicesFragment : Fragment() {
 
     private var mListener: FragmentInteractionListener? = null
 
+    private lateinit var binding: FragmentVotingCreateChoicesBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_voting_create_choices, container, false)
+        binding = FragmentVotingCreateChoicesBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,18 +49,18 @@ class VotingCreateChoicesFragment : Fragment() {
 
         mChoices = (activity as VotingCreateActivity).getChoices()
 
-        buttonCardViewVotingCreateChoicesNew.materialCardView.setOnClickListener {
+        binding.buttonCardViewVotingCreateChoicesNew.bindingButtonCardView.materialCardView.setOnClickListener {
             InputDialog(requireContext()) { button: Int, text: String ->
                 if(button == InputDialog.LEFT) return@InputDialog
                 if(button == InputDialog.RIGHT) {
                     if(text.isNotEmpty()) {
                         mChoices.add(text)
-                        recyclerViewVotingCreateChoices.adapter?.notifyItemInserted(mChoices.size - 1)
-                        textViewVotingCreateChoicesError.visibility = View.GONE
+                        binding.recyclerViewVotingCreateChoices.adapter?.notifyItemInserted(mChoices.size - 1)
+                        binding.textViewVotingCreateChoicesError.visibility = View.GONE
                         (activity as VotingCreateActivity).setChoices(mChoices)
                     }
                 }
-            }.generate()
+            }.generate(DialogInputBinding.inflate(layoutInflater))
                 .setTitle(getString(R.string.voting_create_choice_dialog_title))
                 .setMessage(getString(R.string.voting_create_choice_dialog_text))
                 .setHint(getString(R.string.voting_create_choice_dialog_hint))
@@ -80,34 +76,34 @@ class VotingCreateChoicesFragment : Fragment() {
         val includeEdge = false
 
         val spacing = dpToPx(16)
-        recyclerViewVotingCreateChoices.setPadding(0, spacing, 0, 0)
-        recyclerViewVotingCreateChoices.addItemDecoration(
+        binding.recyclerViewVotingCreateChoices.setPadding(0, spacing, 0, 0)
+        binding.recyclerViewVotingCreateChoices.addItemDecoration(
             GridSpacingItemDecoration(
                 spanCount,
                 dpToPx(4),
                 includeEdge
             )
         )
-        recyclerViewVotingCreateChoices.layoutManager = GridLayoutManager(context, spanCount)
+        binding.recyclerViewVotingCreateChoices.layoutManager = GridLayoutManager(context, spanCount)
 
-        recyclerViewVotingCreateChoices.adapter = ChoicesListAdapter(mChoices) { position: Int ->
+        binding.recyclerViewVotingCreateChoices.adapter = ChoicesListAdapter(mChoices) { position: Int ->
             mChoices.removeAt(position)
-            recyclerViewVotingCreateChoices.adapter?.notifyItemRemoved(position)
+            binding.recyclerViewVotingCreateChoices.adapter?.notifyItemRemoved(position)
             (activity as VotingCreateActivity).setChoices(mChoices)
         }
 
-        itemTouchHelper.attachToRecyclerView(recyclerViewVotingCreateChoices)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerViewVotingCreateChoices)
 
-        buttonCardViewVotingCreateChoicesNext.materialCardView.setOnClickListener {
+        binding.buttonCardViewVotingCreateChoicesNext.bindingButtonCardView.materialCardView.setOnClickListener {
             //TODO show error when there are less than 2 choices added to list --> textViewVotingCreateChoicesError
             if(mChoices.size < 2) {
-                textViewVotingCreateChoicesError.visibility = View.VISIBLE
+                binding.textViewVotingCreateChoicesError.visibility = View.VISIBLE
                 return@setOnClickListener
             }
             onButtonPressed(Constant.NEXT)
         }
 
-        buttonCardViewVotingCreateChoicesPrevious.materialCardView.setOnClickListener {
+        binding.buttonCardViewVotingCreateChoicesPrevious.bindingButtonCardView.materialCardView.setOnClickListener {
             onButtonPressed(Constant.BACK)
         }
     }
@@ -163,7 +159,7 @@ class VotingCreateChoicesFragment : Fragment() {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.adapterPosition
             mChoices.removeAt(position)
-            recyclerView.adapter!!.notifyItemRemoved(position)
+            binding.recyclerViewVotingCreateChoices.adapter!!.notifyItemRemoved(position)
         }
 
     })

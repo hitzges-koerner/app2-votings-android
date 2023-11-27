@@ -1,25 +1,18 @@
-package framework.base.rest
+package appsquared.votings.app.rest
 
-import androidx.preference.PreferenceManager
-import appsquared.votings.app.rest.BasicAuthInterceptor
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
 import com.squareup.moshi.FromJson
-import com.squareup.moshi.Json
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.Moshi
+import appsquared.votings.app.rest.Model
 import io.reactivex.Observable
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.*
 import retrofit2.http.Headers
-import java.net.Authenticator
 
 /**
  * Created by jakobkoerner on 12.12.17.

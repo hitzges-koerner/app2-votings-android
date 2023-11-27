@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
+import app.votings.android.databinding.ItemFaqSectionBinding
 
 class HeaderItemDecoration(recyclerView: RecyclerView, @param:NonNull private val mListener: StickyHeaderInterface) : RecyclerView.ItemDecoration() {
     private var mStickyHeaderHeight: Int = 0
@@ -42,7 +43,7 @@ class HeaderItemDecoration(recyclerView: RecyclerView, @param:NonNull private va
 
         val currentHeader = getHeaderViewForItem(topChildPosition, parent)
         fixLayoutSize(parent, currentHeader)
-        val contactPoint = currentHeader.getBottom()
+        val contactPoint = currentHeader.bottom
         val childInContact = getChildInContact(parent, contactPoint)
         //Util.isNull(childInContact)
         if (childInContact == null) {
@@ -60,9 +61,9 @@ class HeaderItemDecoration(recyclerView: RecyclerView, @param:NonNull private va
     private fun getHeaderViewForItem(itemPosition: Int, parent: RecyclerView): View {
         val headerPosition = mListener.getHeaderPositionForItem(itemPosition)
         val layoutResId = mListener.getHeaderLayout(headerPosition)
-        val header = LayoutInflater.from(parent.context).inflate(layoutResId, parent, false)
-        mListener.bindHeaderData(header, headerPosition)
-        return header
+        val binding = ItemFaqSectionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        mListener.bindHeaderData(binding, headerPosition)
+        return binding.root
     }
 
     private fun drawHeader(c: Canvas, header: View) {
@@ -136,7 +137,7 @@ class HeaderItemDecoration(recyclerView: RecyclerView, @param:NonNull private va
          * @param header View. Header to set the data on.
          * @param headerPosition int. Position of the header item in the adapter.
          */
-        fun bindHeaderData(header: View, headerPosition: Int)
+        fun bindHeaderData(header: ItemFaqSectionBinding, headerPosition: Int)
 
         /**
          * This method gets called by [HeaderItemDecoration] to verify whether the item represents a header.

@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
+import app.votings.android.R
 import com.github.appintro.AppIntro
 import com.github.appintro.AppIntroFragment
 
@@ -27,23 +28,28 @@ class TutorialActivity : AppIntro() {
                 titleColor = ContextCompat.getColor(this, R.color.black),
                 descriptionColor = ContextCompat.getColor(this, R.color.black),
                 imageDrawable = R.drawable.intro_1
-        ))
-        addSlide(AppIntroFragment.newInstance(
+            )
+        )
+        addSlide(
+            AppIntroFragment.newInstance(
                 title = getString(R.string.tutorial_title_2),
                 description = getString(R.string.tutorial_description_2),
                 backgroundColor = ContextCompat.getColor(this, R.color.white),
-            titleColor = ContextCompat.getColor(this, R.color.black),
-            descriptionColor = ContextCompat.getColor(this, R.color.black),
-            imageDrawable = R.drawable.intro_2
-        ))
-        addSlide(AppIntroFragment.newInstance(
+                titleColor = ContextCompat.getColor(this, R.color.black),
+                descriptionColor = ContextCompat.getColor(this, R.color.black),
+                imageDrawable = R.drawable.intro_2
+            )
+        )
+        addSlide(
+            AppIntroFragment.newInstance(
                 title = getString(R.string.tutorial_title_3),
                 description = getString(R.string.tutorial_description_3),
                 backgroundColor = ContextCompat.getColor(this, R.color.white),
                 titleColor = ContextCompat.getColor(this, R.color.black),
                 descriptionColor = ContextCompat.getColor(this, R.color.black),
-            imageDrawable = R.drawable.intro_3
-        ))
+                imageDrawable = R.drawable.intro_3
+            )
+        )
 
         // Toggle Indicator Visibility
         isIndicatorEnabled = true

@@ -2,13 +2,15 @@ package appsquared.votings.app
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import framework.base.rest.Model
-import kotlinx.android.synthetic.main.fragment_newslist.*
+import app.votings.android.R
+import app.votings.android.databinding.FragmentNewslistBinding
+import appsquared.votings.app.adapter.NewsListAdapter
+import appsquared.votings.app.rest.Model
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -37,28 +39,30 @@ class NewsListFragment : Fragment() {
 
         val spacing = dpToPx(16)
 
-        recyclerViewNews.setPadding(0, (activity as NewsListActivity).getImageHeaderHeight() + param1, 0, spacing)
-        recyclerViewNews.addItemDecoration(
+        binding.recyclerViewNews.setPadding(0, (activity as NewsListActivity).getImageHeaderHeight() + param1, 0, spacing)
+        binding.recyclerViewNews.addItemDecoration(
             GridSpacingItemDecoration(
                 spanCount,
                 spacing,
                 includeEdge
             )
         )
-        recyclerViewNews.layoutManager = GridLayoutManager(context, spanCount)
+        binding.recyclerViewNews.layoutManager = GridLayoutManager(context, spanCount)
 
-        recyclerViewNews.adapter = NewsListAdapter(workspace.news, attributes) { position: Int ->
+        binding.recyclerViewNews.adapter = NewsListAdapter(workspace.news, attributes) { position: Int ->
             startActivity(Intent(context, NewsActivity::class.java).putExtra("news_item", workspace.news[position]))
         }
 
     }
 
+    private lateinit var binding: FragmentNewslistBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_newslist, container, false)
+        binding = FragmentNewslistBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     companion object {

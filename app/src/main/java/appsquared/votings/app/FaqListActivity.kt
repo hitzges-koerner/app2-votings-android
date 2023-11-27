@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import app.votings.android.R
+import app.votings.android.databinding.ActivityFaqListBinding
+import appsquared.votings.app.adapter.FaqListAdapter
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_faq_list.*
 
 
 class FaqListActivity : BaseActivity() {
@@ -25,9 +25,11 @@ class FaqListActivity : BaseActivity() {
         ApiService.create(Constant.BASE_API)
     }
 
+    private lateinit var binding: ActivityFaqListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_faq_list)
+        binding = ActivityFaqListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     fun getColorTemp(color: Int) : Int {
@@ -38,16 +40,16 @@ class FaqListActivity : BaseActivity() {
 
         setScreenTitle(getString(R.string.tile_faq))
 
-        recyclerViewFaq.layoutManager = LinearLayoutManager(
+        binding.recyclerViewFaq.layoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.VERTICAL,
             false
         )
-        recyclerViewFaq.adapter = FaqListAdapter(list)
-        recyclerViewFaq.addItemDecoration(
+        binding.recyclerViewFaq.adapter = FaqListAdapter(list)
+        binding.recyclerViewFaq.addItemDecoration(
             HeaderItemDecoration(
-                recyclerViewFaq,
-                recyclerViewFaq.adapter as HeaderItemDecoration.StickyHeaderInterface
+                binding.recyclerViewFaq,
+                binding.recyclerViewFaq.adapter as HeaderItemDecoration.StickyHeaderInterface
             )
         )
         /*
@@ -82,9 +84,9 @@ class FaqListActivity : BaseActivity() {
                         }
                         list.add(item)
                     }
-                    recyclerViewFaq.adapter!!.notifyDataSetChanged()
+                    binding.recyclerViewFaq.adapter!!.notifyDataSetChanged()
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
                     if (error is retrofit2.HttpException) {
                         if (error.code() == 401 || error.code() == 403) {

@@ -2,16 +2,15 @@ package appsquared.votings.app.fragments
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import appsquared.votings.app.VotingCreateActivity
+import androidx.fragment.app.Fragment
+import app.votings.android.R
+import app.votings.android.databinding.FragmentVotingCreateTypeBinding
 import appsquared.votings.app.FragmentInteractionListener
-import appsquared.votings.app.R
-import framework.base.constant.Constant
-import kotlinx.android.synthetic.main.button_card_view.view.*
-import kotlinx.android.synthetic.main.fragment_voting_create_type.*
+import appsquared.votings.app.VotingCreateActivity
+import appsquared.votings.app.Constant
 
 class VotingCreateTypeFragment : Fragment() {
 
@@ -21,12 +20,14 @@ class VotingCreateTypeFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    private lateinit var binding: FragmentVotingCreateTypeBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_voting_create_type, container, false)
+        binding = FragmentVotingCreateTypeBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,21 +36,21 @@ class VotingCreateTypeFragment : Fragment() {
         if((activity as VotingCreateActivity).getChoiceType() == VotingCreateActivity.ChoiceType.SINGLE) setCheckedVotingTypeSingle()
         if((activity as VotingCreateActivity).getChoiceType() == VotingCreateActivity.ChoiceType.MULTI) setCheckedVotingTypeMulti()
 
-        materialCardViewChoiceSingle.setOnClickListener {
+        binding.materialCardViewChoiceSingle.setOnClickListener {
             setCheckedVotingTypeSingle()
         }
 
-        materialCardViewChoiceMulti.setOnClickListener {
+        binding.materialCardViewChoiceMulti.setOnClickListener {
             setCheckedVotingTypeMulti()
         }
 
-        buttonCardViewVotingCreateTypePrevious.materialCardView.setOnClickListener {
+        binding.buttonCardViewVotingCreateTypePrevious.bindingButtonCardView.materialCardView.setOnClickListener {
             onButtonPressed(Constant.BACK)
         }
 
-        buttonCardViewVotingCreateTypeNext.materialCardView.setOnClickListener {
+        binding.buttonCardViewVotingCreateTypeNext.bindingButtonCardView.materialCardView.setOnClickListener {
             if((activity as VotingCreateActivity).getChoiceType() == VotingCreateActivity.ChoiceType.NONE) {
-                textViewVotingCreateTypeError.visibility = View.VISIBLE
+                binding.textViewVotingCreateTypeError.visibility = View.VISIBLE
                 return@setOnClickListener
             }
             onButtonPressed(Constant.NEXT)
@@ -58,17 +59,17 @@ class VotingCreateTypeFragment : Fragment() {
     }
 
     fun setCheckedVotingTypeSingle() {
-        textViewVotingCreateTypeError.visibility = View.GONE
+        binding.textViewVotingCreateTypeError.visibility = View.GONE
         (activity as VotingCreateActivity).setChoiceType(VotingCreateActivity.ChoiceType.SINGLE)
-        imageViewChoiceSingleChecked.setImageResource(R.drawable.ic_round_checked)
-        imageViewChoiceMultiChecked.setImageResource(R.drawable.ic_round_unchecked)
+        binding.imageViewChoiceSingleChecked.setImageResource(R.drawable.ic_round_checked)
+        binding.imageViewChoiceMultiChecked.setImageResource(R.drawable.ic_round_unchecked)
     }
 
     fun setCheckedVotingTypeMulti() {
-        textViewVotingCreateTypeError.visibility = View.GONE
+        binding.textViewVotingCreateTypeError.visibility = View.GONE
         (activity as VotingCreateActivity).setChoiceType(VotingCreateActivity.ChoiceType.MULTI)
-        imageViewChoiceSingleChecked.setImageResource(R.drawable.ic_round_unchecked)
-        imageViewChoiceMultiChecked.setImageResource(R.drawable.ic_round_checked)
+        binding.imageViewChoiceSingleChecked.setImageResource(R.drawable.ic_round_unchecked)
+        binding.imageViewChoiceMultiChecked.setImageResource(R.drawable.ic_round_checked)
     }
 
     fun onButtonPressed(action: Int) {

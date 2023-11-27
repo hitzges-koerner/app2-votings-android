@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import android.widget.TextView
-import appsquared.votings.app.R
+import app.votings.android.R
 import com.google.android.material.card.MaterialCardView
 
 class TextCardView(context: Context, attrs: AttributeSet): LinearLayout(context, attrs) {

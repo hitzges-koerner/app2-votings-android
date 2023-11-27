@@ -186,4 +186,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="show_less">Weniger anzeigen</string>
+    <string name="show_more">Mehr anzeigen</string>
+    <string name="voting_create_multiple_info">Single Choice:\nParticipants can only choose one answer.\n\nMultiple Choice:\nParticipants can select multiple answers.</string>
 </resources>

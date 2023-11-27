@@ -1,16 +1,23 @@
 package appsquared.votings.app
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
-import appsquared.votings.app.fragments.*
+import app.votings.android.R
+import app.votings.android.databinding.ActivityVotingCreateBinding
+import app.votings.android.databinding.DialogListBinding
+import appsquared.votings.app.fragments.FragmentNotFoundFragment
+import appsquared.votings.app.fragments.VotingCreateChoicesFragment
+import appsquared.votings.app.fragments.VotingCreateConfirmationFragment
+import appsquared.votings.app.fragments.VotingCreateInfoFragment
+import appsquared.votings.app.fragments.VotingCreateTitleDetailsFragment
+import appsquared.votings.app.fragments.VotingCreateTypeFragment
+import appsquared.votings.app.fragments.VotingCreateUsersFragment
 import appsquared.votings.app.views.ListDialog
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -93,7 +100,7 @@ class VotingCreateActivity : BaseActivity(),
             val votingAvailable = AppData().isSavedObjectFromPreferenceAvailable(this, PreferenceNames.VOTING_CREATE_DATA)
             if(votingAvailable) {
                 ListDialog(this)
-                    .generate()
+                    .generate(DialogListBinding.inflate(layoutInflater))
                     .addButton("open", R.string.voting_dialog_create_button_open)
                     .addButton("discard", R.string.voting_dialog_create_button_discard)
                     .addCancelButton() {}
@@ -114,9 +121,11 @@ class VotingCreateActivity : BaseActivity(),
         }
     }
 
+    private lateinit var binding: ActivityVotingCreateBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_voting_create)
+        binding = ActivityVotingCreateBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     fun getColorTemp(color: Int) : Int {
@@ -173,7 +182,7 @@ class VotingCreateActivity : BaseActivity(),
              */
 
             ListDialog(this)
-                .generate()
+                .generate(DialogListBinding.inflate(layoutInflater))
                 .setTitle(R.string.voting_dialog_cancel_title)
                 .addButton("discard", R.string.voting_dialog_cancel_button_discard)
                 .addButton("save", R.string.voting_dialog_cancel_button_save)
@@ -270,7 +279,7 @@ class VotingCreateActivity : BaseActivity(),
                     mUserList.addAll(result)
                     setUsers(result)
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 401 || error.code() == 403) {
@@ -283,6 +292,7 @@ class VotingCreateActivity : BaseActivity(),
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         clickToolbarCancelButton()
     }
 }

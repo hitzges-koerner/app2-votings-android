@@ -10,6 +10,7 @@ class VotingCustomItem() {
     var tag: Int = 0
     var count: Int = 0
     var total: Int = 0
+    var best: Boolean = false
     var id: String = ""
     var choiceId: String = ""
     var choiceName: String = ""
@@ -119,6 +120,25 @@ class VotingCustomItem() {
         this.id = id
         this.title = title
         this.count = count
+        this.total = total
+    }
+
+    /**
+     * @param type
+     * @param subType
+     * @param id
+     * @param title
+     * @param count
+     * @param best
+     * @param total
+     */
+    constructor(type: Int, subType: Int, id: String, title: String, count: Int, best: Boolean, total: Int) : this() {
+        this.type = type
+        this.subType = subType
+        this.id = id
+        this.title = title
+        this.count = count
+        this.best = best
         this.total = total
     }
 

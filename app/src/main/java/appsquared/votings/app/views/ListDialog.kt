@@ -7,15 +7,13 @@ import android.os.Build
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
-import appsquared.votings.app.R
-import kotlinx.android.synthetic.main.dialog_input.*
-import kotlinx.android.synthetic.main.dialog_list.*
-import kotlinx.android.synthetic.main.dialog_list.textViewMessage
-import kotlinx.android.synthetic.main.dialog_list.textViewTitle
+import app.votings.android.R
+import app.votings.android.databinding.DialogListBinding
 
 class ListDialog(val context: Context) {
 
     val dialog = Dialog(context)
+    private lateinit var binding: DialogListBinding
     lateinit var mListener : (String) -> Unit
 
     fun callBack(listener: (String) -> Unit) : ListDialog {
@@ -23,9 +21,10 @@ class ListDialog(val context: Context) {
         return this
     }
 
-    fun generate() : ListDialog {
+    fun generate(binding: DialogListBinding) : ListDialog {
+        this@ListDialog.binding = binding
         dialog.setCancelable(true)
-        dialog.setContentView(R.layout.dialog_list)
+        dialog.setContentView(binding.root)
 
         val width = (context.resources.displayMetrics.widthPixels * 0.90).toInt()
         val height = (context.resources.displayMetrics.heightPixels * 0.50).toInt()
@@ -49,7 +48,7 @@ class ListDialog(val context: Context) {
             dialog.dismiss()
         }
 
-        dialog.linearLayoutButtonHolder.addView(button)
+        binding.linearLayoutButtonHolder.addView(button)
         return this
     }
 
@@ -69,7 +68,7 @@ class ListDialog(val context: Context) {
             dialog.dismiss()
         }
 
-        dialog.linearLayoutButtonHolder.addView(button)
+        binding.linearLayoutButtonHolder.addView(button)
         return this
     }
 
@@ -90,7 +89,7 @@ class ListDialog(val context: Context) {
             dialog.dismiss()
         }
 
-        dialog.linearLayoutButtonHolder.addView(button)
+        binding.linearLayoutButtonHolder.addView(button)
         return this
     }
 
@@ -99,8 +98,8 @@ class ListDialog(val context: Context) {
      * @param text
      */
     fun setTitle(text: String) : ListDialog {
-        dialog.textViewTitle.visibility = View.VISIBLE
-        dialog.textViewTitle.text = text
+        binding.textViewTitle.visibility = View.VISIBLE
+        binding.textViewTitle.text = text
         return this
     }
 
@@ -109,8 +108,8 @@ class ListDialog(val context: Context) {
      * @param text
      */
     fun setTitle(text: Int) : ListDialog {
-        dialog.textViewTitle.visibility = View.VISIBLE
-        dialog.textViewTitle.text = context.getString(text)
+        binding.textViewTitle.visibility = View.VISIBLE
+        binding.textViewTitle.text = context.getString(text)
         return this
     }
 
@@ -119,8 +118,8 @@ class ListDialog(val context: Context) {
      * @param text
      */
     fun setMessage(text: String) : ListDialog {
-        dialog.textViewMessage.visibility = View.VISIBLE
-        dialog.textViewMessage.text = text
+        binding.textViewMessage.visibility = View.VISIBLE
+        binding.textViewMessage.text = text
         return this
     }
 
@@ -129,8 +128,8 @@ class ListDialog(val context: Context) {
      * @param text
      */
     fun setMessage(text: Int) : ListDialog {
-        dialog.textViewMessage.visibility = View.VISIBLE
-        dialog.textViewMessage.text = context.getString(text)
+        binding.textViewMessage.visibility = View.VISIBLE
+        binding.textViewMessage.text = context.getString(text)
         return this
     }
 

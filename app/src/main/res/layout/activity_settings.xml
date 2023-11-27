@@ -22,17 +22,29 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/settings_notification_card_view"/>
+            <include
+                android:id="@+id/layoutSettingsNotification"
+                layout="@layout/settings_notification_card_view"/>
 
-            <include layout="@layout/settings_changelog_card_view"/>
+            <include
+                android:id="@+id/layoutSettingsChangelog"
+                layout="@layout/settings_changelog_card_view"/>
 
-            <include layout="@layout/settings_tutorial_card_view"/>
+            <include
+                android:id="@+id/layoutSettingsTutorial"
+                layout="@layout/settings_tutorial_card_view"/>
 
-            <include layout="@layout/settings_impress_card_view"/>
+            <include
+                android:id="@+id/layoutSettingsImpress"
+                layout="@layout/settings_impress_card_view"/>
 
-            <include layout="@layout/settings_privacy_card_view"/>
+            <include
+                android:id="@+id/layoutSettingsPrivacy"
+                layout="@layout/settings_privacy_card_view"/>
 
-            <include layout="@layout/settings_terms_card_view"/>
+            <include
+                android:id="@+id/layoutSettingsTerms"
+                layout="@layout/settings_terms_card_view"/>
 
             <TextView
                 android:padding="8dp"

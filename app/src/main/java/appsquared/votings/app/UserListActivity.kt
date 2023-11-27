@@ -13,14 +13,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import app.votings.android.R
+import app.votings.android.databinding.ActivityUserListBinding
+import appsquared.votings.app.adapter.UserListAdapter
 import appsquared.votings.app.views.EditTextWithClear
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
+import appsquared.votings.app.tag.enums.Style
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_user_list.*
 import kotlin.math.roundToInt
 
 
@@ -38,9 +40,11 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
 
     var statusBarSize = 0
 
+    private lateinit var binding: ActivityUserListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_list)
+        binding = ActivityUserListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
     }
 
@@ -52,101 +56,110 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
     override fun childOnlyMethod() {
 
         setScreenTitle(getString(R.string.title_users))
-        setMenuImageButton(R.drawable.ic_baseline_person_add_24, ContextCompat.getColor(this, R.color.colorAccent))
+        setMenuImageButton(
+            R.drawable.ic_baseline_person_add_24,
+            ContextCompat.getColor(this, R.color.colorAccent)
+        )
         setLoadingIndicatorVisibility(View.VISIBLE)
 
         val workspace: Model.WorkspaceResponse = mWorkspace
 
-        editTextSearch.setOnEditWithClearClickListener(this)
-        editTextSearch.setOnEditorActionListener(this)
+        binding.editTextSearch.setOnEditWithClearClickListener(this)
+        binding.editTextSearch.setOnEditorActionListener(this)
 
         mUserListDownloaded = mutableListOf<Model.User>()
         mUserList = mutableListOf<Model.User>()
         var attributes = Attributes()
 
-        if(workspace.settings.style.isNotEmpty()) {
-            when(workspace.settings.style.toLowerCase()) {
-                "rich" -> {
-                    attributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
-                    attributes.contentBorderColor = getColorTemp(R.color.white_transparent)
-                    attributes.contentBorderWidth = 0
-                    attributes.contentCornerRadius = 10
+        when (workspace.settings.style) {
+            Style.RICH -> {
+                attributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
+                attributes.contentBorderColor = getColorTemp(R.color.white_transparent)
+                attributes.contentBorderWidth = 0
+                attributes.contentCornerRadius = 10
 
-                    attributes.contentTextColor = getColorTemp(R.color.black)
-                    attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    attributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
+                attributes.contentTextColor = getColorTemp(R.color.black)
+                attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                attributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
 
-                    //search bar
-                    materialCardViewSearch.setCardBackgroundColor(getColorTemp(R.color.grey_230))
-                    materialCardViewSearch.strokeColor = getColorTemp(R.color.colorAccent)
-                    materialCardViewSearch.strokeWidth = dpToPx(1)
-                    materialCardViewSearch.radius = dpToPx(5).toFloat()
+                //search bar
+                binding.materialCardViewSearch.setCardBackgroundColor(getColorTemp(R.color.grey_230))
+                binding.materialCardViewSearch.strokeColor = getColorTemp(R.color.colorAccent)
+                binding.materialCardViewSearch.strokeWidth = dpToPx(1)
+                binding.materialCardViewSearch.radius = dpToPx(5).toFloat()
 
-                    editTextSearch.setTextColor(getColorTemp(R.color.grey_60))
-                    editTextSearch.setHintTextColor(getColorTemp(R.color.grey_144))
-                }
+                binding.editTextSearch.setTextColor(getColorTemp(R.color.grey_60))
+                binding.editTextSearch.setHintTextColor(getColorTemp(R.color.grey_144))
+            }
 
-                "minimal" -> {
-                    attributes.contentBackgroundColor = getColorTemp(R.color.transparent)
-                    attributes.contentBorderColor = getColorTemp(R.color.transparent)
-                    attributes.contentBorderWidth = 0
-                    attributes.contentCornerRadius = 0
+            Style.MINIMAL -> {
+                attributes.contentBackgroundColor = getColorTemp(R.color.transparent)
+                attributes.contentBorderColor = getColorTemp(R.color.transparent)
+                attributes.contentBorderWidth = 0
+                attributes.contentCornerRadius = 0
 
-                    attributes.contentTextColor = getColorTemp(R.color.black)
-                    attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    attributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
+                attributes.contentTextColor = getColorTemp(R.color.black)
+                attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                attributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
 
-                    //search bar
-                    materialCardViewSearch.setCardBackgroundColor(getColorTemp(R.color.grey_230))
-                    materialCardViewSearch.strokeColor = getColorTemp(R.color.white)
-                    materialCardViewSearch.strokeWidth = dpToPx(1)
-                    materialCardViewSearch.radius = dpToPx(5).toFloat()
+                //search bar
+                binding.materialCardViewSearch.setCardBackgroundColor(getColorTemp(R.color.grey_230))
+                binding.materialCardViewSearch.strokeColor = getColorTemp(R.color.white)
+                binding.materialCardViewSearch.strokeWidth = dpToPx(1)
+                binding.materialCardViewSearch.radius = dpToPx(5).toFloat()
 
-                    editTextSearch.setTextColor(getColorTemp(R.color.grey_60))
-                    editTextSearch.setHintTextColor(getColorTemp(R.color.grey_144))
-                }
+                binding.editTextSearch.setTextColor(getColorTemp(R.color.grey_60))
+                binding.editTextSearch.setHintTextColor(getColorTemp(R.color.grey_144))
+            }
 
-                "clean" -> {
-                    attributes = setAttributesDefault()
+            Style.CLEAN -> {
+                attributes = setAttributesDefault()
 
-                    //search bar
-                    materialCardViewSearch.setCardBackgroundColor(getColorTemp(R.color.grey_230))
-                    materialCardViewSearch.strokeColor = getColorTemp(R.color.colorAccent)
-                    materialCardViewSearch.strokeWidth = dpToPx(1)
-                    materialCardViewSearch.radius = dpToPx(5).toFloat()
+                //search bar
+                binding.materialCardViewSearch.setCardBackgroundColor(getColorTemp(R.color.grey_230))
+                binding.materialCardViewSearch.strokeColor = getColorTemp(R.color.colorAccent)
+                binding.materialCardViewSearch.strokeWidth = dpToPx(1)
+                binding.materialCardViewSearch.radius = dpToPx(5).toFloat()
 
-                    editTextSearch.setTextColor(getColorTemp(R.color.grey_60))
-                    editTextSearch.setHintTextColor(getColorTemp(R.color.grey_144))
-                }
-                else -> {
-                    attributes = setAttributesDefault()
+                binding.editTextSearch.setTextColor(getColorTemp(R.color.grey_60))
+                binding.editTextSearch.setHintTextColor(getColorTemp(R.color.grey_144))
+            }
 
-                    //search bar
-                    materialCardViewSearch.setCardBackgroundColor(getColorTemp(R.color.grey_230))
-                    materialCardViewSearch.strokeColor = getColorTemp(R.color.colorAccent)
-                    materialCardViewSearch.strokeWidth = dpToPx(1)
-                    materialCardViewSearch.radius = dpToPx(5).toFloat()
+            else -> {
+                attributes = setAttributesDefault()
 
-                    editTextSearch.setTextColor(getColorTemp(R.color.grey_60))
-                    editTextSearch.setHintTextColor(getColorTemp(R.color.grey_144))
-                }
+                //search bar
+                binding.materialCardViewSearch.setCardBackgroundColor(getColorTemp(R.color.grey_230))
+                binding.materialCardViewSearch.strokeColor = getColorTemp(R.color.colorAccent)
+                binding.materialCardViewSearch.strokeWidth = dpToPx(1)
+                binding.materialCardViewSearch.radius = dpToPx(5).toFloat()
+
+                binding.editTextSearch.setTextColor(getColorTemp(R.color.grey_60))
+                binding.editTextSearch.setHintTextColor(getColorTemp(R.color.grey_144))
             }
         }
 
         val workspaceSettings = workspace.settings
-        if(workspaceSettings.contentBackgroundColor.isNotEmpty())  attributes.contentBackgroundColor = convertStringToColor(workspaceSettings.contentBackgroundColor)
-        if(workspaceSettings.contentBorderColor.isNotEmpty()) attributes.contentBorderColor = convertStringToColor(workspaceSettings.contentBorderColor)
-        if(workspaceSettings.contentBorderWidth.isNotEmpty()) attributes.contentBorderWidth = workspaceSettings.contentBorderWidth.toDouble().roundToInt()
-        if(workspaceSettings.contentCornerRadius.isNotEmpty()) attributes.contentCornerRadius = workspaceSettings.contentCornerRadius.toDouble().roundToInt()
+        if (workspaceSettings.contentBackgroundColor.isNotEmpty()) attributes.contentBackgroundColor =
+            convertStringToColor(workspaceSettings.contentBackgroundColor)
+        if (workspaceSettings.contentBorderColor.isNotEmpty()) attributes.contentBorderColor =
+            convertStringToColor(workspaceSettings.contentBorderColor)
+        if (workspaceSettings.contentBorderWidth.isNotEmpty()) attributes.contentBorderWidth =
+            workspaceSettings.contentBorderWidth.toDouble().roundToInt()
+        if (workspaceSettings.contentCornerRadius.isNotEmpty()) attributes.contentCornerRadius =
+            workspaceSettings.contentCornerRadius.toDouble().roundToInt()
 
-        if(workspaceSettings.contentTextColor.isNotEmpty()) attributes.contentTextColor = convertStringToColor(workspaceSettings.contentTextColor)
-        if(workspaceSettings.contentAccentColor.isNotEmpty()) attributes.contentAccentColor = convertStringToColor(workspaceSettings.contentAccentColor)
+        if (workspaceSettings.contentTextColor.isNotEmpty()) attributes.contentTextColor =
+            convertStringToColor(workspaceSettings.contentTextColor)
+        if (workspaceSettings.contentAccentColor.isNotEmpty()) attributes.contentAccentColor =
+            convertStringToColor(workspaceSettings.contentAccentColor)
 
-        materialCardViewSearch.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        binding.materialCardViewSearch.viewTreeObserver.addOnGlobalLayoutListener(object :
+            OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                materialCardViewSearch.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                binding.materialCardViewSearch.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                val searchBarHeight = materialCardViewSearch.height //height is ready
+                val searchBarHeight = binding.materialCardViewSearch.height //height is ready
 
                 var spanCount = 2 // 2 columns for phone
                 val tabletSize = resources.getBoolean(R.bool.isTablet)
@@ -157,22 +170,28 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
 
                 val spacing = dpToPx(16)
 
-                recyclerView.setPadding(0, getImageHeaderHeight(), 0, 0)
-                recyclerView.addItemDecoration(MarginItemDecoration(dpToPx(16)))
+                binding.recyclerView.setPadding(0, getImageHeaderHeight(), 0, 0)
+                binding.recyclerView.addItemDecoration(MarginItemDecoration(dpToPx(16)))
 
-                recyclerView.layoutManager = LinearLayoutManager(this@UserListActivity)
+                binding.recyclerView.layoutManager = LinearLayoutManager(this@UserListActivity)
 
-                recyclerView.adapter = UserListAdapter(mUserList, attributes) { position: Int ->
+                binding.recyclerView.adapter =
+                    UserListAdapter(mUserList, attributes) { position: Int ->
 
-                }
+                    }
 
                 // TODO NEED FIX SEARCH BAR
                 val lp = ConstraintLayout.LayoutParams(
                     ConstraintLayout.LayoutParams.MATCH_PARENT,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT
                 )
-                lp.setMargins(dpToPx(16), getImageHeaderHeight() + dpToPx(16) + dpToPx(16) + dpToPx(16), dpToPx(16), dpToPx(16))
-                materialCardViewSearch.layoutParams = lp
+                lp.setMargins(
+                    dpToPx(16),
+                    getImageHeaderHeight() + dpToPx(16) + dpToPx(16) + dpToPx(16),
+                    dpToPx(16),
+                    dpToPx(16)
+                )
+                binding.materialCardViewSearch.layoutParams = lp
             }
         })
 
@@ -208,11 +227,11 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
 
     }
 
-    fun getColorTemp(color: Int) : Int {
+    fun getColorTemp(color: Int): Int {
         return ResourcesCompat.getColor(resources, color, null)
     }
 
-    fun setAttributesDefault() : Attributes {
+    fun setAttributesDefault(): Attributes {
         val attributes = Attributes()
         attributes.contentBackgroundColor = getColorTemp(R.color.colorAccent)
         attributes.contentBorderColor = getColorTemp(R.color.transparent)
@@ -238,20 +257,20 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
                 { result ->
                     mUserListDownloaded.clear()
                     mUserListDownloaded.addAll(result)
-                    mUserListDownloaded.sortWith(compareBy({it.lastName}, {it.firstName}))
+                    mUserListDownloaded.sortWith(compareBy({ it.lastName }, { it.firstName }))
                     mUserList.clear()
                     mUserList.addAll(addSection(mUserListDownloaded))
-                    recyclerView.adapter?.notifyDataSetChanged()
+                    binding.recyclerView.adapter?.notifyDataSetChanged()
                     setLoadingIndicatorVisibility(View.GONE)
 
                     //TODO commented out because of visual bugs
                     //materialCardViewSearch.visibility = VISIBLE
 
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
-                    if(error is retrofit2.HttpException) {
-                        if(error.code() == 401 || error.code() == 403) {
+                    if (error is retrofit2.HttpException) {
+                        if (error.code() == 401 || error.code() == 403) {
                             pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
                             return@subscribe
                         }
@@ -262,11 +281,13 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
 
     private fun addSection(userList: MutableList<Model.User>): MutableList<Model.User> {
         val userListTemp = mutableListOf<Model.User>()
-        for((index, user) in userList.withIndex()) {
+        for ((index, user) in userList.withIndex()) {
             if (index == 0) {
                 userListTemp.add(Model.User(user.lastName[0].toString().toUpperCase()))
             } else {
-                if(!user.lastName[0].toString().equals(userList[index-1].lastName[0].toString(), true)) {
+                if (!user.lastName[0].toString()
+                        .equals(userList[index - 1].lastName[0].toString(), true)
+                ) {
                     userListTemp.add(Model.User(user.lastName[0].toString().toUpperCase()))
                 }
             }
@@ -284,14 +305,15 @@ class UserListActivity : BaseActivity(), EditTextWithClear.OnEditTextWithClearCl
     }
 
     override fun onItemClick(search: String) {
-        val userListTemp : MutableList<Model.User> = mutableListOf()
+        val userListTemp: MutableList<Model.User> = mutableListOf()
         userListTemp.addAll(mUserListDownloaded)
-        val userList = userListTemp.filter { user -> user.firstName.contains(search, true) ||
-                user.lastName.contains(search, true)
+        val userList = userListTemp.filter { user ->
+            user.firstName.contains(search, true) ||
+                    user.lastName.contains(search, true)
         }
         mUserList.clear()
         mUserList.addAll(addSection(userList.toMutableList()))
-        recyclerView.adapter?.notifyDataSetChanged()
+        binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 
 }

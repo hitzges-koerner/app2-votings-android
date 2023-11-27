@@ -1,12 +1,9 @@
 package appsquared.votings.app
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
-import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.TextView
-import com.google.android.material.card.MaterialCardView
+import app.votings.android.R
 
 class ToolbarCustom(context: Context, attrs: AttributeSet): LinearLayout(context, attrs) {
 

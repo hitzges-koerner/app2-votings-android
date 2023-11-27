@@ -24,7 +24,9 @@
         android:elevation="4dp"
         android:translationZ="4dp">
 
-        <include layout="@layout/layout_toolbar_dialog_voting_select" />
+        <include
+            android:id="@+id/layout_toolbar_dialog_voting_select"
+            layout="@layout/layout_toolbar_dialog_voting_select" />
 
     </androidx.appcompat.widget.Toolbar>
 

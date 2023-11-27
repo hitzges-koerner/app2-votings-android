@@ -6,26 +6,31 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import app.votings.android.BuildConfig
+import app.votings.android.R
+import app.votings.android.databinding.ActivityMainBinding
+import app.votings.android.databinding.DialogDecisionBinding
+import app.votings.android.databinding.DialogInfoBinding
+import appsquared.votings.app.adapter.TilesAdapter
+import appsquared.votings.app.rest.Model
+import appsquared.votings.app.tag.enums.Style
 import appsquared.votings.app.views.DecisionDialog
 import appsquared.votings.app.views.InfoDialog
 import com.google.android.material.navigation.NavigationView
-import framework.base.constant.Constant
-import framework.base.rest.Model
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     var statusBarSize = 0
 
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
     }
 
@@ -35,7 +40,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             startActivity(Intent(this, VotingCreateActivity::class.java))
         } else {
             InfoDialog(this) {
-            }.generate().setButtonName(R.string.ok)
+            }.generate(DialogInfoBinding.inflate(layoutInflater)).setButtonName(R.string.ok)
                 .setTitle(R.string.dialog_error_create_voting_title)
                 .setMessage(R.string.dialog_error_create_voting_message)
                 .show()
@@ -107,40 +112,38 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
         var attributes = Attributes()
 
-        if(workspace.settings.style.isNotEmpty()) {
-            when(workspace.settings.style.toLowerCase()) {
-                "rich" -> {
-                    attributes.tilesBackgroundColor = getColorTemp(R.color.white_transparent)
-                    attributes.tilesBorderColor = getColorTemp(R.color.white_transparent)
-                    attributes.tilesBorderWidth = 0
-                    attributes.tilesCornerRadius = 20
+        when(workspace.settings.style) {
+            Style.RICH -> {
+                attributes.tilesBackgroundColor = getColorTemp(R.color.white_transparent)
+                attributes.tilesBorderColor = getColorTemp(R.color.white_transparent)
+                attributes.tilesBorderWidth = 0
+                attributes.tilesCornerRadius = 20
 
-                    attributes.tilesTextColor = getColorTemp(R.color.black)
+                attributes.tilesTextColor = getColorTemp(R.color.black)
 
-                    attributes.tilesIconBackgroundColor = getColorTemp(R.color.colorAccent)
-                    attributes.tilesIconCornerRadius = 50
-                    attributes.tilesIconTintColor = getColorTemp(R.color.white)
-                }
+                attributes.tilesIconBackgroundColor = getColorTemp(R.color.colorAccent)
+                attributes.tilesIconCornerRadius = 50
+                attributes.tilesIconTintColor = getColorTemp(R.color.white)
+            }
 
-                "minimal" -> {
-                    attributes.tilesBackgroundColor = getColorTemp(R.color.transparent)
-                    attributes.tilesBorderColor = getColorTemp(R.color.transparent)
-                    attributes.tilesBorderWidth = 0
-                    attributes.tilesCornerRadius = 0
+            Style.MINIMAL -> {
+                attributes.tilesBackgroundColor = getColorTemp(R.color.transparent)
+                attributes.tilesBorderColor = getColorTemp(R.color.transparent)
+                attributes.tilesBorderWidth = 0
+                attributes.tilesCornerRadius = 0
 
-                    attributes.tilesTextColor = getColorTemp(R.color.colorAccent)
+                attributes.tilesTextColor = getColorTemp(R.color.colorAccent)
 
-                    attributes.tilesIconBackgroundColor = getColorTemp(R.color.colorAccent)
-                    attributes.tilesIconCornerRadius = 50
-                    attributes.tilesIconTintColor = getColorTemp(R.color.white)
-                }
+                attributes.tilesIconBackgroundColor = getColorTemp(R.color.colorAccent)
+                attributes.tilesIconCornerRadius = 50
+                attributes.tilesIconTintColor = getColorTemp(R.color.white)
+            }
 
-                "clean" -> {
-                    attributes = setAttributesDefault()
-                }
-                else -> {
-                    attributes = setAttributesDefault()
-                }
+            Style.CLEAN -> {
+                attributes = setAttributesDefault()
+            }
+            else -> {
+                attributes = setAttributesDefault()
             }
         }
 
@@ -204,12 +207,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         val spacing = dpToPx(tilesSpacing)
 
-        recyclerView.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
-        recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount, spacing, includeEdge))
+        binding.recyclerView.setPadding(spacing, spacing + getImageHeaderHeight(), spacing, spacing)
+        binding.recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount, spacing, includeEdge))
 
-        recyclerView.layoutManager = GridLayoutManager(this@MainActivity, spanCount)
+        binding.recyclerView.layoutManager = GridLayoutManager(this@MainActivity, spanCount)
 
-        recyclerView.adapter = TilesAdapter(list, attributes) { position: Int ->
+        binding.recyclerView.adapter = TilesAdapter(list, attributes) { position: Int ->
             when(list[position].type) {
                 Item.PROFIL -> {
                     startActivityTemp(MyProfileActivity())
@@ -312,7 +315,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 if (it == DecisionDialog.RIGHT) {
                     openPlayStoreUrl(url)
                 }
-            }.generate()
+            }.generate(DialogDecisionBinding.inflate(layoutInflater))
                 .setTitle(getString(R.string.new_version_available_dialog_title))
                 .setButtonRightName(getString(R.string.new_version_available_dialog_download), false)
                 .setButtonLeftName(getString(R.string.new_version_available_dialog_cancel))
@@ -327,7 +330,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                         openPlayStoreUrl(url)
                         finish()
                     }
-                }.generate()
+                }.generate(DialogDecisionBinding.inflate(layoutInflater))
                     .setCancelable(false)
                     .setTitle(getString(R.string.new_version_required_dialog_title))
                     .setButtonRightName(getString(R.string.new_version_required_dialog_download), false)

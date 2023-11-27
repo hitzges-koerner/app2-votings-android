@@ -14,17 +14,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
+import app.votings.android.R
+import app.votings.android.databinding.ActivityMyProfileBinding
+import app.votings.android.databinding.DialogListBinding
 import appsquared.votings.app.views.ListDialog
 import appsquared.votings.app.views.MyProfileEditCardView
 import com.squareup.picasso.Picasso
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
+import appsquared.votings.app.tag.enums.Style
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_my_profile.*
-import kotlinx.android.synthetic.main.button_card_view.view.*
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
@@ -43,13 +44,15 @@ class MyProfileActivity : BaseActivity(),
 
     var statusBarSize = 0
 
+    private lateinit var binding: ActivityMyProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_my_profile)
+        binding = ActivityMyProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        buttonCardViewLogout.materialCardView.setOnClickListener {
+        binding.buttonCardViewLogout.setOnClickListener {
 
             val pref = PreferenceManager.getDefaultSharedPreferences(this)
             pref.edit().remove(PreferenceNames.PASSWORD).apply()
@@ -57,7 +60,8 @@ class MyProfileActivity : BaseActivity(),
             pref.edit().remove(PreferenceNames.EMAIL).apply()
 
             val intent = Intent(this@MyProfileActivity, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            intent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
 
@@ -65,7 +69,8 @@ class MyProfileActivity : BaseActivity(),
 
     override fun childOnlyMethod() {
 
-        textViewWorkspaceName.text = PreferenceManager.getDefaultSharedPreferences(this).getString(PreferenceNames.WORKSPACE_NAME, "")
+        binding.textViewWorkspaceName.text = PreferenceManager.getDefaultSharedPreferences(this)
+            .getString(PreferenceNames.WORKSPACE_NAME, "")
         setScreenTitle(R.string.tile_my_profil)
 
         val workspace = mWorkspace
@@ -74,100 +79,122 @@ class MyProfileActivity : BaseActivity(),
         val imageHeaderHeight = getImageHeaderHeight()
 
         val spacing = dpToPx(16)
-        scrollView.setPadding(
+        binding.scrollView.setPadding(
             spacing,
             spacing + imageHeaderHeight,
             spacing,
             spacing
         )
 
-        if(workspace.settings.style.isNotEmpty()) {
-            when(workspace.settings.style.toLowerCase()) {
-                "rich" -> {
-                    mAttributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
-                    mAttributes.contentBorderColor = getColorTemp(R.color.white_transparent)
-                    mAttributes.contentBorderWidth = 0
-                    mAttributes.contentCornerRadius = 10
+        when (workspace.settings.style) {
+            Style.RICH -> {
+                mAttributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
+                mAttributes.contentBorderColor = getColorTemp(R.color.white_transparent)
+                mAttributes.contentBorderWidth = 0
+                mAttributes.contentCornerRadius = 10
 
-                    mAttributes.contentTextColor = getColorTemp(R.color.black)
-                    mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    mAttributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
+                mAttributes.contentTextColor = getColorTemp(R.color.black)
+                mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                mAttributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
 
-                    mAttributes.contentAccentContrastColor = getColorTemp(R.color.white)
-                    mAttributes.contentPlaceholderColor = getColorTemp(R.color.grey_144)
-                }
+                mAttributes.contentAccentContrastColor = getColorTemp(R.color.white)
+                mAttributes.contentPlaceholderColor = getColorTemp(R.color.grey_144)
+            }
 
-                "minimal" -> {
-                    mAttributes.contentBackgroundColor = getColorTemp(R.color.transparent)
-                    mAttributes.contentBorderColor = getColorTemp(R.color.transparent)
-                    mAttributes.contentBorderWidth = 0
-                    mAttributes.contentCornerRadius = 0
+            Style.MINIMAL -> {
+                mAttributes.contentBackgroundColor = getColorTemp(R.color.transparent)
+                mAttributes.contentBorderColor = getColorTemp(R.color.transparent)
+                mAttributes.contentBorderWidth = 0
+                mAttributes.contentCornerRadius = 0
 
-                    mAttributes.contentTextColor = getColorTemp(R.color.black)
-                    mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    mAttributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
+                mAttributes.contentTextColor = getColorTemp(R.color.black)
+                mAttributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                mAttributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
 
-                    mAttributes.contentAccentContrastColor = getColorTemp(R.color.white)
-                    mAttributes.contentPlaceholderColor = getColorTemp(R.color.grey_144)
-                }
+                mAttributes.contentAccentContrastColor = getColorTemp(R.color.white)
+                mAttributes.contentPlaceholderColor = getColorTemp(R.color.grey_144)
+            }
 
-                "clean" -> {
-                    mAttributes = setAttributesDefault()
-                }
-                else -> {
-                    mAttributes = setAttributesDefault()
-                }
+            Style.CLEAN -> {
+                mAttributes = setAttributesDefault()
+            }
+
+            else -> {
+                mAttributes = setAttributesDefault()
             }
         }
 
         val workspaceSettings = workspace.settings
-        if(workspaceSettings.contentBackgroundColor.isNotEmpty())  mAttributes.contentBackgroundColor = convertStringToColor(workspaceSettings.contentBackgroundColor)
-        if(workspaceSettings.contentBorderColor.isNotEmpty()) mAttributes.contentBorderColor = convertStringToColor(workspaceSettings.contentBorderColor)
-        if(workspaceSettings.contentBorderWidth.isNotEmpty()) mAttributes.contentBorderWidth = workspaceSettings.contentBorderWidth.toDouble().roundToInt()
-        if(workspaceSettings.contentCornerRadius.isNotEmpty()) mAttributes.contentCornerRadius = workspaceSettings.contentCornerRadius.toDouble().roundToInt()
+        if (workspaceSettings.contentBackgroundColor.isNotEmpty()) mAttributes.contentBackgroundColor =
+            convertStringToColor(workspaceSettings.contentBackgroundColor)
+        if (workspaceSettings.contentBorderColor.isNotEmpty()) mAttributes.contentBorderColor =
+            convertStringToColor(workspaceSettings.contentBorderColor)
+        if (workspaceSettings.contentBorderWidth.isNotEmpty()) mAttributes.contentBorderWidth =
+            workspaceSettings.contentBorderWidth.toDouble().roundToInt()
+        if (workspaceSettings.contentCornerRadius.isNotEmpty()) mAttributes.contentCornerRadius =
+            workspaceSettings.contentCornerRadius.toDouble().roundToInt()
 
-        if(workspaceSettings.contentTextColor.isNotEmpty()) mAttributes.contentTextColor = convertStringToColor(workspaceSettings.contentTextColor)
-        if(workspaceSettings.contentAccentColor.isNotEmpty()) mAttributes.contentAccentColor = convertStringToColor(workspaceSettings.contentAccentColor)
-        if(workspaceSettings.contentPlaceholderColor.isNotEmpty()) mAttributes.contentPlaceholderColor = convertStringToColor(workspaceSettings.contentPlaceholderColor)
-        if(workspaceSettings.contentAccentContrastColor.isNotEmpty()) mAttributes.contentAccentContrastColor = convertStringToColor(workspaceSettings.contentAccentContrastColor)
+        if (workspaceSettings.contentTextColor.isNotEmpty()) mAttributes.contentTextColor =
+            convertStringToColor(workspaceSettings.contentTextColor)
+        if (workspaceSettings.contentAccentColor.isNotEmpty()) mAttributes.contentAccentColor =
+            convertStringToColor(workspaceSettings.contentAccentColor)
+        if (workspaceSettings.contentPlaceholderColor.isNotEmpty()) mAttributes.contentPlaceholderColor =
+            convertStringToColor(workspaceSettings.contentPlaceholderColor)
+        if (workspaceSettings.contentAccentContrastColor.isNotEmpty()) mAttributes.contentAccentContrastColor =
+            convertStringToColor(workspaceSettings.contentAccentContrastColor)
 
-        if(loginData.firstName.isNotEmpty()) myProfileEditCardViewNameOne.setText(loginData.firstName) else myProfileEditCardViewNameOne.setPlaceHolderText(getString(
-            R.string.placeholder_name_first))
-        myProfileEditCardViewNameOne.setOnMyProfileEditButtonClickListener(this)
+        if (loginData.firstName.isNotEmpty()) binding.myProfileEditCardViewNameOne.setText(loginData.firstName) else binding.myProfileEditCardViewNameOne.setPlaceHolderText(
+            getString(
+                R.string.placeholder_name_first
+            )
+        )
+        binding.myProfileEditCardViewNameOne.setOnMyProfileEditButtonClickListener(this)
 
-        if(loginData.lastName.isNotEmpty()) myProfileEditCardViewNameTwo.setText(loginData.lastName) else myProfileEditCardViewNameTwo.setPlaceHolderText(getString(
-            R.string.placeholder_name_last))
-        myProfileEditCardViewNameTwo.setOnMyProfileEditButtonClickListener(this)
+        if (loginData.lastName.isNotEmpty()) binding.myProfileEditCardViewNameTwo.setText(loginData.lastName) else binding.myProfileEditCardViewNameTwo.setPlaceHolderText(
+            getString(
+                R.string.placeholder_name_last
+            )
+        )
+        binding.myProfileEditCardViewNameTwo.setOnMyProfileEditButtonClickListener(this)
 
-        if(loginData.email.isNotEmpty()) myProfileEditCardViewMail.setText(loginData.email) else myProfileEditCardViewMail.setPlaceHolderText(getString(
-            R.string.placeholder_email))
-        myProfileEditCardViewMail.setOnMyProfileEditButtonClickListener(this)
-        myProfileEditCardViewMail.disabledEdit()
+        if (loginData.email.isNotEmpty()) binding.myProfileEditCardViewMail.setText(loginData.email) else binding.myProfileEditCardViewMail.setPlaceHolderText(
+            getString(
+                R.string.placeholder_email
+            )
+        )
+        binding.myProfileEditCardViewMail.setOnMyProfileEditButtonClickListener(this)
+        binding.myProfileEditCardViewMail.disabledEdit()
 
-        if(loginData.phoneNo.isNotEmpty()) myProfileEditCardViewPhoneNo.setText(loginData.phoneNo) else myProfileEditCardViewPhoneNo.setPlaceHolderText(getString(
-            R.string.placeholder_phone_number))
-        myProfileEditCardViewPhoneNo.setOnMyProfileEditButtonClickListener(this)
+        if (loginData.phoneNo.isNotEmpty()) binding.myProfileEditCardViewPhoneNo.setText(loginData.phoneNo) else binding.myProfileEditCardViewPhoneNo.setPlaceHolderText(
+            getString(
+                R.string.placeholder_phone_number
+            )
+        )
+        binding.myProfileEditCardViewPhoneNo.setOnMyProfileEditButtonClickListener(this)
 
         // profile image
         //imageViewProfile.setBackgroundColor(ContextCompat.getColor(this, R.color.grey_144))
-        imageViewProfile.setBackgroundResource(R.drawable.background_round_grey)
-        if(loginData.avatarUrl.isNotEmpty() && URLUtil.isValidUrl(loginData.avatarUrl)) {
+        binding.imageViewProfile.setBackgroundResource(R.drawable.background_round_grey)
+        if (loginData.avatarUrl.isNotEmpty() && URLUtil.isValidUrl(loginData.avatarUrl)) {
             Picasso.get()
                 .load(loginData.avatarUrl)
                 .transform(CircleTransform())
-                .into(imageViewProfile)
+                .into(binding.imageViewProfile)
         } else {
-            imageViewProfile.setImageResource(R.drawable.icon_placeholder)
-            imageViewProfile.setColorFilter(mAttributes.contentTextColor, PorterDuff.Mode.SRC_ATOP)
+            binding.imageViewProfile.setImageResource(R.drawable.icon_placeholder)
+            binding.imageViewProfile.setColorFilter(
+                mAttributes.contentTextColor,
+                PorterDuff.Mode.SRC_ATOP
+            )
         }
 
-        textViewImageEdit.setBackgroundColor(mAttributes.contentAccentColor)
-        textViewImageEdit.setTextColor(mAttributes.contentAccentContrastColor)
+        binding.textViewImageEdit.setBackgroundColor(mAttributes.contentAccentColor)
+        binding.textViewImageEdit.setTextColor(mAttributes.contentAccentContrastColor)
 
-        imageViewProfile.setOnClickListener {
+        binding.imageViewProfile.setOnClickListener {
 
             ListDialog(this)
-                .generate()
+                .generate(DialogListBinding.inflate(layoutInflater))
                 .addButton("camera", R.string.camera)
                 .addButton("photo", R.string.gallery)
                 .addButton("delete", R.string.delete_avatar)
@@ -182,6 +209,7 @@ class MyProfileActivity : BaseActivity(),
                                 ).putExtra("type", CameraActivity.CAMERA), 1
                             )
                         }
+
                         "photo" -> {
                             startActivityForResult(
                                 Intent(
@@ -190,6 +218,7 @@ class MyProfileActivity : BaseActivity(),
                                 ).putExtra("type", CameraActivity.PICKER), 1
                             )
                         }
+
                         "delete" -> {
                             deleteAvatar()
                         }
@@ -204,11 +233,11 @@ class MyProfileActivity : BaseActivity(),
         super.onStart()
     }
 
-    fun getColorTemp(color: Int) : Int {
+    fun getColorTemp(color: Int): Int {
         return ResourcesCompat.getColor(resources, color, null)
     }
 
-    fun setAttributesDefault() : Attributes {
+    fun setAttributesDefault(): Attributes {
         val attributes = Attributes()
         attributes.contentBackgroundColor = getColorTemp(R.color.colorAccent)
         attributes.contentBorderColor = getColorTemp(R.color.transparent)
@@ -231,24 +260,24 @@ class MyProfileActivity : BaseActivity(),
         //val email = if(myProfileEditCardViewMail.getText().isNotEmpty()) myProfileEditCardViewMail.getText() else mLoginData.email
         //val phoneNo = if(myProfileEditCardViewPhoneNo.getText().isNotEmpty()) myProfileEditCardViewPhoneNo.getText() else mLoginData.phoneNo
 
-        val firstName = myProfileEditCardViewNameOne.getText()
-        val lastName = myProfileEditCardViewNameTwo.getText()
-        val email = myProfileEditCardViewMail.getText()
-        val phoneNo = myProfileEditCardViewPhoneNo.getText()
+        val firstName = binding.myProfileEditCardViewNameOne.getText()
+        val lastName = binding.myProfileEditCardViewNameTwo.getText()
+        val email = binding.myProfileEditCardViewMail.getText()
+        val phoneNo = binding.myProfileEditCardViewPhoneNo.getText()
 
-        if(firstName.isEmpty()) {
+        if (firstName.isEmpty()) {
             toast("Feld mit Vorname darf nicht leer sein.")
             return
         }
-        if(lastName.isEmpty()) {
+        if (lastName.isEmpty()) {
             toast("Feld mit Nachname darf nicht leer sein.")
             return
         }
-        if(email.isEmpty()) {
+        if (email.isEmpty()) {
             toast("Feld mit Email darf nicht leer sein.")
             return
         }
-        if(!isEmailValid(email)) {
+        if (!isEmailValid(email)) {
             toast("Die Email muss ein gültiges Format haben.")
             return
         }
@@ -267,15 +296,15 @@ class MyProfileActivity : BaseActivity(),
         jsonData.put("avatarUrl", mLoginData.avatarUrl)
         jsonData.put("phoneNo", phoneNo)
 
-        disposable = apiService.sendUserData( "Bearer $token", workspaceName!!, jsonData.toString())
+        disposable = apiService.sendUserData("Bearer $token", workspaceName!!, jsonData.toString())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
 
-                    myProfileEditCardViewNameOne.editSave()
-                    myProfileEditCardViewNameTwo.editSave()
-                    myProfileEditCardViewPhoneNo.editSave()
+                    binding.myProfileEditCardViewNameOne.editSave()
+                    binding.myProfileEditCardViewNameTwo.editSave()
+                    binding.myProfileEditCardViewPhoneNo.editSave()
 
                     mLoginData.firstName = firstName
                     mLoginData.lastName = lastName
@@ -285,13 +314,13 @@ class MyProfileActivity : BaseActivity(),
                     AppData().saveObjectToSharedPreference(this, PreferenceNames.LOGIN_DATA, result)
 
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
-                    if(error is retrofit2.HttpException) {
-                        if(error.code() == 401 || error.code() == 403) {
+                    if (error is retrofit2.HttpException) {
+                        if (error.code() == 401 || error.code() == 403) {
                             pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
                             return@subscribe
-                        } else if(error.code() == 409) {
+                        } else if (error.code() == 409) {
                             Toast.makeText(this, "Email schon vergeben", Toast.LENGTH_LONG).show()
                         }
                     }
@@ -306,24 +335,31 @@ class MyProfileActivity : BaseActivity(),
         val token = pref.getString(PreferenceNames.USER_TOKEN, "")
         val workspaceName = pref.getString(PreferenceNames.WORKSPACE_NAME, "")
 
-        disposable = apiService.deleteAvatar( "Bearer $token", workspaceName!!)
+        disposable = apiService.deleteAvatar("Bearer $token", workspaceName!!)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    imageViewProfile.setImageResource(R.drawable.icon_placeholder)
-                    imageViewProfile.setColorFilter(mAttributes.contentTextColor, PorterDuff.Mode.SRC_ATOP)
+                    binding.imageViewProfile.setImageResource(R.drawable.icon_placeholder)
+                    binding.imageViewProfile.setColorFilter(
+                        mAttributes.contentTextColor,
+                        PorterDuff.Mode.SRC_ATOP
+                    )
 
                     mLoginData.avatarUrl = ""
-                    AppData().saveObjectToSharedPreference(this, PreferenceNames.LOGIN_DATA, mLoginData)
+                    AppData().saveObjectToSharedPreference(
+                        this,
+                        PreferenceNames.LOGIN_DATA,
+                        mLoginData
+                    )
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
-                    if(error is retrofit2.HttpException) {
-                        if(error.code() == 401 || error.code() == 403) {
+                    if (error is retrofit2.HttpException) {
+                        if (error.code() == 401 || error.code() == 403) {
                             pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
                             return@subscribe
-                        } else if(error.code() == 409) {
+                        } else if (error.code() == 409) {
                             Toast.makeText(this, "Email schon vergeben", Toast.LENGTH_LONG).show()
                         }
                     }
@@ -333,11 +369,13 @@ class MyProfileActivity : BaseActivity(),
 
     private fun addSection(userList: MutableList<Model.User>): MutableList<Model.User> {
         val userListTemp = mutableListOf<Model.User>()
-        for((index, user) in userList.withIndex()) {
+        for ((index, user) in userList.withIndex()) {
             if (index == 0) {
                 userListTemp.add(Model.User(user.lastName[0].toString().toUpperCase()))
             } else {
-                if(!user.lastName[0].toString().equals(userList[index-1].lastName[0].toString(), true)) {
+                if (!user.lastName[0].toString()
+                        .equals(userList[index - 1].lastName[0].toString(), true)
+                ) {
                     userListTemp.add(Model.User(user.lastName[0].toString().toUpperCase()))
                 }
             }
@@ -372,16 +410,20 @@ class MyProfileActivity : BaseActivity(),
             if (resultCode == Activity.RESULT_OK && data != null) {
                 val imageUrl = data.getStringExtra("imageUrl")
                 imageUrl?.let {
-                    if(it.isNotEmpty() && URLUtil.isValidUrl(it)) {
+                    if (it.isNotEmpty() && URLUtil.isValidUrl(it)) {
 
                         mLoginData.avatarUrl = it
-                        AppData().saveObjectToSharedPreference(this, PreferenceNames.LOGIN_DATA, mLoginData)
+                        AppData().saveObjectToSharedPreference(
+                            this,
+                            PreferenceNames.LOGIN_DATA,
+                            mLoginData
+                        )
 
-                        imageViewProfile.colorFilter = null
+                        binding.imageViewProfile.colorFilter = null
                         Picasso.get()
                             .load(it)
                             .transform(CircleTransform())
-                            .into(imageViewProfile)
+                            .into(binding.imageViewProfile)
                     }
                 }
             }
@@ -389,8 +431,8 @@ class MyProfileActivity : BaseActivity(),
     }
 
     private fun focusOnView(view: View) {
-        scrollView.post {
-            scrollView.scrollTo(0, view.top)
+        binding.scrollView.post {
+            binding.scrollView.scrollTo(0, view.top)
         }
     }
 }

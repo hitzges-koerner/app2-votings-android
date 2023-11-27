@@ -3,10 +3,11 @@ package appsquared.votings.app.views
 import android.content.Context
 import android.text.InputType
 import android.util.AttributeSet
-import android.widget.EditText
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
-import appsquared.votings.app.R
+import app.votings.android.R
+import app.votings.android.databinding.EditCardViewBinding
 
 class EditTextCardView(context: Context, attrs: AttributeSet): LinearLayout(context, attrs) {
 
@@ -15,48 +16,45 @@ class EditTextCardView(context: Context, attrs: AttributeSet): LinearLayout(cont
     val NAME = 2
     val PHONE = 3
 
-
-    private val editText: EditText
-
+    var bindingEditCardView: EditCardViewBinding
     init {
-        inflate(context, R.layout.edit_card_view, this)
+        bindingEditCardView = EditCardViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-        editText = findViewById(R.id.editTextView)
         val attributes = context.obtainStyledAttributes(attrs,
             R.styleable.EditTextCardView
         )
 
-        editText.hint = attributes.getString(R.styleable.EditTextCardView_hint)
+        bindingEditCardView.editTextView.hint = attributes.getString(R.styleable.EditTextCardView_hint)
         when(attributes.getInt(R.styleable.EditTextCardView_type, -1)) {
             PASSWORD -> {
-                editText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
+                bindingEditCardView.editTextView.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
             }
             MAIL -> {
-                editText.inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                bindingEditCardView.editTextView.inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
             }
             NAME -> {
-                editText.inputType = InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+                bindingEditCardView.editTextView.inputType = InputType.TYPE_TEXT_VARIATION_PERSON_NAME
             }
             PHONE -> {
-                editText.inputType = InputType.TYPE_CLASS_PHONE
+                bindingEditCardView.editTextView.inputType = InputType.TYPE_CLASS_PHONE
             }
         }
         attributes.recycle()
     }
     
     fun isEmpty() : Boolean {
-        return editText.text.toString().isEmpty()
+        return bindingEditCardView.editTextView.text.toString().isEmpty()
     }
 
     fun getText() : String {
-        return editText.text.toString()
+        return bindingEditCardView.editTextView.text.toString()
     }
 
     fun isEnabled(enabled: Boolean) {
-        editText.isEnabled = enabled
+        bindingEditCardView.editTextView.isEnabled = enabled
     }
 
     fun setText(text: String) {
-        editText.setText(text, TextView.BufferType.EDITABLE)
+        bindingEditCardView.editTextView.setText(text, TextView.BufferType.EDITABLE)
     }
 }

@@ -6,21 +6,20 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import appsquared.votings.app.*
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
+import androidx.fragment.app.Fragment
+import app.votings.android.databinding.FragmentAccountRegisterMailBinding
+import appsquared.votings.app.AccountRegisterActivity
+import appsquared.votings.app.FragmentInteractionListener
+import appsquared.votings.app.LegalDocsActivity
+import appsquared.votings.app.isEmailValid
+import appsquared.votings.app.Constant
+import appsquared.votings.app.rest.ApiService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.button_card_view.view.*
-import kotlinx.android.synthetic.main.fragment_account_register_mail.*
-import kotlinx.android.synthetic.main.fragment_account_register_name.*
-import kotlinx.android.synthetic.main.fragment_account_register_workspace.*
-import kotlinx.android.synthetic.main.fragment_account_register_workspace.buttonCardViewAccountRegisterWorkspacePrevious
 import org.json.JSONObject
 
 class AccountRegisterMailFragment : Fragment() {
@@ -37,55 +36,57 @@ class AccountRegisterMailFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    private lateinit var binding: FragmentAccountRegisterMailBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account_register_mail, container, false)
+        binding = FragmentAccountRegisterMailBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        editTextAccountRegisterMail.setText((activity as AccountRegisterActivity).getEmail())
+        binding.editTextAccountRegisterMail.setText((activity as AccountRegisterActivity).getEmail())
 
-        editTextAccountRegisterMail.addTextChangedListener(object : TextWatcher {
+        binding.editTextAccountRegisterMail.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                textViewAccountRegisterEmailError.visibility = View.INVISIBLE
-                (activity as AccountRegisterActivity).setEmail(editTextAccountRegisterMail.text.toString())
+                binding.textViewAccountRegisterEmailError.visibility = View.INVISIBLE
+                (activity as AccountRegisterActivity).setEmail(binding.editTextAccountRegisterMail.text.toString())
             }
         })
 
-        buttonCardViewAccountRegisterMailNext.materialCardView.setOnClickListener {
-            if(editTextAccountRegisterMail.text.isEmpty() || !isEmailValid(editTextAccountRegisterMail.text)) {
+        binding.buttonCardViewAccountRegisterMailNext.bindingButtonCardView.materialCardView.setOnClickListener {
+            if(binding.editTextAccountRegisterMail.text.isEmpty() || !isEmailValid(binding.editTextAccountRegisterMail.text)) {
                 showError()
                 return@setOnClickListener
             }
-            if(!checkBoxAccountRegisterTerms.isChecked) {
+            if(!binding.checkBoxAccountRegisterTerms.isChecked) {
                 showErrorTerms()
                 return@setOnClickListener
             }
             registerAccount()
         }
 
-        buttonCardViewAccountRegisterMailPrevious.materialCardView.setOnClickListener {
+        binding.buttonCardViewAccountRegisterMailPrevious.bindingButtonCardView.materialCardView.setOnClickListener {
             onButtonPressed(Constant.BACK)
         }
 
-        textViewAccountRegisterTermsClick.setOnClickListener {
+        binding.textViewAccountRegisterTermsClick.setOnClickListener {
             startActivity(Intent(context, LegalDocsActivity::class.java).putExtra(LegalDocsActivity.LEGAL_DOC_TYPE, LegalDocsActivity.TERMS).putExtra(LegalDocsActivity.ACCOUNT_REGISTER_TERMS, true))
         }
 
-        checkBoxAccountRegisterTerms.setOnCheckedChangeListener { buttonView, isChecked ->
-            textViewAccountRegisterEmailTermsError.visibility = View.INVISIBLE
+        binding.checkBoxAccountRegisterTerms.setOnCheckedChangeListener { buttonView, isChecked ->
+            binding.textViewAccountRegisterEmailTermsError.visibility = View.INVISIBLE
         }
     }
 
     private fun showErrorTerms() {
-        textViewAccountRegisterEmailTermsError.visibility = View.VISIBLE
+        binding.textViewAccountRegisterEmailTermsError.visibility = View.VISIBLE
     }
 
     private fun registerAccount() {
@@ -104,7 +105,7 @@ class AccountRegisterMailFragment : Fragment() {
                 { result ->
                     onButtonPressed(Constant.NEXT)
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
                     if(error is retrofit2.HttpException) {
                         if(error.code() == 409 ) {
@@ -116,7 +117,7 @@ class AccountRegisterMailFragment : Fragment() {
     }
 
     fun showError() {
-        textViewAccountRegisterEmailError.visibility = View.VISIBLE
+        binding.textViewAccountRegisterEmailError.visibility = View.VISIBLE
     }
 
     fun onButtonPressed(action: Int) {

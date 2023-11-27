@@ -20,14 +20,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.preference.PreferenceManager
+import app.votings.android.R
+import app.votings.android.databinding.ActivityCameraBinding
 import com.yalantis.ucrop.UCrop
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_camera.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.*
@@ -51,12 +51,15 @@ class CameraActivity : AppCompatActivity() {
     val RC_CROP_IMAGE = 101
     val TAG = "CAMERA"
 
+    private lateinit var binding: ActivityCameraBinding
     override fun onCreate(savedInstanceState: Bundle?) {
 
         mType = intent.getIntExtra("type", CAMERA)
         launchMode()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_camera)
+
+        binding = ActivityCameraBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     private fun launchMode() {
@@ -87,7 +90,7 @@ class CameraActivity : AppCompatActivity() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val extras = data?.extras
             val imageBitmap = extras!!.get("data") as Bitmap
-            imageView.setImageBitmap(imageBitmap)
+            binding.imageView.setImageBitmap(imageBitmap)
         } else if(requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
             val file = File(mCurrentPhotoPath)
             if (Build.VERSION.SDK_INT >= 24)
@@ -141,7 +144,7 @@ class CameraActivity : AppCompatActivity() {
         } else if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             if(data != null) {
                 val resultUri = UCrop.getOutput(data)
-                imageView.setImageURI(resultUri)
+                binding.imageView.setImageURI(resultUri)
 
                 sendAvatar(resultUri!!.toFile())
             }
@@ -188,6 +191,7 @@ class CameraActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(grantResults.contains(PackageManager.PERMISSION_DENIED)) {
             toastLong(getString(R.string.permission_camera_error))
             finish()

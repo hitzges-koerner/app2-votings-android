@@ -8,17 +8,23 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import app.votings.android.R
+import app.votings.android.databinding.ActivityVotingsListBinding
+import app.votings.android.databinding.DialogDecisionBinding
+import app.votings.android.databinding.DialogListBinding
+import app.votings.android.databinding.DialogVotingSelectBinding
+import appsquared.votings.app.adapter.VotingsListAdapter
 import appsquared.votings.app.views.DecisionDialog
 import appsquared.votings.app.views.ListDialog
 import appsquared.votings.app.views.VotingSelectDialog
-import framework.base.constant.Constant
-import framework.base.rest.ApiService
-import framework.base.rest.Model
+import appsquared.votings.app.rest.ApiService
+import appsquared.votings.app.rest.Model
+import appsquared.votings.app.tag.enums.Style
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_votings_list.recyclerView
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import kotlin.math.roundToInt
 
 class VotingsListActivity : BaseActivity() {
@@ -35,14 +41,16 @@ class VotingsListActivity : BaseActivity() {
         ApiService.create(Constant.BASE_API)
     }
 
+    private lateinit var binding: ActivityVotingsListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_votings_list)
+        binding = ActivityVotingsListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     override fun onResume() {
         super.onResume()
-        if(recyclerView.adapter != null) loadVotingsList()
+        if (binding.recyclerView.adapter != null) loadVotingsList()
     }
 
     override fun clickToolbarMenuButton() {
@@ -61,28 +69,30 @@ class VotingsListActivity : BaseActivity() {
     }
 
     private fun refreshEditMode() {
-        if(mEditMode) {
+        if (mEditMode) {
             setMenuButton(R.string.done, ContextCompat.getColor(this, R.color.colorAccent))
         } else {
             setMenuButton(R.string.edit, ContextCompat.getColor(this, R.color.colorAccent))
         }
         mVotingsListAdapter.setEditMode(mEditMode)
-        recyclerView.adapter?.notifyDataSetChanged()
+        binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 
     override fun childOnlyMethod() {
         setLoadingIndicatorVisibility(View.VISIBLE)
         mStatus = intent.extras?.getInt(STATUS)
         // exit activity when status is not set
-        if(mStatus == 0) finish()
+        if (mStatus == 0) finish()
 
-        when(mStatus) {
+        when (mStatus) {
             FUTURE -> {
                 setScreenTitle(getString(R.string.tile_upcoming_votings))
             }
+
             CURRENT -> {
                 setScreenTitle(getString(R.string.tile_current_votings))
             }
+
             PAST -> {
                 setScreenTitle(getString(R.string.tile_archive))
             }
@@ -92,36 +102,36 @@ class VotingsListActivity : BaseActivity() {
 
         var attributes = Attributes()
 
-        if (workspace.settings.style.isNotEmpty()) {
-            when (workspace.settings.style.toLowerCase()) {
-                "rich" -> {
-                    attributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
-                    attributes.contentBorderColor = getColorTemp(R.color.white_transparent)
-                    attributes.contentBorderWidth = 0
-                    attributes.contentCornerRadius = 10
 
-                    attributes.contentTextColor = getColorTemp(R.color.black)
-                    attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    attributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
-                }
+        when (workspace.settings.style) {
+            Style.RICH -> {
+                attributes.contentBackgroundColor = getColorTemp(R.color.white_transparent_fill)
+                attributes.contentBorderColor = getColorTemp(R.color.white_transparent)
+                attributes.contentBorderWidth = 0
+                attributes.contentCornerRadius = 10
 
-                "minimal" -> {
-                    attributes.contentBackgroundColor = getColorTemp(R.color.transparent)
-                    attributes.contentBorderColor = getColorTemp(R.color.transparent)
-                    attributes.contentBorderWidth = 0
-                    attributes.contentCornerRadius = 10
+                attributes.contentTextColor = getColorTemp(R.color.black)
+                attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                attributes.headlinesBackgroundColor = getColorTemp(R.color.white_transparent)
+            }
 
-                    attributes.contentTextColor = getColorTemp(R.color.black)
-                    attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
-                    attributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
-                }
+            Style.MINIMAL -> {
+                attributes.contentBackgroundColor = getColorTemp(R.color.transparent)
+                attributes.contentBorderColor = getColorTemp(R.color.transparent)
+                attributes.contentBorderWidth = 0
+                attributes.contentCornerRadius = 10
 
-                "clean" -> {
-                    attributes = setAttributesDefault()
-                }
-                else -> {
-                    attributes = setAttributesDefault()
-                }
+                attributes.contentTextColor = getColorTemp(R.color.black)
+                attributes.contentAccentColor = getColorTemp(R.color.colorAccent)
+                attributes.headlinesBackgroundColor = getColorTemp(R.color.transparent)
+            }
+
+            Style.CLEAN -> {
+                attributes = setAttributesDefault()
+            }
+
+            else -> {
+                attributes = setAttributesDefault()
             }
         }
 
@@ -149,29 +159,37 @@ class VotingsListActivity : BaseActivity() {
 
         val spacing = dpToPx(16)
 
-        recyclerView.setPadding(0, spacing + getImageHeaderHeight(), 0, spacing)
-        recyclerView.addItemDecoration(
+        binding.recyclerView.setPadding(0, spacing + getImageHeaderHeight(), 0, spacing)
+        binding.recyclerView.addItemDecoration(
             GridSpacingItemDecoration(
                 spanCount,
                 spacing,
                 includeEdge
             )
         )
-        recyclerView.layoutManager = GridLayoutManager(this@VotingsListActivity, spanCount)
+        binding.recyclerView.layoutManager = GridLayoutManager(this@VotingsListActivity, spanCount)
 
         mVotingsListAdapter = VotingsListAdapter(mVotings, attributes) { type: Int, position: Int ->
 
-            when(type) {
+            when (type) {
                 VotingsListAdapter.EDIT_BUTTON -> {
                     var counter = 0
                     val pref = PreferenceManager.getDefaultSharedPreferences(this)
                     val listDialog = ListDialog(this)
-                    listDialog.generate()
-                    if(mVotings[position].isQuickVoting == "1" && mVotings[position].ownerId == pref.getString(PreferenceNames.USERID, "")) listDialog.addButton("delete", R.string.voting_delete)
+                    listDialog.generate(DialogListBinding.inflate(layoutInflater))
+                    if (mVotings[position].isQuickVoting == "1" && mVotings[position].ownerId == pref.getString(
+                            PreferenceNames.USERID,
+                            ""
+                        )
+                    ) listDialog.addButton("delete", R.string.voting_delete)
                     else counter++
-                    if(mVotings[position].isQuickVoting == "1" && mVotings[position].ownerId == pref.getString(PreferenceNames.USERID, "") && mVotings[position].votingTill.isEmpty()) listDialog.addButton("close", R.string.voting_close)
+                    if (mVotings[position].isQuickVoting == "1" && mVotings[position].ownerId == pref.getString(
+                            PreferenceNames.USERID,
+                            ""
+                        ) && mVotings[position].votingTill.isEmpty()
+                    ) listDialog.addButton("close", R.string.voting_close)
                     else counter++
-                    if(mStatus == PAST) listDialog.addButton("hide", R.string.voting_hide)
+                    if (mStatus == PAST) listDialog.addButton("hide", R.string.voting_hide)
                     else counter++
                     listDialog.callBack { tag: String ->
                         when (tag) {
@@ -181,21 +199,33 @@ class VotingsListActivity : BaseActivity() {
                                     if (it == DecisionDialog.RIGHT) {
                                         deleteVoting(mVotings[position].votingId, position)
                                     }
-                                }.generate().setMessage(R.string.dialog_voting_delete_title).setButtonRightName(R.string.yes).setButtonLeftName(R.string.no).show()
+                                }.generate(DialogDecisionBinding.inflate(layoutInflater)).setMessage(R.string.dialog_voting_delete_title)
+                                    .setButtonRightName(R.string.yes).setButtonLeftName(R.string.no)
+                                    .show()
                             }
+
                             "close" -> {
                                 DecisionDialog(this) {
                                     if (it == DecisionDialog.LEFT) return@DecisionDialog
                                     if (it == DecisionDialog.RIGHT) {
                                         closeVoting(mVotings[position].votingId, position)
                                     }
-                                }.generate().setMessage(R.string.dialog_voting_close_title).setButtonRightName(R.string.yes).setButtonLeftName(R.string.no).show()
+                                }.generate(DialogDecisionBinding.inflate(layoutInflater)).setMessage(R.string.dialog_voting_close_title)
+                                    .setButtonRightName(R.string.yes).setButtonLeftName(R.string.no)
+                                    .show()
 
                             }
+
                             "hide" -> {
-                                val votingsHidden = pref.getStringSet(PreferenceNames.VOTINGS_HIDDEN_BY_USER, mutableSetOf()) ?: mutableSetOf()
+                                val votingsHidden = pref.getStringSet(
+                                    PreferenceNames.VOTINGS_HIDDEN_BY_USER,
+                                    mutableSetOf()
+                                ) ?: mutableSetOf()
                                 votingsHidden.add(mVotings[position].votingId)
-                                pref.edit().putStringSet(PreferenceNames.VOTINGS_HIDDEN_BY_USER, votingsHidden).apply()
+                                pref.edit().putStringSet(
+                                    PreferenceNames.VOTINGS_HIDDEN_BY_USER,
+                                    votingsHidden
+                                ).apply()
                                 toggleEditMode()
                             }
                         }
@@ -234,29 +264,41 @@ class VotingsListActivity : BaseActivity() {
                         it.isVoted == mVotings[position].isVoted && it.votingId == mVotings[position].votingId
                     }
 
-                    if(votingSelectList.size > 1) {
+                    if (votingSelectList.size > 1) {
                         VotingSelectDialog(this, attributes) {
                             startActivity(
                                 Intent(this@VotingsListActivity, VotingsActivity::class.java)
                                     .putExtra("voting_id", it.votingId)
                                     .putExtra(STATUS, mStatus)
                                     .putExtra("voting_representation_id", it.inRepresentationOfId)
-                                    .putExtra("voting_representation_name", it.inRepresentationOfName))
+                                    .putExtra(
+                                        "voting_representation_name",
+                                        it.inRepresentationOfName
+                                    )
+                            )
                         }
-                            .generate()
+                            .generate(DialogVotingSelectBinding.inflate(layoutInflater))
                             .setItems(votingSelectList.toMutableList())
                             .show()
                     } else {
-                        startActivity(Intent(this@VotingsListActivity, VotingsActivity::class.java)
-                            .putExtra("voting_id", mVotings[position].votingId)
-                            .putExtra(STATUS, mStatus)
-                            .putExtra("voting_representation_id", mVotings[position].inRepresentationOfId)
-                            .putExtra("voting_representation_name", mVotings[position].inRepresentationOfName))
+                        startActivity(
+                            Intent(this@VotingsListActivity, VotingsActivity::class.java)
+                                .putExtra("voting_id", mVotings[position].votingId)
+                                .putExtra(STATUS, mStatus)
+                                .putExtra(
+                                    "voting_representation_id",
+                                    mVotings[position].inRepresentationOfId
+                                )
+                                .putExtra(
+                                    "voting_representation_name",
+                                    mVotings[position].inRepresentationOfName
+                                )
+                        )
                     }
                 }
             }
         }
-        recyclerView.adapter = mVotingsListAdapter
+        binding.recyclerView.adapter = mVotingsListAdapter
         loadVotingsList()
     }
 
@@ -272,12 +314,12 @@ class VotingsListActivity : BaseActivity() {
             .subscribe(
                 { result ->
                     mVotings.removeAt(position)
-                    recyclerView.adapter?.notifyItemRemoved(position)
+                    binding.recyclerView.adapter?.notifyItemRemoved(position)
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
-                    if(error is retrofit2.HttpException) {
-                        if(error.code() == 401 || error.code() == 403) {
+                    if (error is retrofit2.HttpException) {
+                        if (error.code() == 401 || error.code() == 403) {
                             pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
                             return@subscribe
                         }
@@ -298,12 +340,12 @@ class VotingsListActivity : BaseActivity() {
             .subscribe(
                 { result ->
                     mVotings.removeAt(position)
-                    recyclerView.adapter?.notifyItemRemoved(position)
+                    binding.recyclerView.adapter?.notifyItemRemoved(position)
                 }, { error ->
-                    Log.d("LOGIN", error.message)
+                    Log.d("LOGIN", error.message ?: "")
 
-                    if(error is retrofit2.HttpException) {
-                        if(error.code() == 401 || error.code() == 403) {
+                    if (error is retrofit2.HttpException) {
+                        if (error.code() == 401 || error.code() == 403) {
                             pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
                             return@subscribe
                         }
@@ -326,19 +368,21 @@ class VotingsListActivity : BaseActivity() {
                 { result ->
                     mVotings.clear()
                     mVotingsAll.clear()
-                    when(mStatus) {
+                    when (mStatus) {
                         FUTURE -> {
                             mVotingsAll.addAll(getVotingsByStatus(result).sortedBy { it.votingTill })
                         }
+
                         CURRENT -> {
                             mVotingsAll.addAll(getVotingsByStatus(result).sortedBy { it.votingTill })
                         }
+
                         PAST -> {
                             mVotingsAll.addAll(getVotingsByStatus(result).sortedByDescending { it.votingTill })
                         }
                     }
 
-                    if(mStatus == CURRENT) {
+                    if (mStatus == CURRENT) {
                         val listVoted = mVotingsAll.filter {
                             it.isVoted == "1"
                         }
@@ -348,9 +392,9 @@ class VotingsListActivity : BaseActivity() {
                         }
                         val listNotVotedGroupedMap = listNotVoted.groupBy { it.votingId }
 
-                        val listNotVotedGrouped : MutableList<Model.VotingShort> = mutableListOf()
-                        for(listNotVotedGroupedMapItem in listNotVotedGroupedMap) {
-                            if(listNotVotedGroupedMapItem.value.size > 1) {
+                        val listNotVotedGrouped: MutableList<Model.VotingShort> = mutableListOf()
+                        for (listNotVotedGroupedMapItem in listNotVotedGroupedMap) {
+                            if (listNotVotedGroupedMapItem.value.size > 1) {
                                 val item = listNotVotedGroupedMapItem.value[0]
                                 item.inRepresentationOfId = ""
                                 item.inRepresentationOfName = ""
@@ -358,8 +402,8 @@ class VotingsListActivity : BaseActivity() {
                             } else listNotVotedGrouped.add(listNotVotedGroupedMapItem.value[0])
                         }
 
-                        val listVotedGrouped : MutableList<Model.VotingShort> = mutableListOf()
-                        for(listVotedGroupedMapItem in listVotedGroupedMap) {
+                        val listVotedGrouped: MutableList<Model.VotingShort> = mutableListOf()
+                        for (listVotedGroupedMapItem in listVotedGroupedMap) {
                             listVotedGrouped.add(listVotedGroupedMapItem.value[0])
                         }
 
@@ -377,24 +421,24 @@ class VotingsListActivity : BaseActivity() {
                             it.votingId
                         }
 
-                        val listGrouped : MutableList<Model.VotingShort> = mutableListOf()
-                        for(listGroupedMapItem in listGroupedMap) {
+                        val listGrouped: MutableList<Model.VotingShort> = mutableListOf()
+                        for (listGroupedMapItem in listGroupedMap) {
                             listGrouped.add(listGroupedMapItem.value[0])
                         }
                         mVotings.addAll(listGrouped)
                     }
-                    recyclerView.adapter?.notifyDataSetChanged()
+                    binding.recyclerView.adapter?.notifyDataSetChanged()
                     isEditModeButtonVisible()
 
-                    if(mVotings.isEmpty()) setErrorView(getString(R.string.error_no_voting_available))
+                    if (mVotings.isEmpty()) setErrorView(getString(R.string.error_no_voting_available))
                     setLoadingIndicatorVisibility(View.GONE)
                 }, { error ->
-                    Log.d("LOGIN", error.message)
-                    setErrorView(error.message) {
+                    Log.d("LOGIN", error.message ?: "")
+                    setErrorView(error.message ?: "") {
                         loadVotingsList()
                     }
-                    if(error is retrofit2.HttpException) {
-                        if(error.code() == 401 || error.code() == 403) {
+                    if (error is retrofit2.HttpException) {
+                        if (error.code() == 401 || error.code() == 403) {
                             pref.edit().putString(PreferenceNames.USER_TOKEN, "").apply()
                             return@subscribe
                         }
@@ -404,34 +448,37 @@ class VotingsListActivity : BaseActivity() {
     }
 
     private fun isEditModeButtonVisible() {
-        if(mVotings.isEmpty()) removeMenuButton()
-        else if(mStatus == PAST || isQuickVotingFromOwserInList()) setMenuButton(R.string.edit, ContextCompat.getColor(this, R.color.colorAccent))
+        if (mVotings.isEmpty()) removeMenuButton()
+        else if (mStatus == PAST || isQuickVotingFromOwserInList()) setMenuButton(
+            R.string.edit,
+            ContextCompat.getColor(this, R.color.colorAccent)
+        )
     }
 
-    fun isQuickVotingFromOwserInList() : Boolean {
+    fun isQuickVotingFromOwserInList(): Boolean {
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         val userId = pref.getString(PreferenceNames.USERID, "") ?: ""
         //return mVotings.find { it.isQuickVoting == "1" && it.ownerId == userId}
         return mVotings.any { it.isQuickVoting == "1" && it.ownerId == userId }
     }
 
-    fun getVotingsByStatus(votings: MutableList<Model.VotingShort>) : MutableList<Model.VotingShort> {
+    fun getVotingsByStatus(votings: MutableList<Model.VotingShort>): MutableList<Model.VotingShort> {
 
-        val votingsTemp : MutableList<Model.VotingShort> = mutableListOf()
+        val votingsTemp: MutableList<Model.VotingShort> = mutableListOf()
         val currentTime: Date = Calendar.getInstance().time
 
-        for(voting in votings) {
+        for (voting in votings) {
             if (parseStringToDate(voting.votingFrom)!! > currentTime) {
                 Log.i("app", "votingFrom is after currentTime -> voting not started")
-                if(mStatus == FUTURE) {
+                if (mStatus == FUTURE) {
                     voting.votingStatus = FUTURE
                     votingsTemp.add(voting)
                 }
                 continue
             }
-            if(voting.votingTill.isEmpty()) {
+            if (voting.votingTill.isEmpty()) {
                 Log.i("app", "votingTill is empty -> free voting -> ends when all user voted")
-                if(mStatus == CURRENT) {
+                if (mStatus == CURRENT) {
                     voting.votingStatus = CURRENT
                     votingsTemp.add(voting)
                 }
@@ -439,13 +486,13 @@ class VotingsListActivity : BaseActivity() {
             }
             if (parseStringToDate(voting.votingTill)!! < currentTime) {
                 Log.i("app", "votingTill is before currentTime -> voting ended")
-                if(mStatus == PAST) {
+                if (mStatus == PAST) {
                     voting.votingStatus = PAST
                     votingsTemp.add(voting)
                 }
                 continue
             }
-            if(mStatus == CURRENT) {
+            if (mStatus == CURRENT) {
                 voting.votingStatus = CURRENT
                 votingsTemp.add(voting)
             }
@@ -454,11 +501,11 @@ class VotingsListActivity : BaseActivity() {
         return votingsTemp
     }
 
-    fun getColorTemp(color: Int) : Int {
+    fun getColorTemp(color: Int): Int {
         return ResourcesCompat.getColor(resources, color, null)
     }
 
-    fun setAttributesDefault() : Attributes {
+    fun setAttributesDefault(): Attributes {
         val attributes = Attributes()
         attributes.contentBackgroundColor = getColorTemp(R.color.colorAccent)
         attributes.contentBorderColor = getColorTemp(R.color.transparent)
